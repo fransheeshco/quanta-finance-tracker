@@ -67,14 +67,11 @@ const login = async (req: Request, res: Response): Promise<any> => {
     }
 
     // ✅ Success
-    return res.status(200).json({ message: "Login successful", user });
-
-    
-
+    const token = generateToken(user.userID)
+    return res.status(200).json({ message: "Login successful", token });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: ' i work here! ' });
-
+    res.status(500).json({ message: 'An error has occured.' });
   }
 };
 
