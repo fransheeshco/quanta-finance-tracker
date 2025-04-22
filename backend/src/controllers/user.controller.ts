@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import validator from "validator";
-import bcrypt, { compare } from "bcryptjs";
-import jwt from "jsonwebtoken"
+import { generateToken, verifyToken, comparePasswords, hashPassword } from '../utils/authUtils';
 
 import { User } from '../models/associationblock';
 
@@ -25,7 +24,7 @@ const signUp = async (req: Request, res: Response): Promise<any> => {
       return res.status(409).json({ message: "user already exists." });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hashPassword(password);
 
     const newUser = await User.create({
       fname, lname, email, password: hashedPassword
@@ -61,7 +60,7 @@ const login = async (req: Request, res: Response): Promise<any> => {
 
 
     // Compare password
-    const match = await bcrypt.compare(password, user.password);
+    const match = await comparePasswords(password, user.password);
 
     if (!match) {
       return res.status(401).json({ message: "Invalid password." });
@@ -69,6 +68,8 @@ const login = async (req: Request, res: Response): Promise<any> => {
 
     // ✅ Success
     return res.status(200).json({ message: "Login successful", user });
+
+    
 
   } catch (err) {
     console.error(err);
