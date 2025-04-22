@@ -38,8 +38,10 @@ Expense.belongsTo(User);
 Category.hasMany(Expense, { foreignKey: "categoryID"});
 Expense.belongsTo(Category);
 
+// 
+
 // Sync the models with the database
-sequelize.sync({ force: false })
+sequelize.sync({ force: true })
   .then(() => {
     console.log('Database synced!');
   })

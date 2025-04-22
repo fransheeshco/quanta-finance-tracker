@@ -1,6 +1,5 @@
 import { DataTypes, Sequelize, Model, ENUM, DATE } from "sequelize";
 import { ExpensesAttributes, ExpensesCreationAttributes } from "../types/expenses.types";
-import sequelize from "../config/db";
 
 class Expense extends Model<ExpensesAttributes, ExpensesCreationAttributes> implements ExpensesAttributes {
     public expenseID!: number;
@@ -49,7 +48,7 @@ export const initExpenseModel = (sequelize: Sequelize) => {
     }, 
     {
         sequelize,
-        tableName: 'Savings',
+        tableName: 'Expeneses',
         timestamps: true,  
       }
     )
