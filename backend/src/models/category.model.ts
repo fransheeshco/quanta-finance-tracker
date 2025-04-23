@@ -1,10 +1,10 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 import { CategoryAttributes, CategoryCreationAttributes } from "../types/category.types";
-import sequelize from "../config/db";
 
 class Category extends Model<CategoryAttributes, CategoryCreationAttributes> implements CategoryAttributes {
     public categoryID!: number;
     public categoryName!: String;
+    public userID!: number;
 }
 
 export const initCategoryModel = (sequelize: Sequelize) => {
@@ -17,6 +17,13 @@ export const initCategoryModel = (sequelize: Sequelize) => {
         categoryName: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        userID: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: "Users",
+                key: "userID",
+            }
         }
     }, {
         sequelize,

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import validator from "validator";
-import { generateToken, verifyToken, comparePasswords, hashPassword } from '../utils/authUtils';
+import { generateToken, comparePasswords, hashPassword } from '../utils/authUtils';
 
 import { User } from '../models/associationblock';
 
@@ -75,15 +75,4 @@ const login = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-
-const getUsers = async (req: Request, res: Response) => {
-  try {
-    const Users = await User.findAll();
-    res.status(200).json(Users);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'could not find user' });
-  }
-}
-
-export { getUsers, signUp, login };
+export { signUp, login };

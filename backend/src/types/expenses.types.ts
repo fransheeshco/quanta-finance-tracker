@@ -4,6 +4,7 @@ export interface ExpensesAttributes {
     expenseID: number;
     userID: number;
     categoryID: number;
+    transactionID: number;
     title: string;
     amount: number;
     date: Date;

@@ -5,6 +5,7 @@ class Expense extends Model<ExpensesAttributes, ExpensesCreationAttributes> impl
     public expenseID!: number;
     public userID!: number;
     public categoryID!: number;
+    public transactionID!: number;
     public title!: string;
     public amount!: number;
     public date!: Date;
@@ -32,6 +33,13 @@ export const initExpenseModel = (sequelize: Sequelize) => {
             references: {
                 model: "Categories",
                 key: "categoryID"
+            }
+        },
+        transactionID: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: "Transactions",
+                key: "transactionID",
             }
         },
         title: {
