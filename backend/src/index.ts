@@ -4,6 +4,7 @@ import cors from 'cors';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import categoryRoutes from "./routes/category.routes";
+import budgetRoutes from "./routes/budget.routes";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/auth/user', userRoutes) ;
 app.use('/api/auth/category', categoryRoutes);
+app.use('/api/auth/budgets', budgetRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
