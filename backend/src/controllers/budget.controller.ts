@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { Budget } from "../models/associationblock";
-import { Next } from "mysql2/typings/mysql/lib/parsers/typeCast";
 
 export const createBudget = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
