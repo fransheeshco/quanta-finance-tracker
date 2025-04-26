@@ -10,7 +10,7 @@ export const createBudget = async (req: Request, res: Response, next: NextFuncti
             return res.status(401).json({ message: "Unauthorized: No user ID." });
         }
         const budget = await Budget.create({
-            userID, budgetName, amount, startDate, endDate
+            userID: userID, budgetName: budgetName, amount: amount, startDate: startDate, endDate: endDate
         });
         return res.status(201).json({ message: "Budget created successfully.", budget });
     } catch (err) {
