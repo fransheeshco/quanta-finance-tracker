@@ -1,0 +1,15 @@
+.quanta-header {
+    font-size: 2rem; /* or whatever you want */
+    font-weight: bold;
+    color: #6A0DAD;
+}
+
+.quanta-section {
+    font-size: 128;
+    color: #C999F8
+}
+
+.buttons-style {
+    background-color: #6A0DAD;
+    color: white;
+}

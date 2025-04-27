@@ -1,0 +1,20 @@
+.quanta-text {
+    color: #C999F8;
+    font-size: 128px;
+}
+
+.tag-line {
+    font-size: 64px;
+}
+
+.custom-bg {
+    background-image: url('../assets/bg-final.png'); /* Adjust the path based on your actual file location */
+    background-size:cover; /* or 'fill' depending on the behavior you want */
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    position: relative;
+    margin-top: -4rem; 
+    z-index: -50;
+  }
+  
