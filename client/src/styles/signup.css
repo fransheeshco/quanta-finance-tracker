@@ -1,0 +1,13 @@
+.custom-bg-signup {
+    background-image: url('../assets/Group41.png'); /* Adjust the path based on your actual file location */
+    background-size:cover; /* or 'fill' depending on the behavior you want */
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    position: relative;
+    margin-top: -4rem; 
+  }
+
+.login-form-border {
+    border-color: #C999F8;
+}

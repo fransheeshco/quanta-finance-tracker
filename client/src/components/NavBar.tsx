@@ -3,7 +3,7 @@ import "../styles/navbar.css";
 
 function NavBar() {
   return (
-    <header>
+    <header className="relative z-10">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center">
           <NavLink to="/" className="quanta-header mx-4">
