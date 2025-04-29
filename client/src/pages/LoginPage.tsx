@@ -1,14 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Footer from '../components/Footer'
 import { NavLink } from 'react-router-dom';
 import "../styles/loginpage.css"
 
 function LoginPage() {
-    function handleSubmit(e: any) {
+    const [formdata, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        console.log('Form submitted!');
+        setFormData({
+            email: '',
+            password: ''
+        });
     }
-      
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setFormData(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }));
+    }
+
     return (
         <>
             <section className="custom-bg-login">
@@ -32,11 +47,14 @@ function LoginPage() {
                                 </label>
                                 <div className="mt-2">
                                     <input
+                                        onChange={handleChange}
                                         id="email"
                                         name="email"
                                         type="email"
                                         required
                                         autoComplete="email"
+                                        placeholder='johndoe@email.com'
+                                        value={formdata.email}
                                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                                     />
                                 </div>
@@ -55,11 +73,14 @@ function LoginPage() {
                                 </div>
                                 <div className="mt-2">
                                     <input
+                                        onChange={handleChange}
                                         id="password"
                                         name="password"
                                         type="password"
                                         required
                                         autoComplete="current-password"
+                                        placeholder='********'
+                                        value={formdata.password}
                                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                                     />
                                 </div>
@@ -85,12 +106,8 @@ function LoginPage() {
                     </div>
                 </div>
             </section>
-
             <Footer></Footer>
-
         </>
-
-
     )
 }
 

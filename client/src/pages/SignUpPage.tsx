@@ -1,9 +1,33 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { NavLink } from 'react-router-dom';
 import Footer from '../components/Footer'
 import "../styles/signup.css"
 
 function SignUpPage() {
+    const [formdata, setFormData] = useState({
+        firstname: '',
+        lastname: '',
+        email: '',
+        password: ''
+    });
+
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setFormData({
+            firstname: '',
+            lastname: '',
+            email: '',
+            password: ''
+        });
+    }
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setFormData(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }));
+    }
+
     return (
         <>
             <section className="custom-bg-login">
@@ -20,18 +44,21 @@ function SignUpPage() {
 
                     <div className="flex flex-col justify-between min-h-full mt-12 w-140 px-6 py-6 lg:px-8 border rounded-xl login-form-border">
                         <h1 className="text-3xl">Get Started with Quanta!</h1>
-                        <form action="#" method="POST" className="space-y-4">
+                        <form onSubmit={handleSubmit} action="#" method="POST" className="space-y-4">
                             <div>
                                 <label htmlFor="firstname" className="block text-sm/6 font-medium text-gray-900">
                                     First Name
                                 </label>
                                 <div className="mt-2">
                                     <input
+                                        onChange={handleChange}
                                         id="firstname"
                                         name="firstname"
                                         type="firstname"
                                         required
                                         autoComplete="firstname"
+                                        placeholder='John'
+                                        value={formdata.firstname}
                                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                                     />
                                 </div>
@@ -42,11 +69,14 @@ function SignUpPage() {
                                 </label>
                                 <div className="mt-2">
                                     <input
+                                        onChange={handleChange}
                                         id="lastname"
                                         name="lastname"
                                         type="lastname"
                                         required
                                         autoComplete="lastname"
+                                        placeholder='Doe'
+                                        value={formdata.lastname}
                                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                                     />
                                 </div>
@@ -57,11 +87,14 @@ function SignUpPage() {
                                 </label>
                                 <div className="mt-2">
                                     <input
+                                        onChange={handleChange}
                                         id="email"
                                         name="email"
                                         type="email"
                                         required
                                         autoComplete="email"
+                                        placeholder='johndoe@email.com'
+                                        value={formdata.email}
                                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                                     />
                                 </div>
@@ -75,11 +108,14 @@ function SignUpPage() {
                                 </div>
                                 <div className="mt-2">
                                     <input
+                                        onChange={handleChange}
                                         id="password"
                                         name="password"
                                         type="password"
                                         required
                                         autoComplete="current-password"
+                                        placeholder='*********'
+                                        value={formdata.password}
                                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                                     />
                                 </div>
