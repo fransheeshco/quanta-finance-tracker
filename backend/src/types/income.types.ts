@@ -2,7 +2,7 @@ import { Optional } from "sequelize";
 
 export interface IncomeAttributes {
     incomeID: number;
-    userID: number;
+    accountID: number;
     transactionID: number;
     amount: number;
     date: Date;

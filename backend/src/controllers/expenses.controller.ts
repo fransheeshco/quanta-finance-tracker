@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Expense, Transaction, Category } from "../models/associationblock";
+import { Expense, Transaction, Category, Account } from "../models/associationblock";
 import { TransactionType } from "../types/transactions.types";
 
 export const createExpense = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -10,18 +10,22 @@ export const createExpense = async (req: Request, res: Response, next: NextFunct
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." })
         }
+        const account = await Account.findOne({where:  {userID: userID}});
+        if (!account) {
+            return res.status(404).json({message: "Account not found"})
+        }
         const transaction = await Transaction.create({
-            userID: userID,
+            accountID: account.accountID,
             transactionType: TransactionType.EXPENSE,
             amount: amount,
             date: date,
         })
-        let category = await Category.findOne({where: {userID: userID, categoryID: categoryID}});
+        let category = await Category.findOne({where: {accountID: account.accountID, categoryID: categoryID}});
         if(!category) {
             return res.status(404).json({message: "No category found."});
         }
         const expense = await Expense.create({
-            userID, categoryID: categoryID, transactionID: transaction.transactionID, title: title, amount: amount, date: date
+            accountID: account.accountID, categoryID: categoryID, transactionID: transaction.transactionID, title: title, amount: amount, date: date
         })
         return res.status(201).json({ message: "Expense successfully created.", expense });
     } catch (err) {
@@ -55,7 +59,14 @@ export const deleteExpense = async (req: Request, res: Response, next: NextFunct
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." })
         }
+        const account = await Account.findOne({where:  {userID: userID}});
+        if (!account) {
+            return res.status(404).json({message: "Account not found"})
+        }
         const expense = await Expense.findByPk(expenseID);
+        if(expense?.accountID !== account.accountID) {
+            return res.status(403).json({ message: "Not your expense to delete." });
+        }
         await expense?.destroy();
     } catch (err) {
         return res.status(500).json({ message: "could not delete expenses." });
@@ -69,7 +80,11 @@ export const getExpense = async (req: Request, res: Response, next: NextFunction
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." })
         }
-        const expenses = await Expense.findAll({where: {userID: userID}});
+        const account = await Account.findOne({where:  {userID: userID}});
+        if (!account) {
+            return res.status(404).json({message: "Account not found"})
+        }
+        const expenses = await Expense.findAll({where: {accountID: account.accountID}});
         if(!expenses) {
             return res.status(404).json({ message: "No expenses found." });
         }
@@ -87,7 +102,11 @@ export const getExpenseByCategory = async (req: Request, res: Response, next: Ne
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." })
         }
-        const expenses = await Expense.findAll({where: {categoryID: categoryID}});
+        const account = await Account.findOne({where: {userID: userID}});
+        if (!account) {
+            return res.status(404).json({message: "Account not found"})
+        }
+        const expenses = await Expense.findAll({where: {categoryID: categoryID, accountID: account.accountID }});
         if(!expenses) {
             return res.status(404).json({ message: "No expenses found." });
         }

@@ -4,7 +4,7 @@ import { CategoryAttributes, CategoryCreationAttributes } from "../types/categor
 class Category extends Model<CategoryAttributes, CategoryCreationAttributes> implements CategoryAttributes {
     public categoryID!: number;
     public categoryName!: String;
-    public userID!: number;
+    public accountID!: number;
 }
 
 export const initCategoryModel = (sequelize: Sequelize) => {
@@ -18,11 +18,11 @@ export const initCategoryModel = (sequelize: Sequelize) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        userID: {
+        accountID: {
             type: DataTypes.INTEGER,
             references: {
-                model: "Users",
-                key: "userID",
+                model: "Accounts",
+                key: "accountID",
             }
         }
     }, {

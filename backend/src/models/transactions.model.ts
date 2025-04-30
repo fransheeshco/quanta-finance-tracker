@@ -4,7 +4,7 @@ import sequelize from '../config/db';
 
 class Transaction extends Model<TransactionAttributes, TransactionCreationAttributes> implements TransactionAttributes {
   public transactionID!: number;
-  public userID!: number;
+  public accountID!: number;
   public transactionType!: TransactionType;
   public amount!: number;
   public date!: Date;
@@ -21,12 +21,12 @@ export const initTransactionModel = (sequelize: Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      userID: {
+      accountID: {
         type: DataTypes.INTEGER, // Use INTEGER for userID
         allowNull: false,
         references: {
-          model: 'Users', 
-          key: 'userID',
+          model: 'Accounts', 
+          key: 'accountID',
         },
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',

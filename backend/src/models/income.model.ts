@@ -3,7 +3,7 @@ import { IncomeAttributes, IncomeCreationAttributes } from "../types/income.type
 
 class Income extends Model<IncomeAttributes, IncomeCreationAttributes> implements IncomeAttributes {
     public incomeID!: number;
-    public userID!: number;
+    public accountID!: number;
     public transactionID!: number;
     public amount!: number;
     public date!: Date;
@@ -17,11 +17,11 @@ export const initIncomeModel = (sequelize: Sequelize) => {
             autoIncrement: true, 
             allowNull: false,
         }, 
-        userID: {
+        accountID: {
             type: DataTypes.INTEGER,
             references: {
-                model: "Users",
-                key: "userID"
+                model: "Accounts",
+                key: "accountID"
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',

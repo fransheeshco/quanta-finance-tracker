@@ -1,34 +1,39 @@
 import { Request, Response } from "express";
-import { User, Expense, Transaction, Saving, Budget } from "../models/associationblock";
+import { User, Expense, Transaction, Saving, Budget, Account, Income,  } from "../models/associationblock";
 
 const getUserInfo = async (req: Request, res: Response): Promise<any> => {
     const userID = req.userID;
 
     try {
-        const user = await User.findByPk(userID);
-        const userExpenses = await Expense.findAll({where: {userID: userID}});
-        const userTransactions = await Transaction.findAll({where: {userID: userID}});
-        const userSavings = await Saving.findAll({where: {userID: userID}});
-        const userBudgets = await Budget.findAll({where: {userID: userID}});
+        const account = await Account.findOne({where: {userID: userID}});
+        const expenses = await Expense.findAll({where: { accountID: account?.accountID  }});
+        const transactions = await Transaction.findAll({where: {accountID: account?.accountID}});
+        const savings = await Saving.findAll({where: {accountID: account?.accountID}});
+        const budgets = await Budget.findAll({where: {accountID: account?.accountID}});
+        const incomes = await Income.findAll({where: {accountID: account?.accountID}});
 
-        if (!user) {
+        if (!userID) {
             return res.status(404).json({ message: "User not found." });
         }
-        if (!userExpenses) {
+        if (!expenses) {
             return res.status(404).json({ message: "No expenses found." });
         }
-        if (!userBudgets) {
+        if (!budgets) {
             return res.status(404).json({ message: "No budgets found." });
         }
-        if (!userSavings) {
+        if (!savings) {
             return res.status(404).json({ message: "No savings found." });
         }
-        if (!userTransactions) {
+        if (!transactions) {
             return res.status(404).json({ message: "No transactions found." });
         }
-        res.status(200).json({user, userBudgets, userExpenses, userSavings, userTransactions});
+        if (!incomes) {
+            return res.status(404).json({ message: "No income found." });
+        }
+
+        res.status(200).json({expenses, budgets, incomes, savings, transactions});
     } catch (err) {
-        console.error("Error fetching user:", err); // Log the error to the console
+        console.error("Error fetching user:", err);
         return res.status(500).json({ message: "Server error." });
     }
 };

@@ -2,7 +2,7 @@ import { Optional } from "sequelize";
 
 export interface ExpensesAttributes {
     expenseID: number;
-    userID: number;
+    accountID: number;
     categoryID: number;
     transactionID: number;
     title: string;

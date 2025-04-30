@@ -3,7 +3,7 @@ import { SavingAttributes, SavingCreationAttributes } from '../types/saving.type
 
 class Saving extends Model<SavingAttributes, SavingCreationAttributes> implements SavingAttributes {
   public savingID!: number;
-  public userID!: number;
+  public accountID!: number;
   public title!: string;
   public goalAmount!: number;
   public currentAmount!: number;
@@ -20,12 +20,12 @@ export const initSavingModel = (sequelize: Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      userID: {
+      accountID: {
         type: DataTypes.INTEGER,
         allowNull: false, 
         references: {
-          model: 'Users',
-          key: 'userID',
+          model: 'Accounts',
+          key: 'accountID',
         },
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
@@ -35,11 +35,11 @@ export const initSavingModel = (sequelize: Sequelize) => {
         allowNull: false,
       },
       goalAmount: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
       },
       currentAmount: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
       },
     },

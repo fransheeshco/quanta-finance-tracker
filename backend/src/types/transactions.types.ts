@@ -8,7 +8,7 @@ export enum TransactionType {
 
 export interface TransactionAttributes {
     transactionID: number;
-    userID: number;
+    accountID: number;
     transactionType: TransactionType;
     amount: number;
     date: Date;

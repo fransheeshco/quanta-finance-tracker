@@ -3,7 +3,7 @@ import { BudgetAttributes, BudgetCreationAttributes } from "../types/budget.type
 
 class Budget extends Model<BudgetAttributes, BudgetCreationAttributes> implements BudgetAttributes {
     public budgetID!: number;
-    public userID!: number;
+    public accountID!: number;
     public budgetName!: string;
     public amount!: number;
     public readonly startDate!: Date;
@@ -18,11 +18,11 @@ export const initBudgetModel = (sequelize: Sequelize) => {
             autoIncrement: true,
             primaryKey: true,
         },
-        userID: {
+        accountID: {
             type: DataTypes.INTEGER,
             references: {
-                model: "Users",
-                key: "userID"
+                model: "Accounts",
+                key: "accountID"
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
@@ -32,7 +32,7 @@ export const initBudgetModel = (sequelize: Sequelize) => {
             allowNull: false,
         },
         amount: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             allowNull: false,
         },
         startDate: {

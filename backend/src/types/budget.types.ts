@@ -2,7 +2,7 @@ import { Optional } from "sequelize";
 
 export interface BudgetAttributes {
     budgetID: number;
-    userID: number;
+    accountID: number;
     budgetName: string;
     amount: number;
     startDate: Date;

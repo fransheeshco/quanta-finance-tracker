@@ -3,7 +3,7 @@ import { ExpensesAttributes, ExpensesCreationAttributes } from "../types/expense
 
 class Expense extends Model<ExpensesAttributes, ExpensesCreationAttributes> implements ExpensesAttributes {
     public expenseID!: number;
-    public userID!: number;
+    public accountID!: number;
     public categoryID!: number;
     public transactionID!: number;
     public title!: string;
@@ -19,11 +19,11 @@ export const initExpenseModel = (sequelize: Sequelize) => {
             primaryKey: true,
             allowNull: false,
         }, 
-        userID: {
+        accountID: {
             type: DataTypes.INTEGER,
             references: {
-                model: "Users",
-                key: "userID"
+                model: "Accounts",
+                key: "accountID"
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',

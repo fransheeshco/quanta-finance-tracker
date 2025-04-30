@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Transaction } from "../models/associationblock";
+import { Account, Transaction } from "../models/associationblock";
 
 export const createTransaction = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
@@ -9,8 +9,12 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." });
         }
+        const account = await Account.findOne({where: {userID: userID}})
+        if (!account) {
+            return res.status(404).json({ message: "no account found." });
+        }
         const transaction = await Transaction.create({
-            userID: userID,
+            accountID: account?.accountID,
             transactionType: transactionType,
             amount: amount,
             date: date,
@@ -29,9 +33,16 @@ export const updateTransaction = async (req: Request, res: Response, next: NextF
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." });
         }
+        const account = await Account.findOne({where: {userID: userID}})
+        if (!account) {
+            return res.status(404).json({ message: "No account found." });
+        }
         const transaction = await Transaction.findByPk(transactionID);
+        if(!transaction) {
+            return res.status(404).json({ message: "No transaction found." });
+        }
         await transaction?.update({
-            userID: userID,
+            accountID: account.accountID,
             transactionType: transactionType,
             amount: amount,
             date: date,
@@ -51,8 +62,11 @@ export const deleteTransaction = async (req: Request, res: Response, next: NextF
             return res.status(401).json({ message: "Unauthorized: No user ID." });
         }
         const transaction = await Transaction.findByPk(transactionID);
+        if(!transaction) {
+            return res.status(404).json({ message: "No transaction found." });
+        }
         await transaction?.destroy();
-        return res.status(204).json({ message: "Transaction deleted successfully." }); 
+        return res.status(200).json({ message: "Transaction deleted successfully." }); 
     } catch (err) {
         return res.status(401).json({ message: "could not delete transaction." });
     }
@@ -65,8 +79,12 @@ export const getTransactions = async (req: Request, res: Response, next: NextFun
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." });
         }
-        const transactions = await Transaction.findAll({where: {userID: userID}});
-        if(!transactions) {
+        const account = await Account.findOne({where: {userID: userID}})
+        if (!account) {
+            return res.status(404).json({ message: "no account found." });
+        }
+        const transactions = await Transaction.findAll({where: {accountID: account.accountID }});
+        if(transactions.length === 0) {
             return res.status(404).json({ message: "No transactions found." });
         }
         return res.status(200).json({message: "Transactions found:", transactions});

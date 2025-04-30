@@ -33,8 +33,8 @@ export const initTransferModel = (sequelize: Sequelize) => {
         senderID: {
             type: DataTypes.INTEGER,
             references: {
-                model: "Users",
-                key: "userID"
+                model: "Accounts",
+                key: "accountID"
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
@@ -42,8 +42,8 @@ export const initTransferModel = (sequelize: Sequelize) => {
         recipientID: {
             type: DataTypes.INTEGER,
             references: {
-                model: "Users",
-                key: "userID"
+                model: "Accounts",
+                key: "accountID"
             },
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',

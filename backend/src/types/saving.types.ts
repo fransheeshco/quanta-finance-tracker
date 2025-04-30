@@ -2,7 +2,7 @@ import { Optional } from "sequelize";
 
 export interface SavingAttributes {
   savingID: number;  // This is required for the created instance (auto-incremented by DB)
-  userID: number;
+  accountID: number;
   title: string;
   goalAmount: number;
   currentAmount: number;

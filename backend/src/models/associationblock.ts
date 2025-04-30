@@ -23,21 +23,21 @@ const Account = initAccountModel(sequelize);
 const Transfer = initTransferModel(sequelize);
 const Income = initIncomeModel(sequelize);
 
-// User and Savings relations
-User.hasMany(Saving, { foreignKey: 'userID' });
-Saving.belongsTo(User, { foreignKey: 'userID' });
+// account and Savings relations
+Account.hasMany(Saving, { foreignKey: 'accountID' });
+Saving.belongsTo(Account, { foreignKey: 'accountID' });
 
-// User and budget relations
-User.hasMany(Budget, { foreignKey: 'userID' });
-Budget.belongsTo(User, { foreignKey: 'userID' });
+// account and budget relations
+Account.hasMany(Budget, { foreignKey: 'accountID' });
+Budget.belongsTo(Account, { foreignKey: 'accountID' });
 
-// user and transactions relations
-User.hasMany(Transaction, { foreignKey: 'userID' });
-Transaction.belongsTo(User);
+// account and transactions relations
+Account.hasMany(Transaction, { foreignKey: 'accountID' });
+Transaction.belongsTo(Account, { foreignKey: 'accountID' });
 
-// user and Expense relations
-User.hasMany(Expense, { foreignKey: 'userID' });
-Expense.belongsTo(User, { foreignKey: 'userID' });
+// account and Expense relations
+Account.hasMany(Expense, { foreignKey: 'accountID' });
+Expense.belongsTo(Account, { foreignKey: 'accountID' });
 
 // Category and expenses relations
 Category.hasMany(Expense, { foreignKey: "categoryID" });
@@ -55,11 +55,11 @@ Transaction.hasMany(Income, { foreignKey: "transactionID" });
 Income.belongsTo(Transaction, { foreignKey: "transactionID" });
 
 // account and user relation
-User.hasMany(Account, { foreignKey: "userID" });
-Account.belongsTo(User, { foreignKey: "userID" });
+User.hasOne(Account, { foreignKey: "userID"});
+Account.belongsTo(User, { foreignKey: "userID"});
 
 // Sync the models with the database
-sequelize.sync({ alter: true })
+sequelize.sync({ force: false })
   .then(() => {
     console.log('Database synced!');
   })
