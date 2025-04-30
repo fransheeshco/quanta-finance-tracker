@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { updateAccountBalance } from "../utils/updateAccountUtils";
 import { Account } from "../models/associationblock";
 
 export const addAccount = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -44,5 +45,21 @@ export const deleteAccount = async (req: Request, res: Response, next: NextFunct
 
 export const updateAccount = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    
+    const { balance, accountID } = req.body;
+
+    try {
+        if(!userID) {
+            return res.status(401).json({message: "Unauthorized: user id not found."})
+        }
+
+        const account = await Account.findByPk(accountID);
+        if (!accountID) {
+            return res.status(401).json({message: "Account not found."})
+        }
+
+        const updatedAcc = await updateAccountBalance(accountID, balance);
+        return res.status(201).json({message: "account updated successfully", updatedAcc});
+    } catch (err) {
+        return res.status(400).json({message: "error: could not update account"})
+    }
 }

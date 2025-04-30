@@ -10,6 +10,7 @@ import savingsRoutes from "./routes/savings.routes";
 import expensesRoutes from "./routes/expenses.routes";
 import accountRoutes from "./routes/account.routes";
 import incomeRoutes from "./routes/income.routes";
+import transferRoute from "./routes/transfer.routes";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/api/auth/savings', savingsRoutes);
 app.use('/api/auth/expenses', expensesRoutes);
 app.use('/api/auth/account', accountRoutes);
 app.use('/api/auth/income', incomeRoutes);
+app.use('/api/auth/transfer', transferRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
