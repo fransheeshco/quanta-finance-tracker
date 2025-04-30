@@ -47,7 +47,7 @@ export const initExpenseModel = (sequelize: Sequelize) => {
             allowNull: false
         },
         amount: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.FLOAT,
             allowNull: false
         },
         date: {

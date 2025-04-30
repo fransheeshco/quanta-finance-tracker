@@ -25,7 +25,7 @@ export const initTransactionModel = (sequelize: Sequelize) => {
         type: DataTypes.INTEGER, // Use INTEGER for userID
         allowNull: false,
         references: {
-          model: 'Users', // Make sure this matches your User table name
+          model: 'Users', 
           key: 'userID',
         },
         onDelete: 'CASCADE',
@@ -36,7 +36,7 @@ export const initTransactionModel = (sequelize: Sequelize) => {
         allowNull: false,
       },
       amount: {
-        type: DataTypes.INTEGER, // INTEGER works for numeric fields like this
+        type: DataTypes.FLOAT, 
         allowNull: false,
       },
       date: {
