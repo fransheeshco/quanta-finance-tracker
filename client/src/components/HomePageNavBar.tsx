@@ -69,13 +69,19 @@ const HomePageNavBar = () => {
                                         to="/budgets"
                                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     >
-                                        Budget
+                                        Budgets
                                     </NavLink>
                                     <NavLink
                                         to="/income"
                                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     >
-                                        Income
+                                        Incomes
+                                    </NavLink>
+                                    <NavLink
+                                        to="/transfers"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                        Transfers
                                     </NavLink>
                                     <NavLink
                                         to="/"

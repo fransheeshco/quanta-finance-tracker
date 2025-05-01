@@ -11,6 +11,7 @@ import IncomePage from './pages/IncomePage';
 import TransactionPage from "./pages/TransactionsPage";
 import BudgetsPage from './pages/BudgetsPage';
 import ExpensesPage from './pages/ExpensesPage';
+import TransferPage from './pages/TransferPage';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/savings" element={<SavingsPage />} />
           <Route path="/income" element={<IncomePage />} />
           <Route path="/expenses" element={<ExpensesPage />} />
+          <Route path="/transfers" element={<TransferPage />} />
         </Routes>
       </BrowserRouter>
     </>
