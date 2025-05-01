@@ -33,7 +33,7 @@ export const createTransfer = async (req: Request, res: Response, next: NextFunc
             transactionID: transaction.transactionID
         })
 
-        const sender = await Account.findOne({where: {userID: userID}});
+        const sender = await Account.findOne({where: {userID: senderID}});
         const reciever = await Account.findOne({where: {userID: recipientID}});
 
         if(!sender) {
@@ -52,6 +52,21 @@ export const createTransfer = async (req: Request, res: Response, next: NextFunc
         return res.status(201).json({message: "transfer successful", newSenderAccBalance, newRecieverAccBalance})
     } catch (err) {
         return res.status(400).json({ message: "could not create transaction" })
+    }
+}
+
+export const getAndSortByDate = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    const userID = req.userID;
+
+    try {
+        const account = await Account.findOne({where: {userID: userID}})
+        if (!account) {
+            return res.status(401).json({message: "User account does not exist."})
+        }
+        const transfers = await Transfer.findAll({where: {senderID: account.accountID }, order: [['createdAt', 'DESC']]})
+        return res.status(200).json({message: "Transfers found: ", transfers})
+    } catch (err) {
+        return res.status(401).json({message: "Could not get Transfers"})
     }
 }
 

@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Account, Transaction } from "../models/associationblock";
+import { where } from "sequelize";
+import { TransactionType } from "../types/transactions.types";
 
 export const createTransaction = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
@@ -90,5 +92,21 @@ export const getTransactions = async (req: Request, res: Response, next: NextFun
         return res.status(200).json({message: "Transactions found:", transactions});
     } catch (err) {
         return res.status(401).json({ message: "could not retrieve categories" });
+    }
+}
+
+export const filterTransactionsByTypeTransfer =async (req: Request, res: Response, next: NextFunction) => {
+    const userID = req.userID;
+    const {accountID} = req.body;
+
+    try {
+        const account = await Account.findByPk(accountID);
+        if(!account) {
+            return res.status(201).json({message: "User account does not exists."})
+        }
+        const transferTransactions = await Transaction.findAll({where: {accountID: accountID, transactionType: TransactionType.TRANSFER}})
+        return res.status(200).json({message: "Transfer Transactions Found.", transferTransactions})
+    } catch (err: any) {
+        return res.status(401).json({message: err.message || "Something went wrong." });
     }
 }
