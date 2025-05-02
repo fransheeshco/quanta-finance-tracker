@@ -3,22 +3,23 @@ import { toast } from "react-toastify";
 
 export const handleError = (error: any) => {
     if (axios.isAxiosError(error)) {
-        var err = error.response;
+        const err = error.response;  // Define err here to access within scope
+
         if (Array.isArray(err?.data.errors)) {
             for (let val of err?.data.errors) {
                 toast.warning(val.description);
             }
         } else if (typeof err?.data.errors === "object") {
-            for (let e in err.data.erorrs) {
-                toast.warning(err.data.errors[e][0]);
+            for (let e in err.data.errors) {
+                toast.warning(err.data.errors[e][0]);  // Fixed typo (errors instead of erorrs)
             }
         }
-    } else if (err?.data) {
-        toast.warning(err.data);
-    } else if (err?.status == 401) {
+    } else if (error?.data) {
+        toast.warning(error?.data);
+    } else if (error?.status === 401) {
         toast.warning("Please Login");
         window.history.pushState({}, "LoginPage", "/login");
-    } else if (err) {
-        toast.warning(err?.data);
+    } else if (error) {
+        toast.warning(error?.data);
     }
 };

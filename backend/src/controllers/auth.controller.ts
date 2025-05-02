@@ -8,7 +8,7 @@ import { User } from '../models/associationblock';
 const signUp = async (req: Request, res: Response): Promise<any> => {
   const { fname, lname, email, password } = req.body;
 
-  if (!email || !password) {
+  if (!fname || !lname || !email || !password) {
     return res.status(400).json({ message: "All forms must be filled." });
   }
 
@@ -29,8 +29,12 @@ const signUp = async (req: Request, res: Response): Promise<any> => {
     const newUser = await User.create({
       fname, lname, email, password: hashedPassword
     });
-
-    res.status(201).json(newUser);
+    const token = generateToken(newUser.userID)
+    res.status(201).json({ message: "Login successful", token, user: {
+      fname: newUser.fname,
+      email: newUser.email
+    }
+   });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Error creating user' });
@@ -41,7 +45,7 @@ const login = async (req: Request, res: Response): Promise<any> => {
   const { email, password } = req.body;
 
   // Check for empty fields
-  if (!email || !password) {
+  if (!email || !password ) {
     return res.status(400).json({ message: "All fields must be filled." });
   }
 

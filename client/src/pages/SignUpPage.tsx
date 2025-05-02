@@ -30,7 +30,7 @@ const SignUpPage = (props: Props) => {
     });
 
     const handleRegister = (form: RegisterFormInputs) => {
-        registerUser(form.lname, form.fname, form.email, form.password);
+        registerUser(form.fname, form.lname, form.email, form.password);
     }
 
     return (
@@ -49,12 +49,12 @@ const SignUpPage = (props: Props) => {
             <h1 className="text-3xl">Get Started with Quanta!</h1>
             <form onSubmit={handleSubmit(handleRegister)} method="POST" className="space-y-4">
               <div>
-                <label htmlFor="firstname" className="block text-sm/6 font-medium text-gray-900">
+                <label htmlFor="fname" className="block text-sm/6 font-medium text-gray-900">
                   First Name
                 </label>
                 <div className="mt-2">
                   <input
-                    id="firstname"
+                    id="fname"
                     placeholder="John"
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
                     {...register('fname')}
@@ -64,12 +64,12 @@ const SignUpPage = (props: Props) => {
               </div>
 
               <div>
-                <label htmlFor="lastname" className="block text-sm/6 font-medium text-gray-900">
+                <label htmlFor="lname" className="block text-sm/6 font-medium text-gray-900">
                   Last Name
                 </label>
                 <div className="mt-2">
                   <input
-                    id="lastname"
+                    id="lname"
                     placeholder="Doe"
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
                     {...register('lname')}

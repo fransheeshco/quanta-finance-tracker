@@ -48,11 +48,12 @@ export const UserProvider = ({ children }: Props) => {
     }, []);
 
     const registerUser = async (
-        email: string,
         fname: string,
         lname: string,
+        email: string,
         password: string
     ) => {
+        console.log("Registering with:", { fname, lname, email, password });
         await registerAPI(fname, lname, email, password)
             .then((res) => {
                 if (res) {

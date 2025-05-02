@@ -20,10 +20,7 @@ export const loginAPI = async (email: string, password: string) => {
 export const registerAPI = async (fname: string, lname: string, email: string, password: string) => {
   try {
     const data = await axios.post<UserToken>(api + "auth" + "/signup", {
-      fname: fname,
-      lname: lname,
-      email: email,
-      password: password,
+      fname, lname, email, password
     });
     return data;
   } catch (error) {
