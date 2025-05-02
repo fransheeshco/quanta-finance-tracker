@@ -68,7 +68,11 @@ const login = async (req: Request, res: Response): Promise<any> => {
 
     // ✅ Success
     const token = generateToken(user.userID)
-    return res.status(200).json({ message: "Login successful", token });
+    return res.status(200).json({ message: "Login successful", token, user: {
+      fname: user.fname,
+      email: user.email
+    }
+   });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'An error has occured.' });

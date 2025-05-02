@@ -1,5 +1,5 @@
 import express from 'express';
-import {getUserInfo} from '../controllers/user.controllers';
+import {getUserInfo} from '../controllers/user.controller';
 import { authToken } from '../middlewares/authToken';
 
 const router = express.Router();

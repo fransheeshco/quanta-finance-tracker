@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
+import { useAuth } from '../contexts/authContext';
 
 const HomePageNavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { logout, user } = useAuth();
+
 
     return (
         <section className="h-[45vh] bg-gradient-to-r from-[#A64DFF] to-[#642E99] relative">
@@ -38,7 +41,7 @@ const HomePageNavBar = () => {
                         {isOpen && (
                             <div className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-100">
                                 <div className="px-4 py-3 text-gray-700 text-sm font-semibold border-b">
-                                    @email.com
+                                    {user?.email}
                                 </div>
                                 <div className="py-1">
                                     <NavLink
@@ -83,12 +86,12 @@ const HomePageNavBar = () => {
                                     >
                                         Transfers
                                     </NavLink>
-                                    <NavLink
-                                        to="/"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    <button
+                                        onClick={logout}
+                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     >
                                         Logout
-                                    </NavLink>
+                                    </button>
                                 </div>
                             </div>
                         )}
@@ -97,7 +100,7 @@ const HomePageNavBar = () => {
 
                 <div className='container mx-[100px] my-2 px-4 py-4'>
                     <h1 className='text-5xl text-white'>
-                        Welcome back, User!
+                        Welcome back, {user?.fname}!
                     </h1>
                     <h5 className='text-2xl text-gray-300'>
                         This is your Financial Overview Report

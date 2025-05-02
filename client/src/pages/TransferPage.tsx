@@ -11,7 +11,7 @@ const TransferPage = (props: Props) => {
         {/* Top Row */}
         <div className="flex justify-between items-center">
           <h1 className="text-4xl">Transfer History</h1>
-          <button className="bg-[#A64DFF] px-5 py-2 rounded-2xl text-white text-lg font-semibold">
+          <button className="bg-[#A64DFF] px-5 py-2 rounded-2xl text-white text-lg">
             + ADD NEW
           </button>
         </div>
@@ -29,8 +29,8 @@ const TransferPage = (props: Props) => {
         {/* Pagination */}
         <div className="flex justify-end w-full">
           <div className="flex gap-4">
-            <button className="text-white px-5 py-2 rounded-2xl text-xl font-medium bg-[#A64DFF]">Prev</button>
-            <button className="text-white px-5 py-2 rounded-2xl text-xl font-medium bg-[#A64DFF]">Next</button>
+            <button className="text-white px-5 py-2 rounded-2xl text-xl bg-[#A64DFF]">Prev</button>
+            <button className="text-white px-5 py-2 rounded-2xl text-xl bg-[#A64DFF]">Next</button>
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import express from "express";
 import { authToken } from "../middlewares/authToken";
-import { createCategory, getCategories, updateCategory, deleteCategory } from '../controllers/categories.controllers'
+import { createCategory, getCategories, updateCategory, deleteCategory } from '../controllers/categories.controller'
 
 const router = express.Router();
 

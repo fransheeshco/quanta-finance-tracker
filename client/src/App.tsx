@@ -1,40 +1,46 @@
+// src/App.tsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './App.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/ReactToastify.css';
+import { UserProvider } from './contexts/authContext';
+
+import Layouts from './components/Layouts';
 import LandingPage from './pages/LandingPage';
-import NavBar from './components/NavBar';
-import './App.css'
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import HomePage from './pages/HomePage';
-import HomePageNavBar from "./components/HomePageNavBar";
 import SavingsPage from './pages/SavingsPage';
 import IncomePage from './pages/IncomePage';
-import TransactionPage from "./pages/TransactionsPage";
+import TransactionPage from './pages/TransactionsPage';
 import BudgetsPage from './pages/BudgetsPage';
 import ExpensesPage from './pages/ExpensesPage';
 import TransferPage from './pages/TransferPage';
-
+import ProtectedRoute from './Routes/ProtectedRoutes';
 
 function App() {
-  const user = true;
   return (
-    <>
-      <BrowserRouter>
-      {user ? <HomePageNavBar /> : <NavBar />}
+    <BrowserRouter>
+      <UserProvider>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/transactions" element={<TransactionPage />} />
-          <Route path="/budgets" element={<BudgetsPage />} />
-          <Route path="/savings" element={<SavingsPage />} />
-          <Route path="/income" element={<IncomePage />} />
-          <Route path="/expenses" element={<ExpensesPage />} />
-          <Route path="/transfers" element={<TransferPage />} />
+          <Route element={<Layouts />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            
+            <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+            <Route path="/transactions" element={<ProtectedRoute><TransactionPage /></ProtectedRoute>} />
+            <Route path="/budgets" element={<ProtectedRoute><BudgetsPage /></ProtectedRoute>} />
+            <Route path="/savings" element={<ProtectedRoute><SavingsPage /></ProtectedRoute>} />
+            <Route path="/income" element={<ProtectedRoute><IncomePage /></ProtectedRoute>} />
+            <Route path="/expenses" element={<ProtectedRoute><ExpensesPage /></ProtectedRoute>} />
+            <Route path="/transfers" element={<ProtectedRoute><TransferPage /></ProtectedRoute>} />
+          </Route>
         </Routes>
-      </BrowserRouter>
-    </>
-  )
+        <ToastContainer />
+      </UserProvider>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
