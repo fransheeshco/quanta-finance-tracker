@@ -4,6 +4,7 @@ import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/ReactToastify.css';
 import { UserProvider } from './contexts/authContext';
+import { AccountProvider } from './contexts/accountContext';
 
 import Layouts from './components/Layouts';
 import LandingPage from './pages/LandingPage';
@@ -16,12 +17,14 @@ import TransactionPage from './pages/TransactionsPage';
 import BudgetsPage from './pages/BudgetsPage';
 import ExpensesPage from './pages/ExpensesPage';
 import TransferPage from './pages/TransferPage';
+import AccountsPage from './pages/AccountsPage';
 import ProtectedRoute from './Routes/ProtectedRoutes';
 
 function App() {
   return (
     <BrowserRouter>
       <UserProvider>
+        <AccountProvider>
         <Routes>
           <Route element={<Layouts />}>
             <Route path="/" element={<LandingPage />} />
@@ -35,9 +38,11 @@ function App() {
             <Route path="/income" element={<ProtectedRoute><IncomePage /></ProtectedRoute>} />
             <Route path="/expenses" element={<ProtectedRoute><ExpensesPage /></ProtectedRoute>} />
             <Route path="/transfers" element={<ProtectedRoute><TransferPage /></ProtectedRoute>} />
+            <Route path="/accounts" element={<ProtectedRoute><AccountsPage /></ProtectedRoute>} />
           </Route>
         </Routes>
         <ToastContainer />
+        </AccountProvider>
       </UserProvider>
     </BrowserRouter>
   );

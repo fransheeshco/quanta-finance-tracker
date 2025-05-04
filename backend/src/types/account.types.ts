@@ -4,6 +4,7 @@ export interface AccountAttributes {
     accountID: number;
     userID: number;
     balance: number;
+    accountType: string;
     createdAt?: Date;
     lastUpdated?: Date;
 }

@@ -23,7 +23,9 @@ export const initCategoryModel = (sequelize: Sequelize) => {
             references: {
                 model: "Accounts",
                 key: "accountID",
-            }
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
         }
     }, {
         sequelize,

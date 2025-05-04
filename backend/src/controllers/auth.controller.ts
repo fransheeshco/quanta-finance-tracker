@@ -73,6 +73,7 @@ const login = async (req: Request, res: Response): Promise<any> => {
     // ✅ Success
     const token = generateToken(user.userID)
     return res.status(200).json({ message: "Login successful", token, user: {
+      userID: user.userID,
       fname: user.fname,
       email: user.email
     }

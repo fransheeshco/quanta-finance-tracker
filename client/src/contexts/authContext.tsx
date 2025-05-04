@@ -57,20 +57,23 @@ export const UserProvider = ({ children }: Props) => {
         await registerAPI(fname, lname, email, password)
             .then((res) => {
                 if (res) {
-                    localStorage.setItem("token", res?.data.token);
                     const userObj = {
-                        fname: res?.data.user.fname,
-                        email: res?.data.user.email,
+                        userID: res.data.user.userID,  // Make sure to get the correct userID from the response
+                        fname: res.data.user.fname,
+                        email: res.data.user.email,
                     };
-                    localStorage.setItem("user", JSON.stringify(userObj));
+    
+                    localStorage.setItem("token", res?.data.token);
+                    localStorage.setItem("user", JSON.stringify(userObj));  // Save the full user object
                     setToken(res?.data.token!);
-                    setUser(userObj!);
+                    setUser(userObj);
                     toast.success("Login Success!");
                     navigate("/home");
                 }
             })
-            .catch((e) => toast.warning("Server error occured"));
+            .catch((e) => toast.warning("Server error occurred"));
     };
+    
 
     const loginUser = async (email: string, password: string) => {
         await loginAPI(email, password)
@@ -78,21 +81,24 @@ export const UserProvider = ({ children }: Props) => {
                 if (res) {
                     console.log(res.data.user.email, res.data.user.fname);
                     console.log("API Response Data:", res.data);
-
+    
                     const userObj = {
-                        fname: res?.data.user.fname,
-                        email: res?.data.user.email,
+                        userID: res.data.user.userID,  // Make sure to use the correct userID here
+                        fname: res.data.user.fname,
+                        email: res.data.user.email,
                     };
+    
                     localStorage.setItem("token", res?.data.token);
-                    localStorage.setItem("user", JSON.stringify({ email: res.data.user.email, fname: res.data.user.fname }));
+                    localStorage.setItem("user", JSON.stringify(userObj));  // Save the full user object
                     setToken(res?.data.token!);
-                    setUser(userObj!);
+                    setUser(userObj);
                     toast.success("Login Success!");
                     navigate("/home");
                 }
             })
-            .catch((e) => toast.warning("Server error occured"));
+            .catch((e) => toast.warning("Server error occurred"));
     };
+    
 
     const isLoggedIn = () => {
         return !!user;
