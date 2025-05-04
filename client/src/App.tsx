@@ -19,6 +19,7 @@ import ExpensesPage from './pages/ExpensesPage';
 import TransferPage from './pages/TransferPage';
 import AccountsPage from './pages/AccountsPage';
 import ProtectedRoute from './Routes/ProtectedRoutes';
+import CategoryPage from './pages/CategoryPage';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/signup" element={<SignUpPage />} />
             
             <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+            <Route path="/categories" element={<ProtectedRoute><CategoryPage /></ProtectedRoute>} />
             <Route path="/transactions" element={<ProtectedRoute><TransactionPage /></ProtectedRoute>} />
             <Route path="/budgets" element={<ProtectedRoute><BudgetsPage /></ProtectedRoute>} />
             <Route path="/savings" element={<ProtectedRoute><SavingsPage /></ProtectedRoute>} />

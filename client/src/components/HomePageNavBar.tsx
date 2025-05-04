@@ -57,6 +57,12 @@ const HomePageNavBar = () => {
                                         Savings
                                     </NavLink>
                                     <NavLink
+                                        to="/categories"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                        Categories
+                                    </NavLink>
+                                    <NavLink
                                         to="/expenses"
                                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     >
@@ -85,6 +91,12 @@ const HomePageNavBar = () => {
                                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     >
                                         Transfers
+                                    </NavLink>
+                                    <NavLink
+                                        to="/accounts"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                        Accounts
                                     </NavLink>
                                     <button
                                         onClick={logout}

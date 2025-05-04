@@ -2,7 +2,7 @@ import React from 'react';
 
 type Props = {}
 
-const SavingsPage = (props: Props) => {
+const CategoryPage = (props: Props) => {
     return (
         <section className="absolute top-45 left-25 z-0">
             <div className="mt-4 flex justify-center">
@@ -10,7 +10,7 @@ const SavingsPage = (props: Props) => {
 
                     {/* Top Row */}
                     <div className="flex justify-between items-center">
-                        <h1 className="text-4xl">Savings</h1>
+                        <h1 className="text-4xl">Categories</h1>
                         <button className="bg-[#A64DFF] px-5 py-2 rounded-2xl text-white text-lg">
                             + ADD NEW
                         </button>
@@ -23,7 +23,7 @@ const SavingsPage = (props: Props) => {
 
                     {/* Data Table / Entries */}
                     <div className="w-full h-[300px] bg-white border border-[#A64DFF] rounded-xl p-4">
-                        Savings Entries
+                        Category Entries
                     </div>
 
                     {/* Pagination */}
@@ -40,4 +40,4 @@ const SavingsPage = (props: Props) => {
     );
 };
 
-export default SavingsPage;
+export default CategoryPage;
