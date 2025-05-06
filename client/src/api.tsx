@@ -263,23 +263,6 @@ export const deleteExpensesAPI = async (expenseID: number, token: string) => {
   }
 }
 
-export const addTotalExpensesAPI = async (token: string) => {
-  try {
-    const response = await axios.get<GetTotalExpensesResponse>(`${api}auth/expenses/gettotalexpense`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    // Assuming the response has a `total` property inside the data
-    console.log(response)
-    return response.data.totalExpenses; // Ensure this returns a number
-  } catch (error) {
-    handleError(error);
-    return 0; // Return 0 in case of an error
-  }
-};
-
 
 export const createIncomeAPI = async (amount: number, date: Date, token: string) => {
   try {

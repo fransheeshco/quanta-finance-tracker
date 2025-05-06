@@ -11,7 +11,9 @@ const HomePage = (props: Props) => {
   const totalIncome = incomes.reduce((acc, income) => acc + income.amount, 0);
   const totalExpenses = expenses?.reduce((acc, expense) => acc + expense.amount, 0);
 
-  if (!totalExpenses || !totalIncome) return
+  if (!totalExpenses || !totalIncome) {
+    console.log("error");
+  }
 
   if (loadingIncomes || loadingExpenses) return <div>Loading...</div>;
 
