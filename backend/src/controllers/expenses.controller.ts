@@ -120,3 +120,27 @@ export const getExpenseByCategory = async (req: Request, res: Response, next: Ne
     }
 }
 
+export const addAllExpenses = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    const userID = req.userID;
+    let totalExpense = 0;
+
+    if (!userID) {
+        return res.status(401).json({message: "Unauthorized: no userID"});
+    }
+
+    try {
+        const account = await Account.findOne({where: {userID: userID}})
+        const expenses = await Expense.findAll({where: {accountID: account?.accountID}})
+        if (!expenses || expenses.length === 0) {
+              return res.status(404).json({ message: "No accounts found." });
+        }
+        for (const expense of expenses) {
+            totalExpense += parseFloat(expense.amount as unknown as string);
+        }
+
+        return res.status(200).json({ totalExpense });
+    } catch (error) {
+        return res.status(400).json({message: "Error occured KAJSHDAKJHD"});
+    }
+} 
+

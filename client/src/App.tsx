@@ -37,7 +37,7 @@ function App() {
             <SavingsProvider>
             <CategoryProvider>
               <ExpenseProvider>
-                <TransactionsProvider>
+              <TransactionsProvider>
               <BudgetProvider>
                 <Routes>
                   <Route element={<Layouts />}>

@@ -40,11 +40,17 @@ export type Expenses = {
   title: string;
   amount: number;
   categoryID: number;
+  totalExpenses: number;
   date: Date;
 }
 
 export type GetExpenseResponse = {
   expenses: Expenses[];
+  totalExpenses: number;
+}
+
+export type GetTotalExpensesResponse = {
+  totalExpenses: number;
 }
 
 export type Income = {

@@ -6,7 +6,7 @@ import {
   GetExpenseResponse, Income, GetIncomeResponse,
   Budget, GetBudgetReponse, Savings, GetSavingsResponse,
   TransactionType, GetTransactionResponse, Transactions,
-  Transfer, GetTransferReponse
+  Transfer, GetTransferReponse, GetTotalExpensesResponse
 } from "./interfaces/interfaces";
 
 const api = "http://localhost:8000/api/";
@@ -100,7 +100,7 @@ export const updateAccountAPI = async (accountID: number, token: string, balance
 };
 
 
-export const fetchAccountsAPI = async ( token: string) => {
+export const fetchAccountsAPI = async (token: string) => {
   try {
     const data = await axios.get<GetAccountsResponse>(
       `${api}auth/account/getaccounts/`, // Use the correct endpoint for fetching accounts
@@ -188,7 +188,7 @@ export const deleteCategoryAPI = async (categoryID: number, token: string) => {
 }
 
 export const createExpenseAPI = async (token: string, title: string, amount: number, date: Date, categoryID: number
-  ) => {
+) => {
   try {
     const data = await axios.post<Expenses>(
       `${api}auth/expenses/addexpenses`, {
@@ -227,7 +227,7 @@ export const getExpensesAPI = async (token: string) => {
 
 export const updateExpensesAPI = async (title: string, expenseID: number, token: string, amount: number, date: Date, categoryID: number) => {
   try {
-    const data = await axios.patch<Categories>(
+    const data = await axios.patch<Expenses>(
       `${api}auth/expenses/updateexpenses/${expenseID}`,
       {
         title,
@@ -249,7 +249,7 @@ export const updateExpensesAPI = async (title: string, expenseID: number, token:
 
 export const deleteExpensesAPI = async (expenseID: number, token: string) => {
   try {
-    const data = await axios.patch<Categories>(
+    const data = await axios.patch<Expenses>(
       `${api}auth/expenses/deleteexpense/${expenseID}`,
       {
         headers: {
@@ -262,6 +262,24 @@ export const deleteExpensesAPI = async (expenseID: number, token: string) => {
     handleError(error);
   }
 }
+
+export const addTotalExpensesAPI = async (token: string) => {
+  try {
+    const response = await axios.get<GetTotalExpensesResponse>(`${api}auth/expenses/gettotalexpense`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Assuming the response has a `total` property inside the data
+    console.log(response)
+    return response.data.totalExpenses; // Ensure this returns a number
+  } catch (error) {
+    handleError(error);
+    return 0; // Return 0 in case of an error
+  }
+};
+
 
 export const createIncomeAPI = async (amount: number, date: Date, token: string) => {
   try {

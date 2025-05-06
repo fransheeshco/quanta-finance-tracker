@@ -34,6 +34,8 @@ const IncomePage = (props: Props) => {
     }
   };
 
+  if (!incomes) return <div>Loading...</div>; // Safeguard loading state
+
   return (
     <section className="absolute top-45 left-25 z-0">
       <div className="mt-4 flex justify-center">
@@ -73,8 +75,8 @@ const IncomePage = (props: Props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentData.map((income) => (
-                    <tr key={income.incomeID} className="border-t">
+                  {currentData.map((income, index) => (
+                    <tr key={income.incomeID || index} className="border-t">
                       <td className="py-2">₱{(income.amount ?? 0).toFixed(2)}</td>
                       <td className="py-2">
                         <button
@@ -87,6 +89,7 @@ const IncomePage = (props: Props) => {
                     </tr>
                   ))}
                 </tbody>
+
               </table>
             )}
           </div>

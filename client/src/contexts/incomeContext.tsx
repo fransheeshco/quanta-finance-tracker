@@ -16,10 +16,11 @@ import { toast } from "react-toastify";
 import { useAuth } from "./authContext";
 
 type IncomeContextType = {
-  incomes: Income[] | null;
+  incomes: Income[];
   createIncome: (amount: number, date: Date) => Promise<void>;
   deleteIncome: (incomeID: number) => Promise<void>;
   fetchIncome: () => Promise<void>;
+  loading: boolean;
 };
 
 const IncomeContext = createContext<IncomeContextType | undefined>(undefined);
@@ -29,28 +30,22 @@ type Props = {
 };
 
 export const IncomeProvider = ({ children }: Props) => {
-  const [incomes, setIncomes] = useState<Income[] | null>(null);
+  const [incomes, setIncomes] = useState<Income[]>([]);
+  const [loading, setLoading] = useState(true);
   const { token } = useAuth();
 
-  // Initial fetch to get incomes
   const fetchIncome = useCallback(async () => {
-    if (!token) {
-      console.log("No token available");
-      return;
-    }
+    if (!token) return;
 
+    setLoading(true);
     try {
       const fetched = await getIncomesAPI(token);
-      if (!fetched) {
-        console.log("No incomes data returned");
-        setIncomes([]); // Fallback to an empty array
-      } else {
-        console.log(incomes);
-        setIncomes(fetched);
-      }
+      setIncomes(fetched || []);
     } catch (error) {
       console.error("Failed to fetch incomes", error);
       toast.error("Failed to fetch incomes");
+    } finally {
+      setLoading(false);
     }
   }, [token]);
 
@@ -58,47 +53,31 @@ export const IncomeProvider = ({ children }: Props) => {
     async (amount: number, date: Date) => {
       if (!token) return;
       try {
-        // Call API to create income
-        const newIncome = await createIncomeAPI(amount, date, token); // You get the actual income object here
-  
+        const newIncome = await createIncomeAPI(amount, date, token);
         if (!newIncome) {
           toast.error("Failed to add income (no data received)");
           return;
         }
-  
-        // Update local state to add new income
-        setIncomes((prevIncomes) => {
-          if (prevIncomes && Array.isArray(prevIncomes)) {
-            return [...prevIncomes, newIncome]; // Add new income to the list
-          }
-          return [newIncome]; // If prevIncomes is null or undefined, return an array with newIncome
-        });
-  
+
+        setIncomes((prev) => [...prev, newIncome]);
+        fetchIncome();
         toast.success("Income added!");
       } catch (error) {
         toast.error("Failed to add income");
       }
     },
-    [token] // Dependency array
+    [token]
   );
-  
 
-  // Delete income and update local state
   const deleteIncome = useCallback(
     async (incomeID: number) => {
       if (!token) return;
       try {
-        // Call API to delete income
         await deleteIncomeAPI(incomeID, token);
-
-        // Update local state to remove deleted income
-        setIncomes((prevIncomes) => {
-          if (prevIncomes) {
-            return prevIncomes.filter((income) => income.incomeID !== incomeID); // Remove the deleted income
-          }
-          return prevIncomes;
-        });
-
+        setIncomes((prev) =>
+          prev.filter((income) => income.incomeID !== incomeID)
+        );
+        fetchIncome();
         toast.success("Income deleted");
       } catch (error) {
         toast.error("Failed to delete income");
@@ -108,10 +87,8 @@ export const IncomeProvider = ({ children }: Props) => {
   );
 
   useEffect(() => {
-    if (token) {
-      fetchIncome();
-    }
-  }, []);
+    if (token) fetchIncome();
+  }, [fetchIncome, token]);
 
   return (
     <IncomeContext.Provider
@@ -120,6 +97,7 @@ export const IncomeProvider = ({ children }: Props) => {
         fetchIncome,
         createIncome,
         deleteIncome,
+        loading,
       }}
     >
       {children}
