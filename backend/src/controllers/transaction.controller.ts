@@ -29,7 +29,8 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
 
 export const updateTransaction = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { transactionID, transactionType, amount, date } = req.body;
+    const { transactionID } = req.params;
+    const { transactionType, amount, date } = req.body;
 
     try {
         if (!userID) {
@@ -57,7 +58,7 @@ export const updateTransaction = async (req: Request, res: Response, next: NextF
 
 export const deleteTransaction = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const {transactionID} = req.body;
+    const { transactionID } = req.params;
 
     try {
         if (!userID) {
@@ -86,7 +87,7 @@ export const getTransactions = async (req: Request, res: Response, next: NextFun
             return res.status(404).json({ message: "no account found." });
         }
         const transactions = await Transaction.findAll({where: {accountID: account.accountID }});
-        if(transactions.length === 0) {
+        if(!transactions) {
             return res.status(404).json({ message: "No transactions found." });
         }
         return res.status(200).json({message: "Transactions found:", transactions});

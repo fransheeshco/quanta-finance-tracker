@@ -5,8 +5,8 @@ import { authToken } from "../middlewares/authToken";
 const router = express.Router();
 
 router.post('/addexpenses', authToken, createExpense);
-router.patch('/updateexpenses', authToken, updateExpense);
-router.delete('/deleteexpense', authToken, deleteExpense);
+router.patch('/updateexpenses/:id', authToken, updateExpense);
+router.delete('/deleteexpense/:id', authToken, deleteExpense);
 router.get('/getexpenses', authToken, getExpense);
 router.get('/getexpenses/bycategory', authToken, getExpense);
 

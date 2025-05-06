@@ -1,52 +1,50 @@
 import React, { useState } from "react";
-import { useAccounts } from "../contexts/accountContext";
+import { useIncome } from "../contexts/incomeContext";
 import { useAuth } from "../contexts/authContext";
 
 type Props = {
   onClose: () => void;
 };
 
-const AddAccountForm = ({ onClose }: Props) => {
-  const [balance, setBalance] = useState<number>(0);
-  const [accountType, setAccountType] = useState<string>("");
-  const { createAccount } = useAccounts();
-  const { user, token } = useAuth();
+const AddIncomeForm = ({ onClose }: Props) => {
+  const [amount, setAmount] = useState<number>(0);
+  const [date, setDate] = useState<string>("");
+
+  const { createIncome } = useIncome();
+  const { token } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !token) return;
+    if (!token) return;
 
-
-    await createAccount(accountType, balance, user.userID);
+    const incomeDate = new Date(date);
+    await createIncome(amount, incomeDate);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center items-center bg-[#A64DFF] bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex justify-center bg-[#A64DFF] bg-opacity-40 items-center">
       <div className="bg-white p-6 rounded-2xl w-[400px] shadow-lg relative">
-        <h2 className="text-2xl mb-4 font-semibold text-center">Add New Account</h2>
+        <h2 className="text-2xl mb-4 font-semibold text-center">Add New Income</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="block text-sm font-semibold mb-1">Account Type</label>
+            <label className="block text-sm font-semibold mb-1">Amount</label>
             <input
-              type="text"
-              value={accountType}
-              onChange={(e) => setAccountType(e.target.value)}
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
               className="w-full p-2 border border-gray-300 rounded"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-1">Balance</label>
+            <label className="block text-sm font-semibold mb-1">Date</label>
             <input
-              type="number"
-              value={balance}
-              onChange={(e) => {
-                const value = e.target.value ? Number(e.target.value) : 0; // Sets 0 if input is empty
-                setBalance(value);
-              }}
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded"
               required
             />
@@ -73,4 +71,4 @@ const AddAccountForm = ({ onClose }: Props) => {
   );
 };
 
-export default AddAccountForm;
+export default AddIncomeForm;

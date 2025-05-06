@@ -6,7 +6,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useAcc } from "../contexts/accountContext";
+import { useAccounts } from "../contexts/accountContext";
 import { useAuth } from "../contexts/authContext";
 import AddAccountForm from "../components/AddAccountForm";
 
@@ -14,12 +14,12 @@ type Props = {};
 
 const AccountsPage = (props: Props) => {
   const { user, token } = useAuth();
-  const { accounts, getAccounts } = useAcc();
+  const { accounts, fetchAccounts } = useAccounts();
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     if (user && token) {
-      getAccounts(user.userID, token);
+      fetchAccounts();
     }
   }, [user, token]);
 

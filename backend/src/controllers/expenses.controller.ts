@@ -20,7 +20,10 @@ export const createExpense = async (req: Request, res: Response, next: NextFunct
             amount: amount,
             date: date,
         })
-        let category = await Category.findOne({where: {accountID: account.accountID, categoryID: categoryID}});
+        const category = await Category.findOne({
+            where: { accountID: account.accountID, categoryID: categoryID },
+        });
+        
         if(!category) {
             return res.status(404).json({message: "No category found."});
         }
@@ -35,7 +38,8 @@ export const createExpense = async (req: Request, res: Response, next: NextFunct
 
 export const updateExpense = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { expenseID, title, amount, date } = req.body;
+    const {expenseID} = req.params;
+    const { title, amount, date } = req.body;
 
     try {
         if (!userID) {
@@ -53,7 +57,7 @@ export const updateExpense = async (req: Request, res: Response, next: NextFunct
 
 export const deleteExpense = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { expenseID } = req.body;
+    const {expenseID} = req.params;
 
     try {
         if (!userID) {

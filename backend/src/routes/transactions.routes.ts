@@ -5,8 +5,8 @@ import { createTransaction, deleteTransaction, getTransactions, updateTransactio
 const router = express.Router();
 
 router.post('/addtransaction', authToken, createTransaction);
-router.patch('/updatetransaction', authToken, updateTransaction);
-router.delete('/deletetransaction', authToken, deleteTransaction);
-router.get('gettransactions', authToken, getTransactions);
+router.patch('/updatetransaction/:id', authToken, updateTransaction);
+router.delete('/deletetransaction/:id', authToken, deleteTransaction);
+router.get('/gettransactions', authToken, getTransactions);
 
 export default router;

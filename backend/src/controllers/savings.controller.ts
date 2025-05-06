@@ -24,7 +24,8 @@ export const createSavings = async (req: Request, res: Response, next: NextFunct
 
 export const updateSavings = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { savingID, title, goalAmount, currentAmount } = req.body;
+    const { savingID } = req.params;
+    const { title, goalAmount, currentAmount } = req.body;
 
     try {
         if (!userID) {
@@ -42,7 +43,7 @@ export const updateSavings = async (req: Request, res: Response, next: NextFunct
 
 export const deleteSavings = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { savingID } = req.body;
+    const { savingID } = req.params;
 
     try {
         if (!userID) {

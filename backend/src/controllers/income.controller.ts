@@ -54,3 +54,23 @@ export const deleteIncome = async  (req: Request, res: Response, next: NextFunct
         return res.status(500).json({ message: "could not delete income." });
     }
 }
+
+export const getIncome = async  (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    const userID = req.userID;
+    const incomeID = req.params;
+
+    try {
+        if(!userID) {
+            return res.status(401).json({message: "Unauthorized: no user id."})
+        }
+        const account = await Account.findOne({where: {userID}})
+        if(!account) {
+            return res.status(404).json({message: "No account found"});
+        }
+        const income = await Income.findAll({ where: { accountID: account.accountID } });
+        return res.status(200).json({ message: "Incomes found", income });
+    } catch (err) {
+        return res.status(500).json({ message: "could not delete income." });
+    }
+
+}
