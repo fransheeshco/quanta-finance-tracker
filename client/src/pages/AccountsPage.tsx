@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useAccounts } from "../contexts/accountContext";
 import { useAuth } from "../contexts/authContext";
 import AddAccountForm from "../components/AddAccountForm";
+import EditAccountForm from "../components/EditAccountForm";
+import { Account } from "@/interfaces/interfaces";
 
 const AccountsPage = () => {
   const { user, token } = useAuth();
   const { accounts, fetchAccounts, deleteAccount, updateAccount } = useAccounts();
 
   const [showForm, setShowForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editAccount, setEditAccount] = useState<Account | null>(null);
   const [sortKey, setSortKey] = useState<"accountType" | "balance">("balance");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(1);
@@ -28,14 +32,24 @@ const AccountsPage = () => {
     }
   };
 
-  const handleEdit = (account: any) => {
-    console.log("Edit", account);
+  const handleSave = async (
+    accountID: number,
+    balance: number,
+    accountType: string
+  ) => {
+    if (editAccount) {
+      await updateAccount(accountID, balance, accountType);
+      setShowEditForm(false); // Close the form after update
+    }
+  };
+
+  const handleEdit = (account: Account) => {
+    setEditAccount(account);
+    setShowEditForm(true);
   };
 
   const handleDelete = (id: number) => {
-    console.log("Delete account with ID:", id);
     deleteAccount(id);
-    fetchAccounts(sortKey, sortDirection, limit, page)
   };
 
   const handleNextPage = () => {
@@ -60,11 +74,6 @@ const AccountsPage = () => {
               + ADD NEW
             </button>
             {showForm && <AddAccountForm onClose={() => setShowForm(false)} />}
-          </div>
-
-          {/* Filters */}
-          <div className="w-full h-[50px] bg-white border border-[#A64DFF] rounded-xl p-4">
-            Summary / Filters
           </div>
 
           {/* Table */}
@@ -146,6 +155,15 @@ const AccountsPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Edit Account Modal */}
+      {showEditForm && editAccount && (
+        <EditAccountForm
+          account={editAccount}
+          onClose={() => setShowEditForm(false)}
+          onSave={handleSave}
+        />
+      )}
     </section>
   );
 };

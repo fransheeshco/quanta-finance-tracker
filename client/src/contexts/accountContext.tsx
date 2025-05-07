@@ -86,7 +86,7 @@ export const AccountProvider = ({ children }: Props) => {
     async (accountID: number, balance: number, accountType: string) => {
       if (!token) return;
       try {
-        await updateAccountAPI(accountID, token, balance, accountType);
+         await updateAccountAPI(accountID, token, balance, accountType);
         toast.success("Account updated.");
         await fetchAccounts();
       } catch (error) {
