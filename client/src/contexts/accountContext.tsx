@@ -18,7 +18,7 @@ import { useAuth } from "./authContext";
 
 type AccountContextType = {
   accounts: Account[] | undefined;
-  fetchAccounts: () => Promise<void>;
+  fetchAccounts: (sortBy?: string, sortDirection?: "asc" | "desc", limit?: number, page?: number) => Promise<void>;
   createAccount: (accountType: string, balance: number, userID: number) => Promise<void>;
   deleteAccount: (accountID: number) => Promise<void>;
   updateAccount: (accountID: number, balance: number, accountType: string) => Promise<void>;
@@ -34,25 +34,32 @@ export const AccountProvider = ({ children }: Props) => {
   const [accounts, setAccounts] = useState<Account[] | undefined>(undefined);
   const { user, token } = useAuth();
 
-  const fetchAccounts = useCallback(async () => {
-    if (!token) return;
-    try {
-      const response = await fetchAccountsAPI(token);
-      if (response) setAccounts(response);
-    } catch (error) {
-      toast.error("Failed to fetch accounts.");
-    }
-  }, [token]);
+  const fetchAccounts = useCallback(
+    async (
+      sortBy: string = "balance",
+      sortDirection: "asc" | "desc" = "asc",
+      limit: number = 5,
+      page: number = 1
+    ) => {
+      if (!token) return;
+      try {
+        const response = await fetchAccountsAPI(token, sortBy, sortDirection, limit, page);
+        if (response) setAccounts(response);
+      } catch (error) {
+        toast.error("Failed to fetch accounts.");
+      }
+    },
+    [token]
+  );
 
   const createAccount = useCallback(
     async (accountType: string, balance: number, userID: number) => {
       if (!token) return;
-  
       try {
         const newAccount = await createAccountAPI(accountType, balance, userID, token);
         if (newAccount) {
           toast.success("Account created successfully.");
-          await fetchAccounts(); // re-fetch to keep it synced
+          await fetchAccounts(); // default sort & limit
         }
       } catch (error) {
         toast.error("Failed to create account.");

@@ -65,7 +65,7 @@ export const createAccountAPI = async (
 export const deleteAccountAPI = async (accountID: number, token: string,) => {
   try {
     const data = await axios.delete<Account>(
-      `${api}auth/accounts/deleteaccount/${accountID}`,
+      `${api}auth/account/deleteaccount/${accountID}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -82,7 +82,7 @@ export const deleteAccountAPI = async (accountID: number, token: string,) => {
 export const updateAccountAPI = async (accountID: number, token: string, balance: number, accountType: string) => {
   try {
     const data = await axios.patch<Account>(
-      `${api}auth/accounts/updateaccount/${accountID}`,
+      `${api}auth/account/updateaccount/${accountID}`,
       {
         balance,
         accountType,
@@ -100,22 +100,36 @@ export const updateAccountAPI = async (accountID: number, token: string, balance
 };
 
 
-export const fetchAccountsAPI = async (token: string) => {
+export const fetchAccountsAPI = async (
+  token: string,
+  sortBy: string = 'balance',
+  sortDirection: 'asc' | 'desc' = 'asc',
+  limit: number = 5,
+  page: number = 1
+) => {
   try {
-    const data = await axios.get<GetAccountsResponse>(
-      `${api}auth/account/getaccounts/`, // Use the correct endpoint for fetching accounts
+    const response = await axios.get<GetAccountsResponse>(
+      `${api}auth/account/getaccounts`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: {
+          sortBy,
+          sortDirection,
+          limit,
+          page,
+        },
       }
     );
-    console.log(data)
-    return data.data.accounts;  // Return the fetched data
+
+    console.log(response.data);
+    return response.data.accounts;
   } catch (error) {
     handleError(error);
   }
 };
+
 
 export const createCategoryAPI = async (categoryName: string, token: string) => {
   try {

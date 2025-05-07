@@ -54,7 +54,7 @@ const HomePage = (props: Props) => {
 
           {/* All Statistics */}
           <div className="w-[400px] h-[400px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
-            <h4 className="text-3xl">All Statistics</h4>
+            <h4 className="text-3xl">Categories</h4>
           </div>
         </div>
       </div>

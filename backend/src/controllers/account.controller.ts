@@ -74,7 +74,19 @@ export const updateAccount = async (req: Request, res: Response): Promise<any> =
   }
 };
 
+import { Op } from 'sequelize';
+
 export const getAccounts = async (req: Request, res: Response): Promise<any> => {
+  const {
+    page = 1,
+    limit = 10,
+    sortBy = 'accountType',
+    sortDirection = 'asc',
+    accountType, // filter param (example)
+    minBalance,  // optional filter
+    maxBalance   // optional filter
+  } = req.query;
+
   const userID = req.userID || req.params.id;
 
   try {
@@ -82,13 +94,32 @@ export const getAccounts = async (req: Request, res: Response): Promise<any> => 
       return res.status(401).json({ message: "Unauthorized: No user ID." });
     }
 
-    const accounts = await Account.findAll({ where: { userID: userID } });
-    if (!accounts) {
-      return res.status(404).json({ message: "No accounts found." });
+    const offset = (Number(page) - 1) * Number(limit);
+
+    // Create filter object
+    const filters: any = { userID };
+
+    if (accountType) {
+      filters.accountType = accountType;
     }
-    return res.status(200).json({ message: "accounts found:", accounts });
+
+    if (minBalance || maxBalance) {
+      filters.balance = {};
+      if (minBalance) filters.balance[Op.gte] = Number(minBalance);
+      if (maxBalance) filters.balance[Op.lte] = Number(maxBalance);
+    }
+
+    const accounts = await Account.findAll({
+      where: filters,
+      order: [[String(sortBy), String(sortDirection).toUpperCase()]],
+      limit: Number(limit),
+      offset
+    });
+
+    return res.status(200).json({ message: "Accounts found", accounts });
   } catch (err) {
-    return res.status(404).json({ message: "error retrieving accounts." });
+    console.error(err);
+    return res.status(500).json({ message: "Error retrieving accounts." });
   }
 }
 
@@ -118,4 +149,3 @@ export const totalBalance = async (req: Request, res: Response): Promise<any> =>
     return res.status(401).json({ message: "Could not complete task." })
   }
 }
-
