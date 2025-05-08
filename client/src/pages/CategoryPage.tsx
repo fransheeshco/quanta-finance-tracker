@@ -2,24 +2,26 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/authContext";
 import { useCategory } from "../contexts/categoryContext";
 import AddCategoryForm from "../components/AddCategoryForm";
+import EditCategoryForm from "../components/EditCategoriesForm"; // Import the new EditCategoryForm
 
 type Props = {};
 
 const CategoryPage = (props: Props) => {
   const { user, token } = useAuth();
-  const { categories, fetchCategories } = useCategory();
+  const { categories, fetchCategories, editCategory, removeCategory } = useCategory();
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false); // State for edit form
+  const [selectedCategory, setSelectedCategory] = useState<any>(null); // Store the selected category to edit
   const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
-  if (user && token && !hasFetched) {
-    fetchCategories();
-    setHasFetched(true); // Ensures fetch happens only once
-  }
-}, [user, token, hasFetched, fetchCategories]);
-
+    if (user && token && !hasFetched) {
+      fetchCategories();
+      setHasFetched(true); // Ensures fetch happens only once
+    }
+  }, [user, token, hasFetched, fetchCategories]);
 
   const totalPages = Math.ceil((categories?.length ?? 0) / pageSize);
   const currentData =
@@ -34,6 +36,18 @@ const CategoryPage = (props: Props) => {
   const handleNextPage = () => {
     if (currentPage + 1 < totalPages) {
       setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handleEditCategory = (category: any) => {
+    setSelectedCategory(category); // Set the category to edit
+    setIsEditFormOpen(true); // Open the edit form
+  };
+
+  const handleDeleteCategory = async (categoryID: number) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      await removeCategory(categoryID); // Call the deleteCategory function from the context
+      fetchCategories(); // Re-fetch categories after deletion
     }
   };
 
@@ -58,6 +72,16 @@ const CategoryPage = (props: Props) => {
             </div>
           )}
 
+          {isEditFormOpen && selectedCategory && (
+            <div className="fixed inset-0 z-50 flex justify-center items-center bg-gray-500 bg-opacity-50">
+              <EditCategoryForm
+                category={selectedCategory}
+                onClose={() => setIsEditFormOpen(false)}
+                onSave={editCategory} // Pass onSave to the EditCategoryForm
+              />
+            </div>
+          )}
+
           {/* Summary / Filters */}
           <div className="w-full h-[50px] bg-white border border-[#A64DFF] rounded-xl p-4">
             Summary / Filters
@@ -72,12 +96,27 @@ const CategoryPage = (props: Props) => {
                 <thead>
                   <tr>
                     <th className="py-2">Category Name</th>
+                    <th className="py-2">Actions</th> {/* Add actions column for edit */}
                   </tr>
                 </thead>
                 <tbody>
                   {currentData.map((cat, index) => (
                     <tr key={index} className="border-t">
                       <td className="py-2">{cat.categoryName}</td>
+                      <td className="py-2">
+                        <button
+                          onClick={() => handleEditCategory(cat)}
+                          className="bg-[#A64DFF] px-4 py-2 text-white rounded-2xl"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteCategory(cat.categoryID)}
+                          className="bg-[#A64DFF] px-4 py-2 text-white rounded-2xl"
+                        >
+                          Delete
+                        </button>
+                      </td> {/* Edit and delete buttons */}
                     </tr>
                   ))}
                 </tbody>

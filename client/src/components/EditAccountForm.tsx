@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Account } from "@/interfaces/interfaces";
+import { useAccounts } from "@/contexts/accountContext";
 
 type Props = {
   account: Account;
   onClose: () => void;
-  onSave: (accountID: number, balance: number, accountType: string) => Promise<void>;
+  onSave: (accountID: number, balance: number, accountType: string) => Promise<void>; // Add onSave here
 };
 
 const EditAccountForm = ({ account, onClose, onSave }: Props) => {
@@ -14,7 +15,7 @@ const EditAccountForm = ({ account, onClose, onSave }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!accountType) return alert("Please enter a valid account type.");
-    await onSave(account.accountID, balance, accountType); // Await the save
+    await onSave(account.accountID, balance, accountType); // Call onSave instead of updateAccount
     onClose(); // Close after the save completes
   };
 

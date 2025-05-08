@@ -54,25 +54,38 @@ export const deleteAccount = async (req: Request, res: Response): Promise<any> =
 
 export const updateAccount = async (req: Request, res: Response): Promise<any> => {
   const userID = req.userID;
-  const { balance } = req.body;
-  const { id: accountID } = req.params;
+  const { balance, accountType } = req.body;
+  const { id } = req.params;  // Directly access accountID from params
 
   try {
+    // Check if userID exists
     if (!userID) {
       return res.status(401).json({ message: "Unauthorized: No user ID." });
     }
 
-    const account = await Account.findByPk(accountID);
+    // Find account by ID
+    const account = await Account.findByPk(id);
+
     if (!account) {
       return res.status(404).json({ message: "Account not found." });
     }
 
+    // Update the account balance and accountType
+    await account.update({ balance, accountType });
+
+    // Assuming you have a function for updating the account balance
     const updatedAcc = await updateAccountBalance(account.accountID, balance);
+
     return res.status(200).json({ message: "Account updated successfully", updatedAcc });
   } catch (err) {
-    return res.status(400).json({ message: "Could not update account." });
+    console.error("Error updating account:", err);
+    return res.status(400).json({
+      message: "Could not update account.",
+      err
+    });
   }
 };
+
 
 import { Op } from 'sequelize';
 

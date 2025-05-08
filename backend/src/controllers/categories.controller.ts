@@ -43,7 +43,6 @@ export const deleteCategory = async (req: Request, res: Response, next: NextFunc
     const userID = req.userID;
     const categoryID = req.params.id;
 
-
     try {
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." })

@@ -188,7 +188,7 @@ export const updateCategoryAPI = async (categoryName: string, categoryID: number
 export const deleteCategoryAPI = async (categoryID: number, token: string) => {
   try {
     const data = await axios.delete<Categories>(
-      `${api}auth/category/${categoryID}`,
+      `${api}auth/category/deletecategory/${categoryID}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
