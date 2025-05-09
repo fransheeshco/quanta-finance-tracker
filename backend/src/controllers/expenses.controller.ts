@@ -38,7 +38,7 @@ export const createExpense = async (req: Request, res: Response, next: NextFunct
 
 export const updateExpense = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const {expenseID} = req.params;
+    const {id : expenseID} = req.params;
     const { title, amount, date } = req.body;
 
     try {
@@ -46,8 +46,14 @@ export const updateExpense = async (req: Request, res: Response, next: NextFunct
             return res.status(401).json({ message: "Unauthorized: No user ID." })
         }
         const expense = await Expense.findByPk(expenseID);
+        console.log('Retrieved Expense:', expense); 
+        console.log('User ID:', userID);
+        console.log('Expense ID:', expenseID);
+        if (!expense) {
+            return res.status(401).json({message: "expense not found"});
+        }
         await expense?.update({
-            title: title, amount: amount, date: date
+            title, amount, date
         })
         return res.status(201).json({ message: "Expense updated successfully.", expense });
     } catch (err) {
@@ -57,7 +63,7 @@ export const updateExpense = async (req: Request, res: Response, next: NextFunct
 
 export const deleteExpense = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const {expenseID} = req.params;
+    const {id : expenseID} = req.params;
 
     try {
         if (!userID) {

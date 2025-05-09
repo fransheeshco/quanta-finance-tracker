@@ -29,7 +29,7 @@ export const createTransaction = async (req: Request, res: Response, next: NextF
 
 export const updateTransaction = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { transactionID } = req.params;
+    const { id : transactionID } = req.params;
     const { transactionType, amount, date } = req.body;
 
     try {
@@ -58,7 +58,7 @@ export const updateTransaction = async (req: Request, res: Response, next: NextF
 
 export const deleteTransaction = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { transactionID } = req.params;
+    const { id : transactionID } = req.params;
 
     try {
         if (!userID) {

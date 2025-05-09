@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTransactions } from "../contexts/transactionsContext";
+import { useExpenses } from "@/contexts/expenseContext";
 import AddTransactionForm from "../components/AddTransactionForm"; // Import the form you want to use
 
 type Props = {};
@@ -12,7 +13,7 @@ const TransactionsPage = (props: Props) => {
 
   useEffect(() => {
     fetchTransactions();
-  }, [fetchTransactions]);
+  }, []);
 
   const handleDelete = (transactionID: number) => {
     deleteTransactions(transactionID);

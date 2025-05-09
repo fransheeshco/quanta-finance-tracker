@@ -5,8 +5,8 @@ import { createSavings, deleteSavings, getSavings, updateSavings } from "../cont
 const router = express.Router();
 
 router.post('/addsavings', authToken, createSavings);
-router.patch('/updatesavings', authToken, updateSavings);
-router.delete('/deletesavings', authToken, deleteSavings);
+router.patch('/updatesavings/:id', authToken, updateSavings);
+router.delete('/deletesavings/:id', authToken, deleteSavings);
 router.get('/getsavings', authToken, getSavings);
 
 export default router;

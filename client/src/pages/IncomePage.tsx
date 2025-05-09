@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Income } from "../interfaces/interfaces";
 import { useIncome } from "../contexts/incomeContext";
 import AddIncomeForm from "../components/AddIncome";
+import EditIncomeForm from "../components/EditIncomeForm";
 
 type Props = {};
 
@@ -10,6 +11,8 @@ const IncomePage = (props: Props) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [selectedIncome, setSelectedIncome] = useState<Income | null>(null);
 
   useEffect(() => {
     fetchIncome();
@@ -19,8 +22,20 @@ const IncomePage = (props: Props) => {
     deleteIncome(incomeID);
   };
 
+  const handleEdit = (income: Income) => {
+    setSelectedIncome(income);
+    setIsEditFormOpen(true);
+  };
+
+  const handleSave = async (incomeID: number, amount: number) => {
+    // Here you would typically call an `updateIncome` function from context
+    // e.g., await updateIncome(incomeID, amount);
+    await fetchIncome(); // Refresh income list
+  };
+
   const totalPages = Math.ceil((incomes?.length ?? 0) / pageSize);
-  const currentData = incomes?.slice(currentPage * pageSize, (currentPage + 1) * pageSize) ?? [];
+  const currentData =
+    incomes?.slice(currentPage * pageSize, (currentPage + 1) * pageSize) ?? [];
 
   const handlePrevPage = () => {
     if (currentPage > 0) {
@@ -34,7 +49,7 @@ const IncomePage = (props: Props) => {
     }
   };
 
-  if (!incomes) return <div>Loading...</div>; // Safeguard loading state
+  if (!incomes) return <div>Loading...</div>;
 
   return (
     <section className="absolute top-45 left-25 z-0">
@@ -55,6 +70,14 @@ const IncomePage = (props: Props) => {
             <div className="fixed inset-0 z-50 flex justify-center items-center">
               <AddIncomeForm onClose={() => setIsFormOpen(false)} />
             </div>
+          )}
+
+          {isEditFormOpen && selectedIncome && (
+            <EditIncomeForm
+              income={selectedIncome}
+              onClose={() => setIsEditFormOpen(false)}
+              onSave={handleSave}
+            />
           )}
 
           {/* Summary / Filters */}
@@ -78,7 +101,13 @@ const IncomePage = (props: Props) => {
                   {currentData.map((income, index) => (
                     <tr key={income.incomeID || index} className="border-t">
                       <td className="py-2">₱{(income.amount ?? 0).toFixed(2)}</td>
-                      <td className="py-2">
+                      <td className="py-2 flex gap-2">
+                        <button
+                          onClick={() => handleEdit(income)}
+                          className="bg-blue-500 text-white px-4 py-1 rounded-2xl"
+                        >
+                          Edit
+                        </button>
                         <button
                           onClick={() => handleDelete(income.incomeID)}
                           className="bg-red-500 text-white px-4 py-1 rounded-2xl"
@@ -89,7 +118,6 @@ const IncomePage = (props: Props) => {
                     </tr>
                   ))}
                 </tbody>
-
               </table>
             )}
           </div>

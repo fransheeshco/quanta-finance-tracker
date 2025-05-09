@@ -24,7 +24,7 @@ export const createSavings = async (req: Request, res: Response, next: NextFunct
 
 export const updateSavings = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { savingID } = req.params;
+    const { id : savingID } = req.params;
     const { title, goalAmount, currentAmount } = req.body;
 
     try {
@@ -43,13 +43,16 @@ export const updateSavings = async (req: Request, res: Response, next: NextFunct
 
 export const deleteSavings = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { savingID } = req.params;
+    const { id : savingID } = req.params;
 
     try {
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." });
         }
         const savings = await Saving.findByPk(savingID);
+        if (!savings) {
+            return res.status(401).json({message: "No savings found"})
+        }
         await savings?.destroy();
         return res.status(204).json({ message: "Transaction deleted successfully." });
     } catch (err) {

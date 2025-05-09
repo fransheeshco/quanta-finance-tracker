@@ -11,6 +11,7 @@ import {
   createIncomeAPI,
   deleteIncomeAPI,
   getIncomesAPI,
+  updateIncomeAPI
 } from "../api";
 import { toast } from "react-toastify";
 import { useAuth } from "./authContext";
@@ -20,6 +21,7 @@ type IncomeContextType = {
   createIncome: (amount: number, date: Date) => Promise<void>;
   deleteIncome: (incomeID: number) => Promise<void>;
   fetchIncome: () => Promise<void>;
+  updateIncome: (incomeID: number, amount: number) => Promise<void>;
   loading: boolean;
 };
 
@@ -86,6 +88,27 @@ export const IncomeProvider = ({ children }: Props) => {
     [token]
   );
 
+  const updateIncome = useCallback(
+    async (incomeID: number, amount: number) => {
+      if (!token) return;
+      try {
+        const updated = await updateIncomeAPI(token, amount, incomeID);
+  
+        setIncomes((prev) =>
+          prev.map((income) =>
+            income.incomeID === incomeID ? { ...income, amount } : income
+          )
+        );
+  
+        toast.success("Income updated!");
+      } catch (error) {
+        toast.error("Failed to update income");
+      }
+    },
+    [token]
+  );
+  
+
   useEffect(() => {
     if (token) fetchIncome();
   }, [fetchIncome, token]);
@@ -97,6 +120,7 @@ export const IncomeProvider = ({ children }: Props) => {
         fetchIncome,
         createIncome,
         deleteIncome,
+        updateIncome,
         loading,
       }}
     >

@@ -40,7 +40,9 @@ export const initExpenseModel = (sequelize: Sequelize) => {
             references: {
                 model: "Transactions",
                 key: "transactionID",
-            }
+            },
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
         },
         title: {
             type: DataTypes.STRING,

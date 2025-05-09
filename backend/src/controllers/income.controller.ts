@@ -34,7 +34,7 @@ export const addIncome = async (req: Request, res: Response, next: NextFunction)
 
 export const deleteIncome = async  (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { incomeID } = req.body;
+    const { id:incomeID } = req.body;
 
     try {
         if(!userID) {
@@ -57,7 +57,6 @@ export const deleteIncome = async  (req: Request, res: Response, next: NextFunct
 
 export const getIncome = async  (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const incomeID = req.params;
 
     try {
         if(!userID) {
@@ -73,4 +72,24 @@ export const getIncome = async  (req: Request, res: Response, next: NextFunction
         return res.status(500).json({ message: "could not delete income." });
     }
 
+}
+
+export const updateIncome = async  (req: Request, res: Response): Promise<any> => {
+    const userID = req.userID;
+    const {amount} = req.body;
+    const {id: incomeID} = req.params;
+
+    try {
+        if(!userID) {
+            return res.status(401).json({message: "Unauthorized: no user id."})
+        }
+        const income = await Income.findByPk(incomeID);
+        if (!income) {
+            return res.status(404).json({message: "No income found"});
+        }
+        await income.update({amount})
+        return res.status(200).json({ message: "Incomes found", income });
+    } catch (err) {
+        return res.status(500).json({ message: "could not delete income.", err });
+    }
 }

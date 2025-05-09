@@ -246,7 +246,7 @@ export const updateExpensesAPI = async (title: string, expenseID: number, token:
       {
         title,
         amount,
-        date: date.toISOString(),
+        date: date.toISOString().split('T')[0],
         categoryID
       },
       {
@@ -263,7 +263,7 @@ export const updateExpensesAPI = async (title: string, expenseID: number, token:
 
 export const deleteExpensesAPI = async (expenseID: number, token: string) => {
   try {
-    const data = await axios.patch<Expenses>(
+    const data = await axios.delete<Expenses>(
       `${api}auth/expenses/deleteexpense/${expenseID}`,
       {
         headers: {
@@ -284,7 +284,7 @@ export const createIncomeAPI = async (amount: number, date: Date, token: string)
       `${api}auth/income/addincome`,
       {
         amount,
-        date
+        date: date.toISOString().split('T')[0],
       },
       {
         headers: {
@@ -301,22 +301,13 @@ export const createIncomeAPI = async (amount: number, date: Date, token: string)
 export const getIncomesAPI = async (token: string) => {
   try {
     const data = await axios.get<GetIncomeResponse>(
-      `${api}auth/income/getincomes`,
+      `${api}auth/income/getincomes/`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
-
-    // Log the full response to inspect it
-    console.log("Full API Response:", data);
-
-    // Now accessing the 'income' field instead of 'incomes'
-    if (!data.data || !data.data.income) {
-      console.error("No 'income' field found in response:", data.data);
-      return [];
-    }
 
     return data.data.income;  // Accessing the singular 'income' array
   } catch (error) {
@@ -343,6 +334,25 @@ export const deleteIncomeAPI = async (incomeID: number, token: string) => {
   }
 }
 
+export const updateIncomeAPI =async (token:string, amount: number, incomeID: number) => {
+  try {
+    const data = await axios.patch<Income>(
+      `${api}auth/income/updateincome/${incomeID}`,
+      {
+        amount
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+}
+
 export const createBudgetAPI = async (token: string, budgetName: string, amount: number, startDate: Date, endDate: Date) => {
   try {
     const data = await axios.post<Budget>(
@@ -350,8 +360,8 @@ export const createBudgetAPI = async (token: string, budgetName: string, amount:
       {
         budgetName,
         amount,
-        startDate,
-        endDate
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
       },
       {
         headers: {
@@ -384,12 +394,12 @@ export const deleteBudgetAPI = async (token: string, budgetID: number) => {
 export const updateBudgetAPI = async (token: string, budgetID: number, budgetName: string, amount: number, endDate: Date, startDate: Date) => {
   try {
     const data = await axios.patch<Budget>(
-      `${api}auth/budgets/createbudget/${budgetID}`,
+      `${api}auth/budgets/updatebudget/${budgetID}`,
       {
         budgetName,
         amount,
-        endDate,
-        startDate
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
       },
       {
         headers: {

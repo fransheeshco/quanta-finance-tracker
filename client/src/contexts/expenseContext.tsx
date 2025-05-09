@@ -60,7 +60,7 @@ export const ExpenseProvider = ({ children }: Props) => {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
   const createExpense = useCallback(
     async (
@@ -78,7 +78,7 @@ export const ExpenseProvider = ({ children }: Props) => {
         toast.error("Failed to add expenses.");
       }
     },
-    [token, fetchExpenses]
+    []
   );
 
   const updateExpense = useCallback(
@@ -92,12 +92,7 @@ export const ExpenseProvider = ({ children }: Props) => {
       if (!token) return;
       try {
         await updateExpensesAPI(
-          token,
-          expenseID,
-          title,
-          amount,
-          date,
-          categoryID
+          title, expenseID, token, amount, date, categoryID 
         );
         await fetchExpenses();
         toast.success("Expense updated!");
@@ -105,7 +100,7 @@ export const ExpenseProvider = ({ children }: Props) => {
         toast.error("Failed to update expense.");
       }
     },
-    [token, fetchExpenses]
+    []
   );
 
   const deleteExpenses = useCallback(
@@ -119,7 +114,7 @@ export const ExpenseProvider = ({ children }: Props) => {
         toast.error("Failed to delete expense.");
       }
     },
-    [token, fetchExpenses]
+    []
   );
 
   const getTotalExpenses = useCallback(() => {
@@ -130,7 +125,7 @@ export const ExpenseProvider = ({ children }: Props) => {
     if (user && token) {
       fetchExpenses();
     }
-  }, [user, token, fetchExpenses]);
+  }, []);
 
   const contextValue = useMemo(
     () => ({

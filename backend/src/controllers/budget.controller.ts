@@ -24,7 +24,8 @@ export const createBudget = async (req: Request, res: Response, next: NextFuncti
 
 export const updateBudget = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { budgetID, budgetName, amount, startDate, endDate } = req.body;
+    const { budgetName, amount, startDate, endDate } = req.body;
+    const { id : budgetID } = req.params;
 
     try {
         if (!userID) {
@@ -52,7 +53,7 @@ export const updateBudget = async (req: Request, res: Response, next: NextFuncti
 
 export const deleteBudget = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { budgetID } = req.body;
+    const { id : budgetID } = req.params;
 
     try {
         if (!userID) {

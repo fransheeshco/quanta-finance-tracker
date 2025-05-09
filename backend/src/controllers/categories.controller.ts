@@ -41,7 +41,7 @@ export const getCategories = async (req: Request, res: Response, next: NextFunct
 
 export const deleteCategory = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const categoryID = req.params.id;
+    const {id : categoryID} = req.params;
 
     try {
         if (!userID) {
@@ -64,7 +64,7 @@ export const deleteCategory = async (req: Request, res: Response, next: NextFunc
 
 export const updateCategory = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const categoryID = req.params.id;
+    const {id : categoryID} = req.params;
     const { categoryName } = req.body;
 
     try {

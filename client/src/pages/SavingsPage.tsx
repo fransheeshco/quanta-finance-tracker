@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Savings } from "../interfaces/interfaces";
 import { useSavings } from "../contexts/savingsContext";
 import AddSavingsForm from "../components/AddSavingsForm";
+import EditSavingsForm from "../components/EditSavingsForm"; // Import the EditSavingsForm
 
 type Props = {};
 
@@ -10,6 +11,8 @@ const SavingsPage = (props: Props) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [editingSaving, setEditingSaving] = useState<Savings | null>(null); // State to track which saving is being edited
 
   useEffect(() => {
     fetchSavings();
@@ -17,6 +20,11 @@ const SavingsPage = (props: Props) => {
 
   const handleDelete = (savingID: number) => {
     deleteSavings(savingID);
+  };
+
+  const handleEdit = (saving: Savings) => {
+    setEditingSaving(saving);
+    setIsEditFormOpen(true); // Open the edit form
   };
 
   const totalPages = Math.ceil((savings?.length ?? 0) / pageSize);
@@ -49,9 +57,20 @@ const SavingsPage = (props: Props) => {
             </button>
           </div>
 
+          {/* Add Savings Form */}
           {isFormOpen && (
             <div className="fixed inset-0 z-50 flex justify-center items-center">
               <AddSavingsForm onClose={() => setIsFormOpen(false)} />
+            </div>
+          )}
+
+          {/* Edit Savings Form */}
+          {isEditFormOpen && editingSaving && (
+            <div className="fixed inset-0 z-50 flex justify-center items-center">
+              <EditSavingsForm
+                saving={editingSaving}
+                onClose={() => setIsEditFormOpen(false)} // Close the form
+              />
             </div>
           )}
 
@@ -82,7 +101,13 @@ const SavingsPage = (props: Props) => {
                       <td className="py-2">{saving.title}</td>
                       <td className="py-2">₱{saving.goalAmount.toFixed(2)}</td>
                       <td className="py-2">₱{saving.currentAmount.toFixed(2)}</td>
-                      <td className="py-2">
+                      <td className="py-2 flex gap-2">
+                        <button
+                          onClick={() => handleEdit(saving)} // Open the edit form with the selected saving
+                          className="bg-blue-500 text-white px-4 py-1 rounded-2xl"
+                        >
+                          Edit
+                        </button>
                         <button
                           onClick={() => handleDelete(saving.savingID)}
                           className="bg-red-500 text-white px-4 py-1 rounded-2xl"
