@@ -116,10 +116,11 @@ const CategoryPage = (props: Props) => {
                         >
                           Delete
                         </button>
-                      </td> {/* Edit and delete buttons */}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
+
               </table>
             )}
           </div>

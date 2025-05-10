@@ -1,6 +1,7 @@
 import { Next } from "mysql2/typings/mysql/lib/parsers/typeCast";
 import { Category, User, Account } from "../models/associationblock";
 import { Request, Response, NextFunction } from "express";
+import { buildQueryOptions } from '../utils/sortingAndFilterUtils';
 
 export const createCategory = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID
@@ -28,16 +29,43 @@ export const getCategories = async (req: Request, res: Response, next: NextFunct
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." });
         }
-        const account = await Account.findOne({where:  {userID: userID}});
+
+        const page = Number(req.query.page) || 1;
+        const limit = 5;
+        const offset = (page - 1) * limit;
+
+        const filters = {
+            categoryName: req.query.categoryName,
+        };
+
+        const sortField = (req.query.sortField as string) || 'createdAt';
+        const sortDirection = req.query.sortBy === 'asc' || req.query.sortBy === 'desc' ? req.query.sortBy : 'desc';
+
+        const sort: Record<string, 'asc' | 'desc'> = {
+            [sortField]: sortDirection,
+        };
+
+        const account = await Account.findOne({ where: { userID } });
         if (!account) {
-            return res.status(404).json({message: "Account not found"})
+            return res.status(404).json({ message: "Account not found" });
         }
-        const categories = await Category.findAll({ where: { accountID: account.accountID } });
-        return res.status(200).json({ message: "Categories", categories })
+
+        const { where, order } = buildQueryOptions({ filters, sort });
+        where.accountID = account.accountID;
+
+        const categories = await Category.findAll({
+            where,
+            order,
+            limit,
+            offset,
+        });
+
+        return res.status(200).json({ message: "Categories found", categories });
     } catch (err) {
-        return res.status(401).json({ message: "could not retrieve categories" });
+        console.error(err);
+        return res.status(500).json({ message: "Could not retrieve categories" });
     }
-}
+};
 
 export const deleteCategory = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;

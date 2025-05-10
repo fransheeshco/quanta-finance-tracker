@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Budget, Account } from "../models/associationblock";
+import { buildQueryOptions } from "../utils/sortingAndFilterUtils"
 
 export const createBudget = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
@@ -25,7 +26,7 @@ export const createBudget = async (req: Request, res: Response, next: NextFuncti
 export const updateBudget = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
     const { budgetName, amount, startDate, endDate } = req.body;
-    const { id : budgetID } = req.params;
+    const { id: budgetID } = req.params;
 
     try {
         if (!userID) {
@@ -53,7 +54,7 @@ export const updateBudget = async (req: Request, res: Response, next: NextFuncti
 
 export const deleteBudget = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { id : budgetID } = req.params;
+    const { id: budgetID } = req.params;
 
     try {
         if (!userID) {
@@ -84,16 +85,42 @@ export const getBudgets = async (req: Request, res: Response, next: NextFunction
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." });
         }
-        const account = await Account.findOne({ where: { userID: userID } });
+
+        const account = await Account.findOne({ where: { userID } });
         if (!account) {
-            return res.status(404).json({ message: "Account not found" })
+            return res.status(404).json({ message: "Account not found" });
         }
-        const budgets = await Budget.findAll({ where: { accountID: account.accountID } })
-        if (!budgets) {
+
+        const page = Number(req.query.page) || 1;
+        const limit = 5;
+        const offset = (page - 1) * limit;
+
+        const filters = {
+            budgetName: req.query.budgetName
+        };
+
+        const sortDirection = req.query.sortBy === 'asc' || req.query.sortBy === 'desc' ? req.query.sortBy : 'asc';
+
+        const sort: Record<string, 'asc' | 'desc'> = {
+            budgetName: sortDirection,
+        };
+
+        const { where, order } = buildQueryOptions({ filters, sort });
+        where.accountID = account.accountID;
+
+        const budgets = await Budget.findAll({
+            where,
+            order,
+            limit,
+            offset
+        });
+
+        if (!budgets || budgets.length === 0) {
             return res.status(404).json({ message: "No budgets found." });
         }
+
         return res.status(200).json({ message: "Budgets found:", budgets });
     } catch (err) {
-        return res.status(401).json({ message: "could not retrieve categories" });
+        return res.status(500).json({ message: "Could not retrieve budgets", error: err });
     }
-}
+};

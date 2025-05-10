@@ -60,7 +60,7 @@ export const TransactionsProvider = ({ children }: Props) => {
     const updateTransactions =  async (transactionID: number, transactionType: TransactionType, amount: number, date: Date) => {
         if(!token) return
         try {
-            await updateTransactionAPI(token, transactionType, transactionID, date, amount);
+            await updateTransactionAPI(token, transactionType , amount, date, transactionID);
             await fetchTransactions();
             toast.success("Successfully updated transaction");
         } catch (error) {

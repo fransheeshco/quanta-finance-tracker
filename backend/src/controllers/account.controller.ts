@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { updateAccountBalance } from "../utils/updateAccountUtils";
 import { Account } from "../models/associationblock";
 
+
 export const addAccount = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   const userID = req.userID;
   const { balance, accountType } = req.body;

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTransactions } from "../contexts/transactionsContext";
-import { useExpenses } from "@/contexts/expenseContext";
-import AddTransactionForm from "../components/AddTransactionForm"; // Import the form you want to use
+import { useNavigate } from "react-router-dom";
+import AddTransactionForm from "../components/AddTransactionForm";
+import EditTransactionsForm from "../components/EditTrasactionForm";
 
 type Props = {};
 
@@ -10,13 +11,21 @@ const TransactionsPage = (props: Props) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false); // To control the edit form visibility
+  const [editTransactionID, setEditTransactionID] = useState<number | null>(null); // Store the transactionID to edit
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchTransactions();
-  }, []);
+  }, [fetchTransactions]);
 
   const handleDelete = (transactionID: number) => {
     deleteTransactions(transactionID);
+  };
+
+  const handleEdit = (transactionID: number) => {
+    setEditTransactionID(transactionID); // Store the ID of the transaction to be edited
+    setIsEditOpen(true); // Open the edit modal/page
   };
 
   const totalPages = Math.ceil((transactions?.length ?? 0) / pageSize);
@@ -32,6 +41,11 @@ const TransactionsPage = (props: Props) => {
     if (currentPage + 1 < totalPages) {
       setCurrentPage((prev) => prev + 1);
     }
+  };
+
+  const handleCloseEditForm = () => {
+    setIsEditOpen(false); // Close the edit form
+    setEditTransactionID(null); // Reset the edit transaction ID
   };
 
   return (
@@ -53,6 +67,21 @@ const TransactionsPage = (props: Props) => {
           {isFormOpen && (
             <div className="fixed inset-0 z-50 flex justify-center items-center">
               <AddTransactionForm onClose={() => setIsFormOpen(false)} />
+            </div>
+          )}
+
+          {/* Edit Transaction Modal/Page */}
+          {isEditOpen && editTransactionID !== null && (
+            <div className="fixed inset-0 z-50 flex justify-center items-center">
+              {isEditOpen && editTransactionID !== null && (
+                <div className="fixed inset-0 z-50 flex justify-center items-center">
+                  <EditTransactionsForm
+                    transaction={transactions?.find(t => t.transactionID === editTransactionID)!}
+                    onClose={handleCloseEditForm}
+                  />
+                </div>
+              )}
+
             </div>
           )}
 
@@ -82,6 +111,12 @@ const TransactionsPage = (props: Props) => {
                       <td className="py-2">₱{transaction.amount.toFixed(2)}</td>
                       <td className="py-2">{new Date(transaction.date).toLocaleDateString()}</td>
                       <td className="py-2">
+                        <button
+                          onClick={() => handleEdit(transaction.transactionID)} // Open Edit page for this transaction
+                          className="bg-blue-500 text-white px-4 py-1 rounded-2xl"
+                        >
+                          Edit
+                        </button>
                         <button
                           onClick={() => handleDelete(transaction.transactionID)}
                           className="bg-red-500 text-white px-4 py-1 rounded-2xl"

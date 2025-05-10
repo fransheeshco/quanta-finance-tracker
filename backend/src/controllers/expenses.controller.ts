@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { Expense, Transaction, Category, Account } from "../models/associationblock";
 import { TransactionType } from "../types/transactions.types";
+import { buildQueryOptions } from '../utils/sortingAndFilterUtils';
+
+
 
 export const createExpense = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
@@ -85,24 +88,56 @@ export const deleteExpense = async (req: Request, res: Response, next: NextFunct
 
 export const getExpense = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    
+
     try {
         if (!userID) {
-            return res.status(401).json({ message: "Unauthorized: No user ID." })
+            return res.status(401).json({ message: "Unauthorized: No user ID." });
         }
-        const account = await Account.findOne({where:  {userID: userID}});
+
+        const account = await Account.findOne({ where: { userID } });
+
         if (!account) {
-            return res.status(404).json({message: "Account not found"})
+            return res.status(404).json({ message: "Account not found" });
         }
-        const expenses = await Expense.findAll({where: {accountID: account.accountID}});
-        if(!expenses) {
+
+        // Pagination setup
+        const page = Number(req.query.page) || 1;
+        const limit = 5;
+        const offset = (page - 1) * limit;
+
+        // Build filters using query params
+        const filters = {
+            title: req.query.title,
+            categoryID: req.query.categoryID,
+        };
+        const sortField = (req.query.sortField as string) || 'createdAt';
+        const sortDirection = req.query.sortBy === 'asc' || req.query.sortBy === 'desc' ? req.query.sortBy : 'desc';
+        
+        const sort: Record<string, 'asc' | 'desc'> = {
+            [sortField]: sortDirection,
+        };
+
+        // Include accountID so user only sees their own data
+        const { where, order } = buildQueryOptions({ filters, sort });
+        where.accountID = account.accountID;
+
+        const expenses = await Expense.findAll({
+            where,
+            order,
+            limit,
+            offset
+        });
+
+        if (!expenses || expenses.length === 0) {
             return res.status(404).json({ message: "No expenses found." });
         }
-        return res.status(200).json({message: "Expenses found:", expenses});
+
+        return res.status(200).json({ message: "Expenses found", expenses, page });
     } catch (err) {
-        return res.status(500).json({ message: "could not get expenses." });
+        return res.status(500).json({ message: "Could not get expenses." });
     }
-}
+};
+
 
 export const getExpenseByCategory = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
