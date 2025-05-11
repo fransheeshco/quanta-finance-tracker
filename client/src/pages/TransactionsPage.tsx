@@ -7,45 +7,64 @@ import EditTransactionsForm from "../components/EditTrasactionForm";
 type Props = {};
 
 const TransactionsPage = (props: Props) => {
-  const { transactions, fetchTransactions, deleteTransactions } = useTransactions();
-  const [currentPage, setCurrentPage] = useState(0);
+  const {
+    transactions,
+    transactionCount,
+    fetchTransactions,
+    deleteTransactions,
+  } = useTransactions();
+
+  const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
+  const [filterType, setFilterType] = useState<"all" | "income" | "expense">("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false); // To control the edit form visibility
-  const [editTransactionID, setEditTransactionID] = useState<number | null>(null); // Store the transactionID to edit
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editTransactionID, setEditTransactionID] = useState<number | null>(null);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchTransactions();
-  }, [fetchTransactions]);
+    const filters: any = {
+      page: currentPage,
+      limit: pageSize,
+    };
+
+    if (filterType !== "all") {
+      filters.transactionType = filterType;
+    }
+
+    fetchTransactions(filters);
+  }, [currentPage, pageSize, filterType, fetchTransactions]);
 
   const handleDelete = (transactionID: number) => {
     deleteTransactions(transactionID);
   };
 
   const handleEdit = (transactionID: number) => {
-    setEditTransactionID(transactionID); // Store the ID of the transaction to be edited
-    setIsEditOpen(true); // Open the edit modal/page
+    setEditTransactionID(transactionID);
+    setIsEditOpen(true);
   };
 
-  const totalPages = Math.ceil((transactions?.length ?? 0) / pageSize);
-  const currentData = transactions?.slice(currentPage * pageSize, (currentPage + 1) * pageSize) ?? [];
+  const handleSortByAmount = () => {
+    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+  };
+
+  const totalPages = Math.ceil(transactionCount / pageSize);
+  const sortedData = [...(transactions ?? [])].sort((a, b) =>
+    sortOrder === "asc" ? a.amount - b.amount : b.amount - a.amount
+  );
 
   const handlePrevPage = () => {
-    if (currentPage > 0) {
+    if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
     }
   };
 
   const handleNextPage = () => {
-    if (currentPage + 1 < totalPages) {
+    if (currentPage < totalPages) {
       setCurrentPage((prev) => prev + 1);
     }
-  };
-
-  const handleCloseEditForm = () => {
-    setIsEditOpen(false); // Close the edit form
-    setEditTransactionID(null); // Reset the edit transaction ID
   };
 
   return (
@@ -63,6 +82,26 @@ const TransactionsPage = (props: Props) => {
             </button>
           </div>
 
+          {/* Filter Buttons */}
+          <div className="flex gap-4">
+            {["all", "income", "expense"].map((type) => (
+              <button
+                key={type}
+                onClick={() => {
+                  setCurrentPage(1);
+                  setFilterType(type as "all" | "income" | "expense");
+                }}
+                className={`px-4 py-1 rounded-2xl border ${
+                  filterType === type
+                    ? "bg-[#A64DFF] text-white"
+                    : "text-[#A64DFF] border-[#A64DFF]"
+                }`}
+              >
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </button>
+            ))}
+          </div>
+
           {/* Add Transaction Form Modal */}
           {isFormOpen && (
             <div className="fixed inset-0 z-50 flex justify-center items-center">
@@ -70,25 +109,17 @@ const TransactionsPage = (props: Props) => {
             </div>
           )}
 
-          {/* Edit Transaction Modal/Page */}
+          {/* Edit Transaction Modal */}
           {isEditOpen && editTransactionID !== null && (
             <div className="fixed inset-0 z-50 flex justify-center items-center">
-              {isEditOpen && editTransactionID !== null && (
-                <div className="fixed inset-0 z-50 flex justify-center items-center">
-                  <EditTransactionsForm
-                    transaction={transactions?.find(t => t.transactionID === editTransactionID)!}
-                    onClose={handleCloseEditForm}
-                  />
-                </div>
-              )}
-
+              <EditTransactionsForm
+                transaction={transactions?.find(
+                  (t) => t.transactionID === editTransactionID
+                )!}
+                onClose={() => setIsEditOpen(false)}
+              />
             </div>
           )}
-
-          {/* Summary / Filters */}
-          <div className="w-full h-[50px] bg-white border border-[#A64DFF] rounded-xl p-4">
-            Summary / Filters
-          </div>
 
           {/* Table */}
           <div className="w-full min-h-[300px] bg-white border border-[#A64DFF] rounded-xl p-4 overflow-x-auto">
@@ -99,21 +130,28 @@ const TransactionsPage = (props: Props) => {
                 <thead>
                   <tr>
                     <th className="py-2">Type</th>
-                    <th className="py-2">Amount</th>
+                    <th
+                      className="py-2 cursor-pointer select-none"
+                      onClick={handleSortByAmount}
+                    >
+                      Amount {sortOrder === "asc" ? "↑" : "↓"}
+                    </th>
                     <th className="py-2">Date</th>
                     <th className="py-2">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {currentData.map((transaction) => (
+                  {sortedData.map((transaction) => (
                     <tr key={transaction.transactionID} className="border-t">
                       <td className="py-2">{transaction.transactionType}</td>
                       <td className="py-2">₱{transaction.amount.toFixed(2)}</td>
-                      <td className="py-2">{new Date(transaction.date).toLocaleDateString()}</td>
+                      <td className="py-2">
+                        {new Date(transaction.date).toLocaleDateString()}
+                      </td>
                       <td className="py-2">
                         <button
-                          onClick={() => handleEdit(transaction.transactionID)} // Open Edit page for this transaction
-                          className="bg-blue-500 text-white px-4 py-1 rounded-2xl"
+                          onClick={() => handleEdit(transaction.transactionID)}
+                          className="bg-blue-500 text-white px-4 py-1 rounded-2xl mr-2"
                         >
                           Edit
                         </button>
@@ -134,20 +172,20 @@ const TransactionsPage = (props: Props) => {
           {/* Pagination Controls */}
           <div className="flex justify-between items-center w-full px-2">
             <span className="text-sm text-gray-600">
-              Page {currentPage + 1} of {totalPages}
+              Page {currentPage} of {totalPages}
             </span>
             <div className="flex gap-4">
               <button
                 className="text-white px-5 py-2 rounded-2xl text-xl bg-[#A64DFF] disabled:opacity-40"
                 onClick={handlePrevPage}
-                disabled={currentPage === 0}
+                disabled={currentPage === 1}
               >
                 Prev
               </button>
               <button
                 className="text-white px-5 py-2 rounded-2xl text-xl bg-[#A64DFF] disabled:opacity-40"
                 onClick={handleNextPage}
-                disabled={currentPage + 1 >= totalPages}
+                disabled={currentPage >= totalPages}
               >
                 Next
               </button>

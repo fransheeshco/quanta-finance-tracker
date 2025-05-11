@@ -12,7 +12,7 @@ import {
   deleteCategoryAPI,
   updateCategoryAPI,
   getCategoriesAPI,
-} from "../api";
+} from "../api/CategoriesAPI";
 import { toast } from "react-toastify";
 import { useAuth } from "./authContext";
 
@@ -37,12 +37,20 @@ export const CategoryProvider = ({ children }: Props) => {
   const fetchCategories = useCallback(async () => {
     if (!token) return;
     try {
-      const fetched = await getCategoriesAPI(token);
-      if (fetched) setCategories(fetched);
+      const response = await getCategoriesAPI({
+        token, // Pass token
+        sortField: "categoryID", // Default sort field
+        sortBy: "asc", // Default sort direction
+        page: 1, // Default page number
+      });
+      if (response) {
+        setCategories(response); // Set the rows directly from the response
+      }
     } catch (err) {
       toast.error("Failed to fetch categories");
     }
   }, [token]);
+  
 
   const addCategory = async (categoryName: string) => {
     if (!token) return;

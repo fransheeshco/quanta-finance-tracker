@@ -1,34 +1,24 @@
 import React, { useState } from "react";
 import { useBudgets } from "../contexts/budgetsContext";
+import { Budget } from "../interfaces/interfaces";
 
 interface EditBudgetFormProps {
-  budgetID: number;
-  budgetName: string;
-  amount: number;
-  startDate: string; // string because input[type="date"] expects string
-  endDate: string;
+  budget: Budget;
   onClose: () => void;
 }
 
-const EditBudgetForm: React.FC<EditBudgetFormProps> = ({
-  budgetID,
-  budgetName,
-  amount,
-  startDate,
-  endDate,
-  onClose,
-}) => {
+const EditBudgetForm: React.FC<EditBudgetFormProps> = ({ budget, onClose }) => {
   const { editBudget } = useBudgets();
 
-  const [name, setName] = useState(budgetName);
-  const [budgetAmount, setBudgetAmount] = useState(amount);
-  const [start, setStart] = useState(startDate);
-  const [end, setEnd] = useState(endDate);
+  const [name, setName] = useState(budget.budgetName);
+  const [budgetAmount, setBudgetAmount] = useState(budget.amount);
+  const [start, setStart] = useState(budget.startDate.slice(0, 10)); // Ensure it's formatted for input[type="date"]
+  const [end, setEnd] = useState(budget.endDate.slice(0, 10));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await editBudget(
-      budgetID,
+      budget.budgetID,
       name,
       budgetAmount,
       new Date(start),

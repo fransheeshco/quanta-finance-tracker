@@ -126,14 +126,14 @@ export const getTransactions = async (
       const { where, order } = buildQueryOptions({ filters, sort });
       where.accountID = account.accountID;
   
-      const transactions = await Transaction.findAll({
+      const transactions = await Transaction.findAndCountAll({
         where,
         order,
         limit,
         offset,
       });
   
-      return res.status(200).json({ message: "Transactions found.", transactions });
+      return res.status(200).json({ message: "transactions: ", transactions });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ message: "Could not retrieve transactions.", err });

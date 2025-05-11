@@ -121,22 +121,42 @@ export const getExpense = async (req: Request, res: Response, next: NextFunction
         const { where, order } = buildQueryOptions({ filters, sort });
         where.accountID = account.accountID;
 
-        const expenses = await Expense.findAll({
+        console.log("Where:", where);  // Debugging where
+        console.log("Order:", order);  // Debugging order
+
+        const { rows, count } = await Expense.findAndCountAll({
             where,
             order,
             limit,
-            offset
+            offset,
+            include: [
+                {
+                  model: Category,
+                  attributes: ['categoryName'], // Only include the name
+                },
+              ],
+            
         });
 
-        if (!expenses || expenses.length === 0) {
+        console.log("Rows:", rows);  // Check what rows are returned
+        console.log("Count:", count);  // Check the count
+
+        if (!rows || rows.length === 0) {
             return res.status(404).json({ message: "No expenses found." });
         }
 
-        return res.status(200).json({ message: "Expenses found", expenses, page });
+        return res.status(200).json({ 
+            message: "Expenses found", 
+            expenses: rows,      // renamed to match expectation
+            count,               // this is your expenseCount
+            page 
+        });
     } catch (err) {
+        console.error(err);  // Log any errors
         return res.status(500).json({ message: "Could not get expenses." });
     }
 };
+
 
 
 export const getExpenseByCategory = async (req: Request, res: Response, next: NextFunction): Promise<any> => {

@@ -1,19 +1,40 @@
-import React, { createContext, useEffect, useState, ReactNode, useContext } from "react";
-import { Budget } from "../interfaces/interfaces";
+import React, {
+  createContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useContext,
+} from "react";
+import { Budget, GetBudgetResponse } from "../interfaces/interfaces";
 import {
   createBudgetAPI,
   deleteBudgetAPI,
   updateBudgetAPI,
   getBudgetAPI,
-} from "../api";
+} from "../api/BudgetsAPI";
 import { toast } from "react-toastify";
 import { useAuth } from "./authContext";
 
 type BudgetTypeContext = {
   budgets: Budget[] | null;
-  fetchBudgets: () => Promise<void>;
-  addBudget: (budgetName: string, amount: number, startDate: Date, endDate: Date) => Promise<void>;
-  editBudget: (budgetID: number, budgetName: string, amount: number, endDate: Date, startDate: Date) => Promise<void>;
+  fetchBudgets: (
+    page?: number,
+    sortField?: string,
+    sortBy?: "asc" | "desc"
+  ) => Promise<void>;
+  addBudget: (
+    budgetName: string,
+    amount: number,
+    startDate: Date,
+    endDate: Date
+  ) => Promise<void>;
+  editBudget: (
+    budgetID: number,
+    budgetName: string,
+    amount: number,
+    startDate: Date,
+    endDate: Date
+  ) => Promise<void>;
   removeBudget: (budgetID: number) => Promise<void>;
 };
 
@@ -27,18 +48,39 @@ export const BudgetProvider = ({ children }: Props) => {
   const [budgets, setBudgets] = useState<Budget[] | null>(null);
   const { token } = useAuth();
 
-  const fetchBudgets = async () => {
+  const fetchBudgets = async (
+    page: number = 1,
+    sortField: string = "budgetName",
+    sortBy: "asc" | "desc" = "asc"
+  ) => {
     if (!token) return;
     try {
-      const fetched = await getBudgetAPI(token);
-      if (fetched) setBudgets(fetched);
+      const fetched = await getBudgetAPI({
+        token,
+        sortField,
+        sortBy,
+        page,
+      });
+      setBudgets(fetched.budgets);
+      console.log("Total number of budgets:", fetched.count);      
     } catch (err) {
+      console.error('Error fetching budgets:', err);  // Log the error to the console
       toast.error("Failed to fetch budgets");
     }
   };
+  
+  
+  
+  
 
-  const addBudget = async (budgetName: string, amount: number, startDate: Date, endDate: Date) => {
+  const addBudget = async (
+    budgetName: string,
+    amount: number,
+    startDate: Date,
+    endDate: Date
+  ) => {
     if (!token) return;
+
     try {
       await createBudgetAPI(token, budgetName, amount, startDate, endDate);
       await fetchBudgets();
@@ -48,10 +90,24 @@ export const BudgetProvider = ({ children }: Props) => {
     }
   };
 
-  const editBudget = async (budgetID: number, budgetName: string, amount: number, endDate: Date, startDate: Date) => {
+  const editBudget = async (
+    budgetID: number,
+    budgetName: string,
+    amount: number,
+    startDate: Date,
+    endDate: Date
+  ) => {
     if (!token) return;
+
     try {
-      await updateBudgetAPI(token, budgetID, budgetName, amount, endDate, startDate);
+      await updateBudgetAPI(
+        token,
+        budgetID,
+        budgetName,
+        amount,
+        startDate,
+        endDate
+      );
       await fetchBudgets();
       toast.success("Budget updated!");
     } catch {
@@ -61,6 +117,7 @@ export const BudgetProvider = ({ children }: Props) => {
 
   const removeBudget = async (budgetID: number) => {
     if (!token) return;
+
     try {
       await deleteBudgetAPI(token, budgetID);
       await fetchBudgets();
@@ -74,7 +131,7 @@ export const BudgetProvider = ({ children }: Props) => {
     if (token) {
       fetchBudgets();
     }
-  }, []);
+  }, [token]);
 
   return (
     <BudgetContext.Provider
@@ -91,7 +148,6 @@ export const BudgetProvider = ({ children }: Props) => {
   );
 };
 
-// ✅ Stable and HMR-friendly hook export
 export const useBudgets = (): BudgetTypeContext => {
   const context = useContext(BudgetContext);
   if (!context) {

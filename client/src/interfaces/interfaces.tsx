@@ -29,11 +29,19 @@ export type GetAccountsResponse = {
 export type Categories = {
   categoryName: string;
   categoryID: number;
+  accountID: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type GetCategoriesResponse = {
-  categories: Categories[];
+  message: string;
+  categories: {
+    count: number;
+    rows: Categories[];
+  }
 }
+
 
 export type Expenses = {
   expenseID: number;
@@ -42,12 +50,17 @@ export type Expenses = {
   categoryID: number;
   totalExpenses: number;
   date: Date;
+  Category?: Categories;
 }
 
 export type GetExpenseResponse = {
-  expenses: Expenses[];
-  totalExpenses: number;
+  message: string;
+  expenses: {
+    count: number;
+    rows: Expenses[]; // Directly assign expenses array to rows
+  };
 }
+
 
 export type GetTotalExpensesResponse = {
   totalExpenses: number;
@@ -64,15 +77,22 @@ export type GetIncomeResponse = {
 
 export type Budget = {
   budgetID: number;
+  accountID: number;
   budgetName: string;
   amount: number;
-  endDate: Date;
-  startDate: Date;
-}
+  startDate: string;
+  endDate: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
-export type GetBudgetReponse = {
+export type GetBudgetResponse = {
+  message: string;
+  count: number;
   budgets: Budget[];
-}
+};
+
+
 
 export type Savings = {
   savingID: number;
@@ -96,10 +116,14 @@ export type Transactions = {
   transactionType: TransactionType;
   amount: number;
   date: Date;
-}
+};
 
 export type GetTransactionResponse = {
-  transactions: Transactions[];
+  message: string;
+  transactions: {
+    count: number;
+    rows: Transactions[]; // This is an array of the actual transaction objects
+  };
 }
 
 export type Transfer = {

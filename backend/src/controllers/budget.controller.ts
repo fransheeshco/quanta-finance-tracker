@@ -108,18 +108,23 @@ export const getBudgets = async (req: Request, res: Response, next: NextFunction
         const { where, order } = buildQueryOptions({ filters, sort });
         where.accountID = account.accountID;
 
-        const budgets = await Budget.findAll({
+        const budgets = await Budget.findAndCountAll({
             where,
             order,
             limit,
             offset
         });
 
-        if (!budgets || budgets.length === 0) {
+        if (!budgets || budgets.count === 0) {
             return res.status(404).json({ message: "No budgets found." });
         }
 
-        return res.status(200).json({ message: "Budgets found:", budgets });
+        // Return the proper structure with count and rows
+        return res.status(200).json({
+            message: "Budgets found:",
+            count: budgets.count,
+            budgets: budgets.rows // Return only the actual rows (budgets)
+        });
     } catch (err) {
         return res.status(500).json({ message: "Could not retrieve budgets", error: err });
     }

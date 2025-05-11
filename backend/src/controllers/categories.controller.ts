@@ -53,7 +53,7 @@ export const getCategories = async (req: Request, res: Response, next: NextFunct
         const { where, order } = buildQueryOptions({ filters, sort });
         where.accountID = account.accountID;
 
-        const categories = await Category.findAll({
+        const categories = await Category.findAndCountAll({
             where,
             order,
             limit,

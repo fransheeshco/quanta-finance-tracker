@@ -4,7 +4,7 @@ import {
   UserToken, Account, GetAccountsResponse,
   Categories, GetCategoriesResponse, Expenses,
   GetExpenseResponse, Income, GetIncomeResponse,
-  Budget, GetBudgetReponse, Savings, GetSavingsResponse,
+  Budget, GetBudgetResponse, Savings, GetSavingsResponse,
   TransactionType, GetTransactionResponse, Transactions,
   Transfer, GetTransferReponse, GetTotalExpensesResponse
 } from "./interfaces/interfaces";
