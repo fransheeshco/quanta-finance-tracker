@@ -1,6 +1,7 @@
 import React, {
   createContext,
   useEffect,
+  useCallback,
   useState,
   ReactNode,
   useContext,
@@ -48,29 +49,29 @@ export const BudgetProvider = ({ children }: Props) => {
   const [budgets, setBudgets] = useState<Budget[] | null>(null);
   const { token } = useAuth();
 
-  const fetchBudgets = async (
-    page: number = 1,
-    sortField: string = "budgetName",
-    sortBy: "asc" | "desc" = "asc"
-  ) => {
-    if (!token) return;
-    try {
-      const fetched = await getBudgetAPI({
-        token,
-        sortField,
-        sortBy,
-        page,
-      });
-      setBudgets(fetched.budgets);
-      console.log("Total number of budgets:", fetched.count);      
-    } catch (err) {
-      console.error('Error fetching budgets:', err);  // Log the error to the console
-      toast.error("Failed to fetch budgets");
-    }
-  };
-  
-  
-  
+  const fetchBudgets = useCallback(
+    async (
+      page: number = 1,
+      sortField: string = "budgetName",
+      sortBy: "asc" | "desc" = "asc"
+    ) => {
+      if (!token) return;
+      try {
+        const fetched = await getBudgetAPI({
+          token,
+          sortField,
+          sortBy,
+          page,
+        });
+        setBudgets(fetched.budgets);
+        console.log("Total number of budgets:", fetched.count);
+      } catch (err) {
+        console.error("Error fetching budgets:", err);
+        toast.error("Failed to fetch budgets");
+      }
+    },
+    [token] // <— depends only on token
+  );
   
 
   const addBudget = async (

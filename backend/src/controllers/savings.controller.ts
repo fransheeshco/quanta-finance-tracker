@@ -94,7 +94,7 @@ export const getSavings = async (req: Request, res: Response, next: NextFunction
         const { where, order } = buildQueryOptions({ filters, sort });
         where.accountID = account.accountID;
 
-        const savings = await Saving.findAll({
+        const savings = await Saving.findAndCountAll({
             where,
             order,
             limit,

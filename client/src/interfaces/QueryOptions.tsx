@@ -25,3 +25,12 @@ export interface GetBudgetsOptions {
   sortBy?: 'asc' | 'desc';
   page?: number;
 }
+
+// interfaces/QueryOptions.ts
+export interface GetSavingsOptions {
+  token?: string;
+  limit?: number;
+  sortField?: string;
+  sortBy?: 'asc' | 'desc';
+  page?: number;
+}

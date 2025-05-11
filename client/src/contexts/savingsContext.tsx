@@ -1,130 +1,147 @@
 import React, {
-    createContext,
-    useEffect,
-    useState,
-    useCallback,
-    useContext,
-    ReactNode,
-  } from "react";
-  import { Savings } from "../interfaces/interfaces";
-  import {
-    createSavingsAPI,
-    deleteSavingsAPI,
-    updateSavingsAPI,
-    getSavingsAPI,
-  } from "../api";
-  import { toast } from "react-toastify";
-  import { useAuth } from "./authContext";
-  
-  type SavingsContextType = {
-    savings: Savings[] | null;
-    fetchSavings: () => Promise<void>;
-    createSavings: (
-      title: string,
-      goalAmount: number,
-      currentAmount: number
-    ) => Promise<void>;
-    deleteSavings: (savingID: number) => Promise<void>;
-    updateSavings: (
-      title: string,
-      goalAmount: number,
-      currentAmount: number,
-      savingID: number
-    ) => Promise<void>;
-  };
-  
-  type Props = {
-    children: ReactNode;
-  };
-  
-  const SavingsContext = createContext<SavingsContextType | undefined>(undefined);
-  
-  export const useSavings = () => {
-    const context = useContext(SavingsContext);
-    if (!context) {
-      throw new Error("useSavings must be used within a SavingsProvider");
+  createContext,
+  useEffect,
+  useState,
+  useContext,
+  ReactNode,
+} from "react";
+import { Savings } from "../interfaces/interfaces";
+import { GetSavingsOptions } from "@/interfaces/QueryOptions";
+import {
+  createSavingsAPI,
+  deleteSavingsAPI,
+  updateSavingsAPI,
+  getSavingsAPI,
+} from "../api/SavingsAPI";
+import { toast } from "react-toastify";
+import { useAuth } from "./authContext";
+
+type SavingsContextType = {
+  savings: Savings[] | undefined;
+  savingsCount: number;
+  fetchSavings: (options?: GetSavingsOptions) => Promise<Savings[] | null | undefined>;
+  createSavings: (title: string, goalAmount: number, currentAmount: number) => Promise<void>;
+  deleteSavings: (savingID: number) => Promise<void>;
+  updateSavings: (savingID: number, title: string, goalAmount: number, currentAmount: number) => Promise<void>;
+};
+
+const SavingsContext = createContext<SavingsContextType | undefined>(undefined);
+
+type Props = {
+  children: ReactNode;
+};
+
+export const SavingsProvider = ({ children }: Props) => {
+  const [savings, setSavings] = useState<Savings[] | undefined>(undefined);
+  const [savingsCount, setSavingsCount] = useState(0);
+  const { token } = useAuth();
+
+  const fetchSavings = async (
+    options: GetSavingsOptions = {}
+  ): Promise<Savings[] | null | undefined> => {
+    if (!token) {
+      toast.error("Token is missing.");
+      return;
     }
-    return context;
+
+    try {
+      const response = await getSavingsAPI({ ...options, token });
+      if (!response) return;
+
+      setSavings(response);
+      setSavingsCount(response.length);
+
+      return response;
+    } catch (error) {
+      console.error("Error fetching savings:", error);
+      toast.error("Error fetching savings");
+      return null;
+    }
   };
-  
-  export const SavingsProvider = ({ children }: Props) => {
-    const [savings, setSavings] = useState<Savings[] | null>(null);
-    const { token } = useAuth();
-  
-    const fetchSavings = async () => {
-      if (!token) return;
-      try {
-        const savingsData = await getSavingsAPI(token);
-        if (savingsData) setSavings(savingsData);
-      } catch (err) {
-        toast.error("Failed to fetch savings.");
-      }
-    };
-  
-    const createSavings = async (
-      title: string,
-      goalAmount: number,
-      currentAmount: number
-    ) => {
-      if (!token) return;
-      try {
-        const saving = await createSavingsAPI(
-          token,
-          title,
-          goalAmount,
-          currentAmount
-        );
-        if (saving) {
-          await fetchSavings();
-          toast.success("Savings added!");
-        }
-      } catch (err) {
-        toast.error("Could not create savings.");
-      }
-    };
-  
-    const deleteSavings = async (savingID: number) => {
-      if (!token) return;
-      try {
-        await deleteSavingsAPI(token, savingID);
-        await fetchSavings();
-        toast.success("Savings deleted.");
-      } catch (err) {
-        toast.error("Could not delete savings.");
-      }
-    };
-  
-    const updateSavings = useCallback(
-      async (
-        title: string,
-        goalAmount: number,
-        currentAmount: number,
-        savingID: number
-      ) => {
-        if (!token) return;
-        try {
-          await updateSavingsAPI(token, title, goalAmount, currentAmount, savingID);
-          await fetchSavings();
-          toast.success("Savings updated.");
-        } catch (err) {
-          toast.error("Could not update savings.");
-        }
-      },
-      [token, fetchSavings]
-    );
-  
-    useEffect(() => {
-      if (token) {
-        fetchSavings();
-      }
-    }, []);
-  
-    return (
-      <SavingsContext.Provider
-        value={{ savings, fetchSavings, createSavings, deleteSavings, updateSavings }}
-      >
-        {children}
-      </SavingsContext.Provider>
-    );
+
+  const createSavings = async (
+    title: string,
+    goalAmount: number,
+    currentAmount: number
+  ) => {
+    if (!token) {
+      toast.error("Token is missing.");
+      return;
+    }
+
+    try {
+      await createSavingsAPI(token, title, goalAmount, currentAmount);
+      toast.success("Successfully created savings");
+      await fetchSavings();
+    } catch (error) {
+      console.error(error);
+      toast.error("Could not create savings.");
+    }
   };
-  
+
+  const updateSavings = async (
+    savingID: number,
+    title: string,
+    goalAmount: number,
+    currentAmount: number
+  ) => {
+    if (!token) {
+      toast.error("Token is missing.");
+      return;
+    }
+
+    try {
+      await updateSavingsAPI(token, title, goalAmount, currentAmount, savingID);
+      toast.success("Successfully updated savings");
+      await fetchSavings();
+    } catch (error) {
+      console.error(error);
+      toast.error("Could not update savings.");
+    }
+  };
+
+  const deleteSavings = async (savingID: number) => {
+    if (!token) {
+      toast.error("Token is missing.");
+      return;
+    }
+
+    try {
+      await deleteSavingsAPI(token, savingID);
+      toast.success("Savings deleted.");
+      await fetchSavings();
+    } catch (error) {
+      console.error(error);
+      toast.error("Could not delete savings.");
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchSavings();
+    }
+  }, [token]);
+
+  return (
+    <SavingsContext.Provider
+      value={{
+        savings,
+        savingsCount,
+        fetchSavings,
+        createSavings,
+        deleteSavings,
+        updateSavings,
+      }}
+    >
+      {children}
+    </SavingsContext.Provider>
+  );
+};
+
+export const useSavings = (): SavingsContextType => {
+  const context = useContext(SavingsContext);
+  if (!context) {
+    throw new Error("useSavings must be used within a SavingsProvider");
+  }
+  return context;
+};

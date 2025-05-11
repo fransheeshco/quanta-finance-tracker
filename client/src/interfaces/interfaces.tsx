@@ -93,17 +93,24 @@ export type GetBudgetResponse = {
 };
 
 
-
 export type Savings = {
   savingID: number;
+  accountID: number; // Include this if you need it
   title: string;
-  goalAmount: number; 
+  goalAmount: number;
   currentAmount: number;
-}
+  createdAt: string;
+  updatedAt: string;
+  rows: number;
+};
 
 export type GetSavingsResponse = {
-  savings: Savings[];
-}
+  savings: {
+    count: number;
+    rows: Savings[]; // The savings are stored inside `rows`
+  };
+};
+
 
 export enum TransactionType {
   INCOME = 'income',

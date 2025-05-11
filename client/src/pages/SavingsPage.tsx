@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Savings } from "../interfaces/interfaces";
 import { useSavings } from "../contexts/savingsContext";
 import AddSavingsForm from "../components/AddSavingsForm";
-import EditSavingsForm from "../components/EditSavingsForm"; // Import the EditSavingsForm
+import EditSavingsForm from "../components/EditSavingsForm";
 
 type Props = {};
 
@@ -27,8 +27,11 @@ const SavingsPage = (props: Props) => {
     setIsEditFormOpen(true); // Open the edit form
   };
 
-  const totalPages = Math.ceil((savings?.length ?? 0) / pageSize);
-  const currentData = savings?.slice(currentPage * pageSize, (currentPage + 1) * pageSize) ?? [];
+  // If savings is not an array or is empty, return "No savings found"
+  if (!Array.isArray(savings) || savings.length === 0) return <p>No savings found.</p>;
+
+  const totalPages = Math.ceil(savings.length / pageSize);
+  const currentData = savings.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
 
   const handlePrevPage = () => {
     if (currentPage > 0) {
@@ -81,13 +84,12 @@ const SavingsPage = (props: Props) => {
 
           {/* Table */}
           <div className="w-full min-h-[300px] bg-white border border-[#A64DFF] rounded-xl p-4 overflow-x-auto">
-            {savings?.length === 0 ? (
+            {savings.length === 0 ? (
               <p>No savings found.</p>
             ) : (
               <table className="w-full text-left">
                 <thead>
                   <tr>
-                    <th className="py-2">Savings ID</th>
                     <th className="py-2">Title</th>
                     <th className="py-2">Goal Amount</th>
                     <th className="py-2">Current Amount</th>
@@ -97,7 +99,6 @@ const SavingsPage = (props: Props) => {
                 <tbody>
                   {currentData.map((saving) => (
                     <tr key={saving.savingID} className="border-t">
-                      <td className="py-2">{saving.savingID}</td>
                       <td className="py-2">{saving.title}</td>
                       <td className="py-2">₱{saving.goalAmount.toFixed(2)}</td>
                       <td className="py-2">₱{saving.currentAmount.toFixed(2)}</td>
