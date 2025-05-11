@@ -5,7 +5,7 @@ import React, {
   useContext,
   ReactNode,
 } from "react";
-import { Savings } from "../interfaces/interfaces";
+import { Savings, GetSavingsResponse } from "../interfaces/interfaces";
 import { GetSavingsOptions } from "@/interfaces/QueryOptions";
 import {
   createSavingsAPI,
@@ -48,10 +48,11 @@ export const SavingsProvider = ({ children }: Props) => {
       const response = await getSavingsAPI({ ...options, token });
       if (!response) return;
 
-      setSavings(response);
-      setSavingsCount(response.length);
+      // Accessing the rows and count from the response structure
+      setSavings(response.savings.rows);
+      setSavingsCount(response.savings.count);
 
-      return response;
+      return response.savings.rows;
     } catch (error) {
       console.error("Error fetching savings:", error);
       toast.error("Error fetching savings");

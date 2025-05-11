@@ -146,29 +146,29 @@ const ExpensesPage = () => {
           )}
 
           {/* Table */}
-          <div className="w-full min-h-[300px] bg-white border border-[#A64DFF] rounded-xl p-4 overflow-x-auto">
+          <div className="mt-6 bg-white border border-[#A64DFF] rounded-lg shadow-md overflow-x-auto">
             {currentData.length === 0 ? (
-              <p>No expenses found.</p>
+              <p className="p-4 text-center text-gray-600">No expenses found.</p>
             ) : (
               <table className="w-full text-left">
-                <thead>
+                <thead className="bg-[#F4E1FF]">
                   <tr>
-                    <th className="py-2">Title</th>
-                    <th className="py-2">Category</th>
-                    <th className="py-2 cursor-pointer" onClick={handleSortByAmount}>
+                    <th className="py-3 px-6">Title</th>
+                    <th className="py-3 px-6">Category</th>
+                    <th className="py-3 px-6 cursor-pointer" onClick={handleSortByAmount}>
                       Amount {sortOrder === "asc" ? "↑" : "↓"}
                     </th>
-                    <th className="py-2">Date</th>
-                    <th className="py-2">Actions</th>
+                    <th className="py-3 px-6">Date</th>
+                    <th className="py-3 px-6">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentData.map((expense) => (
                     <tr key={expense.expenseID} className="border-t">
-                      <td className="py-2">{expense.title ?? "N/A"}</td>
+                      <td className="py-3 px-6">{expense.title ?? "N/A"}</td>
                       <td>{expense.Category?.categoryName || "Uncategorized"}</td>
-                      <td className="py-2">₱{expense.amount.toFixed(2)}</td>
-                      <td className="py-2">
+                      <td className="py-3 px-6">₱{expense.amount.toFixed(2)}</td>
+                      <td className="py-3 px-6">
                         {new Date(expense.date).toLocaleDateString()}
                       </td>
                       <td className="py-2">

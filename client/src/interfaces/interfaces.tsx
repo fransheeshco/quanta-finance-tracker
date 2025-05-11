@@ -102,6 +102,7 @@ export type Savings = {
   createdAt: string;
   updatedAt: string;
   rows: number;
+  count: number
 };
 
 export type GetSavingsResponse = {

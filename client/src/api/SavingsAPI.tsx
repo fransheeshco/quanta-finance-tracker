@@ -61,7 +61,7 @@ export const createSavingsAPI = async (
     sortField = "title",
     sortBy = "asc",
     page = 1,
-  }: GetSavingsOptions): Promise<Savings[]> => {
+  }: GetSavingsOptions): Promise<GetSavingsResponse> => {
     try {
       const params = {
         limit,
@@ -78,11 +78,12 @@ export const createSavingsAPI = async (
         }
       );
   
-      // Extract savings from 'rows' and return it
-      return data.data.savings.rows;
+      // Return the savings object as received from the backend
+      return data.data;
     } catch (error) {
       handleError(error);
-      return [];  // Fallback to an empty array if there's an error
+      // Return fallback data structure matching GetSavingsResponse
+      return { savings: { count: 0, rows: [] } };
     }
   };
   
