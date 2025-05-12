@@ -24,15 +24,15 @@ app.use(express.json());
 
 // API Routes
 // app.use('/api', authRoutes); // Ensure this line is commented out
-app.use('/api/user', userRoutes) ;
-app.use('/api/category', categoryRoutes);
-app.use('/api/budgets', budgetRoutes);
-app.use('/api/transaction', transactionRoutes);
-app.use('/api/savings', savingsRoutes);
-app.use('/api/expenses', expensesRoutes);
-app.use('/api/account', accountRoutes);
-app.use('/api/income', incomeRoutes);
-app.use('/api/transfer', transferRoute);
+//app.use('/api/user', userRoutes) ;
+//app.use('/api/category', categoryRoutes);
+//app.use('/api/budgets', budgetRoutes);
+//app.use('/api/transaction', transactionRoutes);
+//app.use('/api/savings', savingsRoutes);
+//app.use('/api/expenses', expensesRoutes);
+//app.use('/api/account', accountRoutes);
+//app.use('/api/income', incomeRoutes);
+//app.use('/api/transfer', transferRoute);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Root route working');
