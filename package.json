@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node backend/dist/index.js",
-    "build": "cd backend && npm install && npm run build"
+    "build": "cd backend && npm install && npm run build",
+    "heroku-prebuild": "cd client && npm install && npm run build"
   },
   "repository": {
     "type": "git",
