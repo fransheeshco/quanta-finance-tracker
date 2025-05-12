@@ -56,34 +56,47 @@ export const createSavingsAPI = async (
   };
   
   export const getSavingsAPI = async ({
-    token,
     limit = 5,
     sortField = "title",
     sortBy = "asc",
     page = 1,
-  }: GetSavingsOptions): Promise<GetSavingsResponse> => {
-    try {
-      const params = {
-        limit,
-        sortField,
-        sortBy,
-        page,
-      };
+  }: GetSavingsOptions) => {
+    const queryParams = new URLSearchParams();
+    queryParams.append('page', page.toString());
+    queryParams.append('limit', limit.toString());
+    queryParams.append('sortField', sortField);
+    queryParams.append('sortBy', sortBy);
+
+    const token = localStorage.getItem('token');
   
-      const data = await axios.get<GetSavingsResponse>(
-        `${api}auth/savings/getsavings`,
+    try {
+      const response = await axios.get<GetSavingsResponse>(
+        `${api}auth/savings/getsavings?${queryParams.toString()}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
-          params,
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
   
-      // Return the savings object as received from the backend
-      return data.data;
+      // Extract data and return it in the required format
+      const { savings, count, page: currentPage, totalPages, nextPage } = response.data;
+      console.log(savings, count, currentPage, totalPages, nextPage)
+      console.log(response.data)
+  
+      return {
+        savings: {
+          rows: savings,
+          count,
+        },
+        page: currentPage,
+        totalPages,
+        nextPage,
+      };      
     } catch (error) {
-      handleError(error);
-      // Return fallback data structure matching GetSavingsResponse
-      return { savings: { count: 0, rows: [] } };
+      console.error("Failed to fetch savings:", error);
     }
   };
   

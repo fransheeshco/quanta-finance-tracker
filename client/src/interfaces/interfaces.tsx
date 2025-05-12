@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 
-
 export type UserToken = {
   token: string;
   user: {
@@ -27,21 +26,20 @@ export type GetAccountsResponse = {
 };
 
 export type Categories = {
-  categoryName: string;
   categoryID: number;
+  categoryName: string;
   accountID: number;
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export type GetCategoriesResponse = {
   message: string;
   categories: {
-    count: number;
-    rows: Categories[];
-  }
-}
-
+      count: number;
+      rows: Categories[];
+  };
+};
 
 export type Expenses = {
   expenseID: number;
@@ -95,23 +93,22 @@ export type GetBudgetResponse = {
 
 export type Savings = {
   savingID: number;
-  accountID: number; // Include this if you need it
+  accountID: number;
   title: string;
   goalAmount: number;
   currentAmount: number;
   createdAt: string;
   updatedAt: string;
   rows: number;
-  count: number
 };
 
 export type GetSavingsResponse = {
-  savings: {
-    count: number;
-    rows: Savings[]; // The savings are stored inside `rows`
-  };
+  savings: Savings[];     // The actual data for the current page
+  count: number;          // Total count of savings
+  page: number;           // Current page number
+  totalPages: number;     // Total number of pages
+  nextPage: number | null; // Next page number (null if there is no next page)
 };
-
 
 export enum TransactionType {
   INCOME = 'income',

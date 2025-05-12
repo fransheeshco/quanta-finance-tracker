@@ -22,24 +22,31 @@ export const createCategory = async (req: Request, res: Response, next: NextFunc
     }
 }
 
-export const getCategories = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+export const getCategories = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<any> => {
     const userID = req.userID;
 
     try {
         if (!userID) {
-            return res.status(401).json({ message: "Unauthorized: No user ID." });
+            return res.status(401).json({ message: 'Unauthorized: No user ID.' });
         }
 
         const page = Number(req.query.page) || 1;
-        const limit = 5;
+        const limit = Number(req.query.limit) || 5; // Make limit configurable
         const offset = (page - 1) * limit;
 
         const filters = {
-            categoryName: req.query.categoryName,
+            categoryName: req.query.categoryName as string | undefined, // Explicitly type as potentially undefined
         };
 
         const sortField = (req.query.sortField as string) || 'createdAt';
-        const sortDirection = req.query.sortBy === 'asc' || req.query.sortBy === 'desc' ? req.query.sortBy : 'desc';
+        const sortDirection =
+            req.query.sortBy === 'asc' || req.query.sortBy === 'desc'
+                ? (req.query.sortBy as 'asc' | 'desc')
+                : 'desc';
 
         const sort: Record<string, 'asc' | 'desc'> = {
             [sortField]: sortDirection,
@@ -47,26 +54,33 @@ export const getCategories = async (req: Request, res: Response, next: NextFunct
 
         const account = await Account.findOne({ where: { userID } });
         if (!account) {
-            return res.status(404).json({ message: "Account not found" });
+            return res.status(404).json({ message: 'Account not found' });
         }
 
         const { where, order } = buildQueryOptions({ filters, sort });
         where.accountID = account.accountID;
 
-        const categories = await Category.findAndCountAll({
+        const { count, rows: categories } = await Category.findAndCountAll({
             where,
             order,
             limit,
             offset,
         });
 
-        return res.status(200).json({ message: "Categories found", categories });
+        const totalPages = Math.ceil(count / limit);
+
+        return res.status(200).json({
+            message: 'Categories found',
+            data: categories, // Rename 'categories' to 'data' for consistency
+            count,
+            totalPages,
+            currentPage: page,
+        });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: "Could not retrieve categories" });
+        return res.status(500).json({ message: 'Could not retrieve categories' });
     }
 };
-
 export const deleteCategory = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
     const {id : categoryID} = req.params;

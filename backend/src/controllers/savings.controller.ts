@@ -63,53 +63,70 @@ export const deleteSavings = async (req: Request, res: Response, next: NextFunct
 
 export const getSavings = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-  
+
     try {
-      if (!userID) {
-        return res.status(401).json({ message: "Unauthorized: No user ID." });
-      }
-  
-      const account = await Account.findOne({ where: { userID } });
-      if (!account) {
-        return res.status(404).json({ message: "Account not found." });
-      }
-  
-      const page = Number(req.query.page) || 1;
-      const limit = 5;
-      const offset = (page - 1) * limit;
-  
-      const filters = {
-        title: req.query.title,
-      };
-  
-      const sortField = (req.query.sortField as string) || 'createdAt';
-      const sortDirection = req.query.sortBy === 'asc' || req.query.sortBy === 'desc' ? req.query.sortBy : 'asc';
-  
-      const sort: Record<string, 'asc' | 'desc'> = {
-        title: sortDirection,
-      };
-  
-      const { where, order } = buildQueryOptions({ filters, sort });
-      where.accountID = account.accountID;
-  
-      const savings = await Saving.findAndCountAll({
-        where,
-        order,
-        limit,
-        offset,
-      });
-  
-      // Return the savings data in the expected format
-      return res.status(200).json({
-        message: "Savings found",
-        savings: {           
-          count: savings.count,
-          rows: savings.rows,
-        },
-      });
+        if (!userID) {
+            return res.status(401).json({ message: "Unauthorized: No user ID." });
+        }
+
+        const account = await Account.findOne({ where: { userID } });
+
+        if (!account) {
+            return res.status(404).json({ message: "Account not found" });
+        }
+
+        // Pagination setup
+        const page = Number(req.query.page) || 1; // Default to page 1 (1-indexed)
+        const limit = 5; // Items per page
+        const offset = (page - 1) * limit; // Calculate offset for 1-indexed page
+
+        // Build filters using query params
+        const filters = {
+            title: req.query.title,
+        };
+
+        const sortField = (req.query.sortField as string) || 'createdAt';
+        const sortDirection = req.query.sortBy === 'asc' || req.query.sortBy === 'desc' ? req.query.sortBy : 'asc';
+
+        const sort: Record<string, 'asc' | 'desc'> = {
+            [sortField]: sortDirection,
+        };
+
+        // Include accountID so user only sees their own data
+        const { where, order } = buildQueryOptions({ filters, sort });
+        where.accountID = account.accountID;
+
+        console.log("Where:", where);  // Debugging where
+        console.log("Order:", order);  // Debugging order
+
+        const { rows, count } = await Saving.findAndCountAll({
+            where,
+            order,
+            limit,
+            offset,
+        });
+
+        console.log("Rows:", rows);  // Check what rows are returned
+        console.log("Count:", count);  // Check the count
+        console.log("Backend Page:", page); // Log the page number
+
+        if (!rows || rows.length === 0) {
+            return res.status(404).json({ message: "No savings found." });
+        }
+
+        const totalPages = Math.ceil(count / limit);
+        const nextPage = page < totalPages ? page + 1 : null;
+
+        return res.status(200).json({
+            message: "Savings found",
+            savings: rows,
+            count,
+            page, // Send back the 1-based page number
+            totalPages,
+            nextPage,
+        });
     } catch (err) {
-      console.error(err);
-      return res.status(500).json({ message: "Could not retrieve savings.", err });
+        console.error(err);
+        return res.status(500).json({ message: "Could not get savings." });
     }
-  };
-  
+};

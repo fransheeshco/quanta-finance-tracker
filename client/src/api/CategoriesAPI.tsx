@@ -3,6 +3,7 @@ import { handleError } from "../ErrorHandler";
 import {
   Categories, GetCategoriesResponse, 
 } from "../interfaces/interfaces";
+import { GetCategoriesOptions } from "@/interfaces/QueryOptions";
 
 const api = "http://localhost:8000/api/";
 
@@ -25,31 +26,33 @@ export const createCategoryAPI = async (categoryName: string, token: string) => 
     }
   }
   
+  
   export const getCategoriesAPI = async (
-    { token, sortField = "categoryID", sortBy = "asc", page = 1 }: {
-      token: string;
-      sortField?: string;
-      sortBy?: "asc" | "desc";
-      page?: number;
-    }
-  ): Promise<Categories[]> => {
+    options: GetCategoriesOptions = {}
+  ): Promise<GetCategoriesResponse | undefined> => { // Return the full response type
+    const { token, sortField = "categoryID", sortBy = "asc", page = 1, categoryID } = options;
+  
+    const queryParams = new URLSearchParams();
+    queryParams.append("page", page.toString());
+    if (categoryID) queryParams.append("categoryID", categoryID.toString());
+    if (sortField) queryParams.append("sortField", sortField);
+    if (sortBy) queryParams.append("sortBy", sortBy);
+  
     try {
-      const response = await axios.get<GetCategoriesResponse>(`${api}auth/category/getcategories`, {
+      const response = await axios.get<GetCategoriesResponse>(`${api}auth/category/getcategories?${queryParams.toString()}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params: {
-          sortField,
-          sortBy,
-          page,
-        },
       });
-      return response.data.categories.rows; // Use 'rows' to get the actual categories
+      console.log("Backend Response:", response.data);
+      return response.data; // Return the entire response data
     } catch (error) {
       handleError(error);
-      return []; // Return an empty array in case of error
+      return undefined; // Or throw the error depending on your error handling strategy
     }
   };
+  
+  
   
   
   export const updateCategoryAPI = async (categoryName: string, categoryID: number, token: string) => {

@@ -34,3 +34,11 @@ export interface GetSavingsOptions {
   sortBy?: 'asc' | 'desc';
   page?: number;
 }
+
+export interface GetCategoriesOptions {
+  token?: string;
+  sortField?: string;
+  sortBy?: "asc" | "desc";
+  page?: number;
+  categoryID?: string | number;
+}

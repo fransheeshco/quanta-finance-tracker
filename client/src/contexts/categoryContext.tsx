@@ -1,3 +1,4 @@
+// CategoryContext.tsx
 import React, {
   createContext,
   useEffect,
@@ -16,9 +17,18 @@ import {
 import { toast } from "react-toastify";
 import { useAuth } from "./authContext";
 
+interface GetCategoriesResponse {
+  count: number;
+  currentPage: number;
+  data: Categories[]; // Categories array is directly under 'data'
+  message: string;
+  totalPages: number;
+}
+
 type CategoryTypeContext = {
   categories: Categories[] | null;
-  fetchCategories: () => Promise<void>;
+  totalCategories: number;
+  fetchCategories: (page: number) => Promise<void>;
   addCategory: (categoryName: string) => Promise<void>;
   editCategory: (categoryName: string, categoryID: number) => Promise<void>;
   removeCategory: (categoryID: number) => Promise<void>;
@@ -32,31 +42,44 @@ const CategoryContext = createContext<CategoryTypeContext>(
 
 export const CategoryProvider = ({ children }: Props) => {
   const [categories, setCategories] = useState<Categories[] | null>(null);
+  const [totalCategories, setTotalCategories] = useState(0);
   const { user, token } = useAuth();
+  const [pageSize] = useState(5);
 
-  const fetchCategories = useCallback(async () => {
-    if (!token) return;
-    try {
-      const response = await getCategoriesAPI({
-        token, // Pass token
-        sortField: "categoryID", // Default sort field
-        sortBy: "asc", // Default sort direction
-        page: 1, // Default page number
-      });
-      if (response) {
-        setCategories(response); // Set the rows directly from the response
+  const fetchCategories = useCallback(
+    async (page: number) => {
+      if (!token) return;
+      try {
+        const response = (await getCategoriesAPI({
+          token,
+          sortField: "categoryID",
+          sortBy: "asc",
+          page,
+        })) as GetCategoriesResponse; // Explicitly cast the response
+
+        console.log("Response from getCategoriesAPI:", response); // For debugging
+
+        if (response && response.data) {
+          setCategories(response.data); // Access the categories from 'response.data'
+          setTotalCategories(response.count);
+        } else {
+          setCategories([]);
+          setTotalCategories(0);
+        }
+      } catch (err) {
+        toast.error("Failed to fetch categories");
+        setCategories([]);
+        setTotalCategories(0);
       }
-    } catch (err) {
-      toast.error("Failed to fetch categories");
-    }
-  }, [token]);
-  
+    },
+    [token]
+  );
 
   const addCategory = async (categoryName: string) => {
     if (!token) return;
     try {
       await createCategoryAPI(categoryName, token);
-      await fetchCategories();
+      await fetchCategories(1);
       toast.success("Category added!");
     } catch {
       toast.error("Failed to add category.");
@@ -67,7 +90,7 @@ export const CategoryProvider = ({ children }: Props) => {
     if (!token) return;
     try {
       await updateCategoryAPI(categoryName, categoryID, token);
-      await fetchCategories();
+      await fetchCategories(1);
       toast.success("Category updated!");
     } catch {
       toast.error("Failed to update category.");
@@ -78,28 +101,23 @@ export const CategoryProvider = ({ children }: Props) => {
     if (!token) return;
     try {
       await deleteCategoryAPI(categoryID, token);
-      await fetchCategories();
+      await fetchCategories(1);
       toast.success("Category deleted.");
     } catch {
       toast.error("Failed to delete category.");
     }
   };
 
-  useEffect(() => {
-    if (token) {
-      fetchCategories();
-    }
-  }, [token, fetchCategories]);
-
   const contextValue = useMemo(
     () => ({
       categories,
+      totalCategories,
       fetchCategories,
       addCategory,
       editCategory,
       removeCategory,
     }),
-    [categories, fetchCategories, addCategory, editCategory, removeCategory]
+    [categories, totalCategories, fetchCategories, addCategory, editCategory, removeCategory]
   );
 
   return (

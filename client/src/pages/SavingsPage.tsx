@@ -7,8 +7,7 @@ import EditSavingsForm from "../components/EditSavingsForm";
 type Props = {};
 
 const SavingsPage = (props: Props) => {
-  const { savings, fetchSavings, deleteSavings } = useSavings();
-  const [currentPage, setCurrentPage] = useState(0);
+  const { savings, fetchSavings, deleteSavings, setCurrentPage, currentPage, totalPages } = useSavings();
   const [pageSize, setPageSize] = useState(5);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
@@ -16,9 +15,22 @@ const SavingsPage = (props: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState<string>("goalAmountAsc");
 
+  console.log(currentPage)
   useEffect(() => {
-    fetchSavings();  // Initially fetch the savings
-  }, [fetchSavings]);
+    const filters: {
+      page: number;
+      limit?: number;
+      sortField?: string;
+      sortBy?: "asc" | "desc"; // Or "asc" | "desc" | undefined depending on your GetSavingsOptions
+    } = {
+      page: currentPage, 
+      limit: pageSize,
+      sortField: sortOption.replace('Asc', '').replace('Desc', ''),
+      sortBy: sortOption.endsWith('Asc') ? 'asc' : 'desc',
+    };
+    fetchSavings(filters);
+  }, [currentPage, pageSize, sortOption, fetchSavings]);
+  
 
   const handleDelete = (savingID: number) => {
     deleteSavings(savingID);
@@ -38,14 +50,8 @@ const SavingsPage = (props: Props) => {
     saving.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // If savings is not an array or is empty, return "No savings found"
-  if (!Array.isArray(filteredSavings) || filteredSavings.length === 0)
-    return <p>No savings found.</p>;
-
-  const totalPages = Math.ceil(filteredSavings.length / pageSize);
-  let currentData = filteredSavings.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
-
   // Sorting logic
+  let currentData = filteredSavings;
   if (sortOption === "goalAmountAsc") {
     currentData = currentData.sort((a, b) => a.goalAmount - b.goalAmount);
   } else if (sortOption === "goalAmountDesc") {
@@ -56,21 +62,29 @@ const SavingsPage = (props: Props) => {
     currentData = currentData.sort((a, b) => b.currentAmount - a.currentAmount);
   }
 
+  // Paginate the data based on the current page
+  console.log(totalPages)
+  console.log(currentPage)
+  console.log(currentPage + 1)
+
   const handlePrevPage = () => {
     if (currentPage > 0) {
-      setCurrentPage((prev) => prev - 1);
+      console.log("blahblah " ,currentPage - 1)
+      setCurrentPage(currentPage - 1);
     }
   };
 
   const handleNextPage = () => {
-    if (currentPage + 1 < totalPages) {
-      setCurrentPage((prev) => prev + 1);
+    if (currentPage < totalPages) {
+      setCurrentPage((currentPage + 1));
     }
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOption(e.target.value);
   };
+
+  console.log("SavingsPage - Current Page:", currentPage, "Total Pages:", totalPages);
 
   return (
     <section className="absolute top-45 left-25 z-0">
@@ -87,20 +101,15 @@ const SavingsPage = (props: Props) => {
             </button>
           </div>
 
-          {/* Add Savings Form */}
+          {/* Add/Edit Savings Forms */}
           {isFormOpen && (
             <div className="fixed inset-0 z-50 flex justify-center items-center bg-opacity-50 bg-black">
               <AddSavingsForm onClose={() => setIsFormOpen(false)} />
             </div>
           )}
-
-          {/* Edit Savings Form */}
           {isEditFormOpen && editingSaving && (
             <div className="fixed inset-0 z-50 flex justify-center items-center bg-opacity-50 bg-black">
-              <EditSavingsForm
-                saving={editingSaving}
-                onClose={() => setIsEditFormOpen(false)} // Close the form
-              />
+              <EditSavingsForm saving={editingSaving} onClose={() => setIsEditFormOpen(false)} />
             </div>
           )}
 
@@ -113,8 +122,7 @@ const SavingsPage = (props: Props) => {
               onChange={handleSearch}
               className="w-full p-3 border border-[#A64DFF] rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-[#A64DFF]"
             />
-
-          {/* Sorting Dropdown */}
+            {/* Sorting Dropdown */}
             <label htmlFor="sort" className="text-lg font-semibold text-[#4A00B3]">Sort By:</label>
             <select
               id="sort"
@@ -173,7 +181,7 @@ const SavingsPage = (props: Props) => {
           {/* Pagination Controls */}
           <div className="flex justify-between items-center mt-6 px-2">
             <span className="text-sm text-gray-600">
-              Page {currentPage + 1} of {totalPages}
+              Page {currentPage} of {totalPages}
             </span>
             <div className="flex gap-4">
               <button
@@ -186,7 +194,7 @@ const SavingsPage = (props: Props) => {
               <button
                 className="text-white px-5 py-2 rounded-3xl text-xl bg-[#A64DFF] disabled:opacity-40"
                 onClick={handleNextPage}
-                disabled={currentPage + 1 >= totalPages}
+                disabled={currentPage + 1 > totalPages}
               >
                 Next
               </button>
@@ -195,7 +203,6 @@ const SavingsPage = (props: Props) => {
         </div>
       </div>
     </section>
-    
   );
 };
 

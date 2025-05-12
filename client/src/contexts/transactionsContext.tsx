@@ -17,9 +17,9 @@ import { toast } from "react-toastify";
 import { useAuth } from "./authContext";
 
 type TransactionsContextType = {
-    transactions: Transactions[] | undefined;
-    transactionCount: number;
-    fetchTransactions: (options?: GetTransactionsOptions) => Promise<void>;  
+  transactions: Transactions[] | undefined;
+  transactionCount: number;
+  fetchTransactions: (options?: GetTransactionsOptions) => Promise<void>;
   createTransactions: (transactionType: TransactionType, amount: number, date: Date) => Promise<void>;
   deleteTransactions: (transactionID: number) => Promise<void>;
   updateTransactions: (transactionID: number, transactionType: TransactionType, amount: number, date: Date) => Promise<void>;
@@ -44,8 +44,8 @@ export const TransactionsProvider = ({ children }: Props) => {
       const response = await getTransactionsAPI(options);
       // Check the structure of the response
       if (response && response.transactionsData && Array.isArray(response.transactionsData.rows)) {
-        setTransactions(response.transactionsData.rows); // Set transactions state
-        setTransactionCount(response.transactionsData.count); 
+        setTransactions(response.transactionsData.rows);
+        setTransactionCount(response.transactionsData.count);
       } else {
         console.error("Unexpected data structure:", response);
         toast.error("Unexpected data structure from API.");

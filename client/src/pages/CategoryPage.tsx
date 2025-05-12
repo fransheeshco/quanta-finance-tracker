@@ -7,43 +7,45 @@ import EditCategoryForm from "../components/EditCategoriesForm";
 type Props = {};
 
 const CategoryPage = (props: Props) => {
-  const { user, token } = useAuth();
-  const { categories, fetchCategories, editCategory, removeCategory } = useCategory();
+  const { user, token, logout } = useAuth();
+  const { categories, totalCategories, fetchCategories, editCategory, removeCategory } = useCategory();
 
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
+  const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
-  const [hasFetched, setHasFetched] = useState(false);
 
-  const [selectedName, setSelectedName] = useState("All");
+  console.log("--- CategoryPage Render ---");
+  console.log("Categories from Context:", categories);
+  console.log("Total Categories from Context:", totalCategories);
+  console.log("Current Page:", currentPage);
+  console.log("Search Term:", searchTerm);
 
   useEffect(() => {
-    if (user && token && !hasFetched) {
-      fetchCategories();
-      setHasFetched(true);
+    if (!user && token) {
+      console.warn("User not available, potential issue with auth context.");
     }
-  }, [user, token, hasFetched, fetchCategories]);
-
-  const filteredCategories =
-    selectedName === "All"
-      ? categories
-      : categories?.filter((cat) => cat.categoryName === selectedName);
-
-  const totalPages = Math.ceil((filteredCategories?.length ?? 0) / pageSize);
-  const currentData =
-    filteredCategories?.slice(currentPage * pageSize, (currentPage + 1) * pageSize) ?? [];
-
-  const handlePrevPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage((prev) => prev - 1);
+    if (token) {
+      fetchCategories(currentPage); // Fetch based on current page
+    } else if (!token && user) {
+      console.error("Token missing while user is logged in. Logging out.");
+      logout();
+    } else {
+      console.log("Not logged in.");
     }
-  };
+  }, [user, token, currentPage, fetchCategories, logout]);
 
-  const handleNextPage = () => {
-    if (currentPage + 1 < totalPages) {
-      setCurrentPage((prev) => prev + 1);
+  // Reset page to 1 when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const handleDeleteCategory = async (categoryID: number) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      await removeCategory(categoryID);
+      fetchCategories(currentPage); // Refresh current page after deletion
     }
   };
 
@@ -52,11 +54,31 @@ const CategoryPage = (props: Props) => {
     setIsEditFormOpen(true);
   };
 
-  const handleDeleteCategory = async (categoryID: number) => {
-    if (window.confirm("Are you sure you want to delete this category?")) {
-      await removeCategory(categoryID);
-      fetchCategories();
+  const totalPages = Math.ceil(totalCategories / pageSize);
+
+  // Client-side filtering based on search term
+  const filteredCategories = React.useMemo(() => {
+    if (!categories) {
+      return [];
     }
+    if (!searchTerm) {
+      return categories;
+    }
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    return categories.filter((cat) =>
+      cat.categoryName.toLowerCase().includes(lowerCaseSearchTerm)
+    );
+  }, [categories, searchTerm]);
+
+  // Since the backend handles pagination, we just render the filtered data
+  const currentData = filteredCategories;
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
 
   return (
@@ -92,32 +114,24 @@ const CategoryPage = (props: Props) => {
             </div>
           )}
 
-          {/* Filter Dropdown */}
+          {/* Search Bar */}
           <div className="w-full bg-white border border-[#A64DFF] rounded-xl p-4 flex items-center gap-4">
-            <label htmlFor="categoryFilter" className="text-lg font-medium">
-              Filter by Name:
+            <label htmlFor="categorySearch" className="text-lg font-medium">
+              Search by Name:
             </label>
-            <select
-              id="categoryFilter"
-              className="border border-gray-300 rounded-lg px-3 py-2"
-              value={selectedName}
-              onChange={(e) => {
-                setSelectedName(e.target.value);
-                setCurrentPage(0);
-              }}
-            >
-              <option value="All">All</option>
-              {categories?.map((cat) => (
-                <option key={cat.categoryID} value={cat.categoryName}>
-                  {cat.categoryName}
-                </option>
-              ))}
-            </select>
+            <input
+              type="text"
+              id="categorySearch"
+              className="border border-gray-300 rounded-lg px-3 py-2 w-full"
+              placeholder="Enter category name"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
 
           {/* Category Table */}
           <div className="w-full min-h-[300px] bg-white border border-[#A64DFF] rounded-xl p-4 overflow-x-auto">
-            {filteredCategories?.length === 0 ? (
+            {filteredCategories.length === 0 ? (
               <p>No categories found.</p>
             ) : (
               <table className="w-full text-left">
@@ -155,20 +169,20 @@ const CategoryPage = (props: Props) => {
           {/* Pagination */}
           <div className="flex justify-between items-center w-full px-2">
             <span className="text-sm text-gray-600">
-              Page {currentPage + 1} of {totalPages}
+              Page {currentPage} of {totalPages}
             </span>
             <div className="flex gap-4">
               <button
                 className="text-white px-5 py-2 rounded-2xl text-xl bg-[#A64DFF] disabled:opacity-40"
                 onClick={handlePrevPage}
-                disabled={currentPage === 0}
+                disabled={currentPage === 1}
               >
                 Prev
               </button>
               <button
                 className="text-white px-5 py-2 rounded-2xl text-xl bg-[#A64DFF] disabled:opacity-40"
                 onClick={handleNextPage}
-                disabled={currentPage + 1 >= totalPages}
+                disabled={currentPage >= totalPages}
               >
                 Next
               </button>
