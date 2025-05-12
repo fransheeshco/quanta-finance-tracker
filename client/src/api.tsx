@@ -21,11 +21,20 @@ export const loginAPI = async (email: string, password: string) => {
 
 export const registerAPI = async (fname: string, lname: string, email: string, password: string) => {
   try {
-    const data = await axios.post<UserToken>(api + "auth" + "/signup", {
-      fname, lname, email, password
+    const data = await axios.post < UserToken > (api + "auth" + "/signup", {
+      fname,
+      lname,
+      email,
+      password
     });
     return data;
-  } catch (error) {
-    handleError(error);
+  } catch (error: any) {
+    if (axios.isAxiosError(error) && error.response && error.response.status === 400 && error.response.data.message === "Too weak") {
+      throw error;
+    } else {
+      handleError(error);
+      throw error;
+    }
   }
 };
+

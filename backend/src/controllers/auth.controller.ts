@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import validator from "validator";
 import { generateToken, comparePasswords, hashPassword } from '../utils/authUtils';
+import { passwordStrength } from 'check-password-strength'
 
 import { User } from '../models/associationblock';
 
@@ -15,6 +16,13 @@ const signUp = async (req: Request, res: Response): Promise<any> => {
   // check if email is valid
   if (!validator.isEmail(email)) {
     return res.status(400).json({ message: "Not a valid email." })
+  }
+
+  const strong = passwordStrength(password).value;
+  console.log(strong);
+
+  if(strong === 'Too weak') {
+    return res.status(400).json({message: "Password is too weak."});
   }
 
   try {

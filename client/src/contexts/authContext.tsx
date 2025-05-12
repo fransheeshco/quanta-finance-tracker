@@ -4,15 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { loginAPI, registerAPI } from "../api";
 import { toast } from "react-toastify";
 import React from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios"; // Import AxiosError
 
 type UserContextType = {
     user: User | null;
     token: string | null;
-    registerUser: (email: string, fname: string, lname: string, password: string) => Promise<void>;
+    registerUser: (fname: string, lname: string, email: string, password: string) => Promise<string | void>; // Return type can be string (error) or void (success)
     loginUser: (username: string, password: string) => Promise<void>;
     logout: () => void;
     isLoggedIn: () => boolean;
+    registrationError: string | null; // Add state for registration error
 };
 
 type Props = { children: React.ReactNode };
@@ -24,27 +25,27 @@ export const UserProvider = ({ children }: Props) => {
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const [isReady, setIsReady] = useState(false);
+    const [registrationError, setRegistrationError] = useState<string | null>(null); // Initialize registration error state
 
     useEffect(() => {
         const user = localStorage.getItem("user");
         const token = localStorage.getItem("token");
-        
+
         if (user && token) {
             try {
-                const parsedUser: User = JSON.parse(user);  // Ensure it's parsed correctly as `User` type
-                setUser(parsedUser);  // Set the user state with the parsed data
-                setToken(token);  // Set the token
-                axios.defaults.headers.common["Authorization"] = "Bearer " + token;  // Set axios authorization header
+                const parsedUser: User = JSON.parse(user);
+                setUser(parsedUser);
+                setToken(token);
+                axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             } catch (error) {
                 console.error("Error parsing user data from localStorage:", error);
-                // Handle the error, e.g., clear invalid data
                 localStorage.removeItem("user");
                 localStorage.removeItem("token");
             }
         }
-        
+
         setIsReady(true);
-        
+
     }, []);
 
     const registerUser = async (
@@ -52,44 +53,52 @@ export const UserProvider = ({ children }: Props) => {
         lname: string,
         email: string,
         password: string
-    ) => {
+    ): Promise<string | void> => {
         console.log("Registering with:", { fname, lname, email, password });
-        await registerAPI(fname, lname, email, password)
-            .then((res) => {
-                if (res) {
-                    const userObj = {
-                        userID: res.data.user.userID,  // Make sure to get the correct userID from the response
-                        fname: res.data.user.fname,
-                        email: res.data.user.email,
-                    };
-    
-                    localStorage.setItem("token", res?.data.token);
-                    localStorage.setItem("user", JSON.stringify(userObj));  // Save the full user object
-                    setToken(res?.data.token!);
-                    setUser(userObj);
-                    toast.success("Login Success!");
-                    navigate("/home");
-                }
-            })
-            .catch((e) => toast.warning("Server error occurred"));
+        setRegistrationError(null); // Clear any previous registration error
+
+        try {
+            const res = await registerAPI(fname, lname, email, password);
+            if (res) {
+                const userObj = {
+                    userID: res.data.user.userID,
+                    fname: res.data.user.fname,
+                    email: res.data.user.email,
+                };
+
+                localStorage.setItem("token", res?.data.token);
+                localStorage.setItem("user", JSON.stringify(userObj));
+                setToken(res?.data.token!);
+                setUser(userObj);
+                toast.success("Registration Success!");
+                navigate("/home");
+            }
+        } catch (error: any) {
+            if (axios.isAxiosError(error) && error.response?.status === 400 && error.response?.data?.message === "Password is too weak.") {
+                setRegistrationError(error.response.data.message);
+                return error.response.data.message; // Return the error message to the component
+            } else {
+                toast.warning("Server error occurred during registration.");
+                console.error("Registration error:", error);
+                setRegistrationError("An unexpected error occurred during registration."); // Set a generic error message
+                return "An unexpected error occurred during registration."; // Return a generic error
+            }
+        }
     };
-    
+
 
     const loginUser = async (email: string, password: string) => {
         await loginAPI(email, password)
             .then((res) => {
                 if (res) {
-                    console.log(res.data.user.email, res.data.user.fname);
-                    console.log("API Response Data:", res.data);
-    
                     const userObj = {
-                        userID: res.data.user.userID,  // Make sure to use the correct userID here
+                        userID: res.data.user.userID,
                         fname: res.data.user.fname,
                         email: res.data.user.email,
                     };
-    
+
                     localStorage.setItem("token", res?.data.token);
-                    localStorage.setItem("user", JSON.stringify(userObj));  // Save the full user object
+                    localStorage.setItem("user", JSON.stringify(userObj));
                     setToken(res?.data.token!);
                     setUser(userObj);
                     toast.success("Login Success!");
@@ -98,7 +107,7 @@ export const UserProvider = ({ children }: Props) => {
             })
             .catch((e) => toast.warning("Server error occurred"));
     };
-    
+
 
     const isLoggedIn = () => {
         return !!user;
@@ -114,7 +123,7 @@ export const UserProvider = ({ children }: Props) => {
 
     return (
         <UserContext.Provider
-            value={{ loginUser, user, token, logout, isLoggedIn, registerUser }}
+            value={{ loginUser, user, token, logout, isLoggedIn, registerUser, registrationError }} // Include registrationError in the value
         >
             {isReady ? children : null}
         </UserContext.Provider>
