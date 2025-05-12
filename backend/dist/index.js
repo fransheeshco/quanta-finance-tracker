@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
-const auth_routes_1 = __importDefault(require("./routes/auth.routes")); // Comment out this line
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const category_routes_1 = __importDefault(require("./routes/category.routes"));
 const budget_routes_1 = __importDefault(require("./routes/budget.routes"));
@@ -24,7 +23,7 @@ const PORT = process.env.PORT || 8000;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // API Routes
-app.use('/api', auth_routes_1.default); // Ensure this line is commented out
+// app.use('/api', authRoutes); // Ensure this line is commented out
 app.use('/api/user', user_routes_1.default);
 app.use('/api/category', category_routes_1.default);
 app.use('/api/budgets', budget_routes_1.default);

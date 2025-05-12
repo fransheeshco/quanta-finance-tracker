@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
-app.use('/api', authRoutes); // Ensure this line is commented out
+// app.use('/api', authRoutes); // Ensure this line is commented out
 app.use('/api/user', userRoutes) ;
 app.use('/api/category', categoryRoutes);
 app.use('/api/budgets', budgetRoutes);
