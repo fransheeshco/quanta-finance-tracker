@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
+const path_1 = __importDefault(require("path"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 8000;
@@ -27,8 +28,8 @@ app.get('/', (req, res) => {
     res.send('Root route working');
 });
 // Serve static files from your frontend build directory
-//const frontendBuildPath = path.join(__dirname, '../../frontend/build'); // Adjust the path as needed
-// app.use(express.static(frontendBuildPath));
+const frontendBuildPath = path_1.default.join(__dirname, '../../frontend/build'); // Adjust the path as needed
+app.use(express_1.default.static(frontendBuildPath));
 // Define a catch-all route to serve the frontend's index.html for all other requests
 // app.get('*', (req: Request, res: Response) => {
 //  res.sendFile(path.join(frontendBuildPath, 'index.html'));

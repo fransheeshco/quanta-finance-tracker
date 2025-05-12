@@ -1,16 +1,16 @@
 import express, { Application, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-// import authRoutes from './routes/auth.routes'; // Comment out this line
-// import userRoutes from './routes/user.routes';
-// import categoryRoutes from "./routes/category.routes";
-// import budgetRoutes from "./routes/budget.routes";
-// import transactionRoutes from "./routes/transactions.routes";
-// import savingsRoutes from "./routes/savings.routes";
-// import expensesRoutes from "./routes/expenses.routes";
-// import accountRoutes from "./routes/account.routes";
-// import incomeRoutes from "./routes/income.routes";
-// import transferRoute from "./routes/transfer.routes";
+import authRoutes from './routes/auth.routes'; // Comment out this line
+import userRoutes from './routes/user.routes';
+import categoryRoutes from "./routes/category.routes";
+import budgetRoutes from "./routes/budget.routes";
+import transactionRoutes from "./routes/transactions.routes";
+import savingsRoutes from "./routes/savings.routes";
+import expensesRoutes from "./routes/expenses.routes";
+import accountRoutes from "./routes/account.routes";
+import incomeRoutes from "./routes/income.routes";
+import transferRoute from "./routes/transfer.routes";
 import path from 'path';
 
 dotenv.config();
@@ -39,8 +39,8 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Serve static files from your frontend build directory
-//const frontendBuildPath = path.join(__dirname, '../../frontend/build'); // Adjust the path as needed
-// app.use(express.static(frontendBuildPath));
+const frontendBuildPath = path.join(__dirname, '../../frontend/build'); // Adjust the path as needed
+app.use(express.static(frontendBuildPath));
 
 // Define a catch-all route to serve the frontend's index.html for all other requests
 // app.get('*', (req: Request, res: Response) => {
