@@ -39,13 +39,13 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Serve static files from your frontend build directory
-const frontendBuildPath = path.join(__dirname, '../../frontend/build'); // Adjust the path as needed
-app.use(express.static(frontendBuildPath));
+//const frontendBuildPath = path.join(__dirname, '../../frontend/build'); // Adjust the path as needed
+// app.use(express.static(frontendBuildPath));
 
 // Define a catch-all route to serve the frontend's index.html for all other requests
-app.get('*', (req: Request, res: Response) => {
-  res.sendFile(path.join(frontendBuildPath, 'index.html'));
-});
+// app.get('*', (req: Request, res: Response) => {
+//  res.sendFile(path.join(frontendBuildPath, 'index.html'));
+// });
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
