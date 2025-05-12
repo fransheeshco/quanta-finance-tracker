@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
+const income_routes_1 = __importDefault(require("./routes/income.routes"));
 const transfer_routes_1 = __importDefault(require("./routes/transfer.routes"));
 const path_1 = __importDefault(require("path"));
 dotenv_1.default.config();
@@ -23,7 +24,7 @@ app.use(express_1.default.json());
 //app.use('/api/savings', savingsRoutes);
 //app.use('/api/expenses', expensesRoutes);
 //app.use('/api/account', accountRoutes);
-//app.use('/api/income', incomeRoutes);
+app.use('/api/income', income_routes_1.default);
 app.use('/api/transfer', transfer_routes_1.default);
 app.get('/', (req, res) => {
     res.send('Root route working');

@@ -31,7 +31,7 @@ app.use(express.json());
 //app.use('/api/savings', savingsRoutes);
 //app.use('/api/expenses', expensesRoutes);
 //app.use('/api/account', accountRoutes);
-//app.use('/api/income', incomeRoutes);
+app.use('/api/income', incomeRoutes);
 app.use('/api/transfer', transferRoute);
 
 app.get('/', (req: Request, res: Response) => {
