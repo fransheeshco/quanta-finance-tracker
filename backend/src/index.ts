@@ -40,10 +40,10 @@ app.use('/api/transfer', transferRoute);
 const frontendBuildPath = path.join(__dirname, '../../client/dist');
 app.use(express.static(frontendBuildPath));
 
-
 app.get(/(.*)/, (req: Request, res: Response) => {
   res.sendFile(path.join(frontendBuildPath, 'index.html'));
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
