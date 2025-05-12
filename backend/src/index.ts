@@ -37,7 +37,7 @@ app.use('/api/transfer', transferRoute);
 
 
 // Serve static files from your frontend build directory
-const frontendBuildPath = path.join(__dirname, '../../client/build');
+const frontendBuildPath = path.join(process.cwd(), 'client', 'build');
 app.use(express.static(frontendBuildPath));
 
 

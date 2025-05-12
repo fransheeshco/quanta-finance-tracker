@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-prebuild": "cd client && npm install && npm run build",
     "start": "node backend/dist/index.js",
-    "build": "tsc -p backend/tsconfig.json"
+    "build": "cd backend && npm install && npm run build"
   },
   "repository": {
     "type": "git",

@@ -35,7 +35,7 @@ app.use('/api/account', account_routes_1.default);
 app.use('/api/income', income_routes_1.default);
 app.use('/api/transfer', transfer_routes_1.default);
 // Serve static files from your frontend build directory
-const frontendBuildPath = path_1.default.join(__dirname, '../../client/build');
+const frontendBuildPath = path_1.default.join(process.cwd(), 'client', 'build');
 app.use(express_1.default.static(frontendBuildPath));
 app.get(/(.*)/, (req, res) => {
     res.sendFile(path_1.default.join(frontendBuildPath, 'index.html'));
