@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
-const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
+// import authRoutes from './routes/auth.routes'; // Comment out this line
 // import userRoutes from './routes/user.routes';
 // import categoryRoutes from "./routes/category.routes";
 // import budgetRoutes from "./routes/budget.routes";
@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 8000;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // API Routes
-app.use('/api/auth', auth_routes_1.default);
+// app.use('/api/auth', authRoutes); // Ensure this line is commented out
 // app.use('/api/auth/user', userRoutes) ;
 // app.use('/api/auth/category', categoryRoutes);
 // app.use('/api/auth/budgets', budgetRoutes);
@@ -35,7 +35,7 @@ app.use('/api/auth', auth_routes_1.default);
 // app.use('/api/auth/income', incomeRoutes);
 // app.use('/api/auth/transfer', transferRoute);
 app.get('/', (req, res) => {
-    res.send('Testing root route');
+    res.send('Root route working');
 });
 // Serve static files from your frontend build directory
 const frontendBuildPath = path_1.default.join(__dirname, '../../frontend/build'); // Adjust the path as needed

@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import authRoutes from './routes/auth.routes';
+// import authRoutes from './routes/auth.routes'; // Comment out this line
 // import userRoutes from './routes/user.routes';
 // import categoryRoutes from "./routes/category.routes";
 // import budgetRoutes from "./routes/budget.routes";
@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
-app.use('/api/auth', authRoutes);
+// app.use('/api/auth', authRoutes); // Ensure this line is commented out
 // app.use('/api/auth/user', userRoutes) ;
 // app.use('/api/auth/category', categoryRoutes);
 // app.use('/api/auth/budgets', budgetRoutes);
@@ -35,7 +35,7 @@ app.use('/api/auth', authRoutes);
 // app.use('/api/auth/transfer', transferRoute);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Testing root route');
+  res.send('Root route working');
 });
 
 // Serve static files from your frontend build directory
