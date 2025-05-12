@@ -40,7 +40,7 @@ app.use('/api/transfer', transferRoute);
 const frontendBuildPath = path.join(__dirname, '../../client/dist');
 app.use(express.static(frontendBuildPath));
 
-app.get(/(.*)/, (req: Request, res: Response) => {
+app.get('/*\w', (req: Request, res: Response) => {
   res.sendFile(path.join(frontendBuildPath, 'index.html'));
 });
 
