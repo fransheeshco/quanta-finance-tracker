@@ -122,33 +122,33 @@ const TransactionsPage = (props: Props) => {
           )}
 
           {/* Table */}
-          <div className="w-full min-h-[300px] bg-white border border-[#A64DFF] rounded-xl p-4 overflow-x-auto">
+          <div className="mt-6 bg-white border border-[#A64DFF] rounded-lg shadow-md overflow-x-auto">
             {transactions?.length === 0 ? (
               <p>No transactions found.</p>
             ) : (
               <table className="w-full text-left">
-                <thead>
+                <thead className="bg-[#F4E1FF]">
                   <tr>
-                    <th className="py-2">Type</th>
+                    <th className="py-3 px-6">Type</th>
                     <th
-                      className="py-2 cursor-pointer select-none"
+                      className="py-3 px-6 cursor-pointer select-none"
                       onClick={handleSortByAmount}
                     >
                       Amount {sortOrder === "asc" ? "↑" : "↓"}
                     </th>
-                    <th className="py-2">Date</th>
-                    <th className="py-2">Actions</th>
+                    <th className="py-3 px-6">Date</th>
+                    <th className="py-3 px-6">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {sortedData.map((transaction) => (
                     <tr key={transaction.transactionID} className="border-t">
-                      <td className="py-2">{transaction.transactionType}</td>
-                      <td className="py-2">₱{transaction.amount.toFixed(2)}</td>
-                      <td className="py-2">
+                      <td className="py-3 px-6">{transaction.transactionType}</td>
+                      <td className="py-3 px-6">₱{transaction.amount.toFixed(2)}</td>
+                      <td className="py-3 px-6">
                         {new Date(transaction.date).toLocaleDateString()}
                       </td>
-                      <td className="py-2">
+                      <td className="py-3 px-6">
                         <button
                           onClick={() => handleEdit(transaction.transactionID)}
                           className="bg-blue-500 text-white px-4 py-1 rounded-2xl mr-2"

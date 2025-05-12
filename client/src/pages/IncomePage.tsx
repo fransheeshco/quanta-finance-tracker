@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Income } from "../interfaces/interfaces";
 import { useIncome } from "../contexts/incomeContext";
 import AddIncomeForm from "../components/AddIncome";
@@ -7,16 +7,25 @@ import EditIncomeForm from "../components/EditIncomeForm";
 type Props = {};
 
 const IncomePage = (props: Props) => {
-  const { incomes, fetchIncome, deleteIncome } = useIncome();
-  const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
+  const { incomes, fetchIncome, deleteIncome, incomeCount } = useIncome();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(5);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [selectedIncome, setSelectedIncome] = useState<Income | null>(null);
+  const [sortField, setSortField] = useState<string>("amount");
+  const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
+
+  const fetchData = useCallback(
+    (page: number, sortField: string, sortOrder: "asc" | "desc") => {
+      fetchIncome({ page, sortField, sortBy: sortOrder, limit: pageSize });
+    },
+    [fetchIncome, pageSize]
+  );
 
   useEffect(() => {
-    fetchIncome();
-  }, [fetchIncome]);
+    fetchData(currentPage, sortField, sortOrder);
+  }, [currentPage, sortField, sortOrder, fetchData]);
 
   const handleDelete = (incomeID: number) => {
     deleteIncome(incomeID);
@@ -30,21 +39,30 @@ const IncomePage = (props: Props) => {
   const handleSave = async (incomeID: number, amount: number) => {
     // Here you would typically call an `updateIncome` function from context
     // e.g., await updateIncome(incomeID, amount);
-    await fetchIncome(); // Refresh income list
+    await fetchData(currentPage, sortField, sortOrder); // Refresh income list
   };
 
-  const totalPages = Math.ceil((incomes?.length ?? 0) / pageSize);
-  const currentData =
-    incomes?.slice(currentPage * pageSize, (currentPage + 1) * pageSize) ?? [];
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
+    setCurrentPage(1); // Reset to the first page on sort
+  };
+
+  const totalPages = Math.ceil(incomeCount / pageSize);
+  const currentData = incomes ?? [];
 
   const handlePrevPage = () => {
-    if (currentPage > 0) {
+    if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
     }
   };
 
   const handleNextPage = () => {
-    if (currentPage + 1 < totalPages) {
+    if (currentPage < totalPages) {
       setCurrentPage((prev) => prev + 1);
     }
   };
@@ -80,28 +98,27 @@ const IncomePage = (props: Props) => {
             />
           )}
 
-          {/* Summary / Filters */}
-          <div className="w-full h-[50px] bg-white border border-[#A64DFF] rounded-xl p-4">
-            Summary / Filters
-          </div>
-
           {/* Table */}
-          <div className="w-full min-h-[300px] bg-white border border-[#A64DFF] rounded-xl p-4 overflow-x-auto">
+          <div className="mt-6 bg-white border border-[#A64DFF] rounded-lg shadow-md overflow-x-auto">
             {incomes?.length === 0 ? (
               <p>No incomes found.</p>
             ) : (
               <table className="w-full text-left">
-                <thead>
+                <thead className="bg-[#F4E1FF]">
                   <tr>
-                    <th className="py-2">Amount</th>
-                    <th className="py-2">Actions</th>
+                    <th className="py-3 px-6 cursor-pointer" onClick={() => handleSort("amount")}>
+                      Amount {sortField === "amount" && (sortOrder === "asc" ? "↑" : "↓")}
+                    </th>
+                    <th className="py-3 px-6">Date</th>
+                    <th className="py-3 px-6">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentData.map((income, index) => (
                     <tr key={income.incomeID || index} className="border-t">
-                      <td className="py-2">₱{(income.amount ?? 0).toFixed(2)}</td>
-                      <td className="py-2 flex gap-2">
+                      <td className="py-3 px-6">₱{(income.amount ?? 0).toFixed(2)}</td>
+                      <td className="py-3 px-6">{new Date(income.date).toLocaleDateString()}</td>
+                      <td className="py-3 px-6 flex gap-2">
                         <button
                           onClick={() => handleEdit(income)}
                           className="bg-blue-500 text-white px-4 py-1 rounded-2xl"
@@ -125,20 +142,20 @@ const IncomePage = (props: Props) => {
           {/* Pagination Controls */}
           <div className="flex justify-between items-center w-full px-2">
             <span className="text-sm text-gray-600">
-              Page {currentPage + 1} of {totalPages}
+              Page {currentPage} of {totalPages}
             </span>
             <div className="flex gap-4">
               <button
                 className="text-white px-5 py-2 rounded-2xl text-xl bg-[#A64DFF] disabled:opacity-40"
                 onClick={handlePrevPage}
-                disabled={currentPage === 0}
+                disabled={currentPage === 1}
               >
                 Prev
               </button>
               <button
                 className="text-white px-5 py-2 rounded-2xl text-xl bg-[#A64DFF] disabled:opacity-40"
                 onClick={handleNextPage}
-                disabled={currentPage + 1 >= totalPages}
+                disabled={currentPage >= totalPages}
               >
                 Next
               </button>

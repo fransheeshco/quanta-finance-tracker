@@ -130,22 +130,22 @@ const CategoryPage = (props: Props) => {
           </div>
 
           {/* Category Table */}
-          <div className="w-full min-h-[300px] bg-white border border-[#A64DFF] rounded-xl p-4 overflow-x-auto">
+          <div className="mt-6 bg-white border border-[#A64DFF] rounded-lg shadow-md overflow-x-auto">
             {filteredCategories.length === 0 ? (
               <p>No categories found.</p>
             ) : (
               <table className="w-full text-left">
-                <thead>
+                <thead className="bg-[#F4E1FF]">
                   <tr>
-                    <th className="py-2">Category Name</th>
-                    <th className="py-2">Actions</th>
+                    <th className="py-3 px-6">Category Name</th>
+                    <th className="py-3 px-6">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentData.map((cat, index) => (
                     <tr key={index} className="border-t">
-                      <td className="py-2">{cat.categoryName}</td>
-                      <td className="py-2">
+                      <td className="py-3 px-6">{cat.categoryName}</td>
+                      <td className="py-3 px-6">
                         <button
                           onClick={() => handleEditCategory(cat)}
                           className="bg-blue-500 text-white px-4 py-1 rounded-2xl mr-2"

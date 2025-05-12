@@ -42,3 +42,22 @@ export interface GetCategoriesOptions {
   page?: number;
   categoryID?: string | number;
 }
+
+export interface GetIncomeOptions {
+  token?: string;
+  incomeID?: number; 
+  sortField?: string;
+  limit?: number;
+  sortBy?: 'asc' | 'desc';
+  page?: number;
+}
+
+export interface GetAccountsOptions {
+  token?: string;
+  accountID?: number; 
+  sortField?: string;
+  limit?: number;
+  sortBy?: 'asc' | 'desc';
+  page?: number;
+  search?: string; 
+}

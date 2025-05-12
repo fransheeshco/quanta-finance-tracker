@@ -35,7 +35,7 @@ export const addIncome = async (req: Request, res: Response, next: NextFunction)
 
 export const deleteIncome = async  (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const { id:incomeID } = req.body;
+    const { id: incomeID } = req.body;
 
     try {
         if(!userID) {
@@ -89,7 +89,7 @@ export const getIncome = async (req: Request, res: Response, next: NextFunction)
         const { where, order } = buildQueryOptions({ filters, sort });
         where.accountID = account.accountID;
 
-        const income = await Income.findAll({
+        const income = await Income.findAndCountAll({
             where,
             order,
             limit,

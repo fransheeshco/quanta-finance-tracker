@@ -95,7 +95,7 @@ const BudgetPage = () => {
             placeholder="Search by name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="ml-auto px-4 py-1 border border-[#A64DFF] rounded-2xl text-sm w-60"
+            className="w-full bg-white border border-[#A64DFF] rounded-xl p-4 flex items-center gap-4"
           />
 
           {/* Add Budget Modal */}
@@ -116,36 +116,36 @@ const BudgetPage = () => {
           )}
 
           {/* Table */}
-          <div className="w-full min-h-[300px] bg-white border border-[#A64DFF] rounded-xl p-4 overflow-x-auto">
+          <div className="mt-6 bg-white border border-[#A64DFF] rounded-lg shadow-md overflow-x-auto">
             {currentData.length === 0 ? (
               <p>No budgets found.</p>
             ) : (
               <table className="w-full text-left">
-                <thead>
+                <thead className="bg-[#F4E1FF]">
                   <tr>
-                    <th className="py-2 cursor-pointer" onClick={() => handleSort("budgetName")}>
+                    <th className="py-3 px-6 cursor-pointer" onClick={() => handleSort("budgetName")}>
                       Name {sortField === "budgetName" && (sortOrder === "asc" ? "↑" : "↓")}
                     </th>
-                    <th className="py-2 cursor-pointer" onClick={() => handleSort("amount")}>
+                    <th className="py-3 px-6 cursor-pointer" onClick={() => handleSort("amount")}>
                       Amount {sortField === "amount" && (sortOrder === "asc" ? "↑" : "↓")}
                     </th>
-                    <th className="py-2 cursor-pointer" onClick={() => handleSort("startDate")}>
+                    <th className="py-3 px-6 cursor-pointer" onClick={() => handleSort("startDate")}>
                       Start Date {sortField === "startDate" && (sortOrder === "asc" ? "↑" : "↓")}
                     </th>
-                    <th className="py-2 cursor-pointer" onClick={() => handleSort("endDate")}>
+                    <th className="py-3 px-6 cursor-pointer" onClick={() => handleSort("endDate")}>
                       End Date {sortField === "endDate" && (sortOrder === "asc" ? "↑" : "↓")}
                     </th>
-                    <th className="py-2">Actions</th>
+                    <th className="py-3 px-6">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentData.map((budget) => (
                     <tr key={budget.budgetID} className="border-t">
-                      <td className="py-2">{budget.budgetName}</td>
-                      <td className="py-2">₱{budget.amount.toFixed(2)}</td>
+                      <td className="py-3 px-6">{budget.budgetName}</td>
+                      <td className="py-3 px-6">₱{budget.amount.toFixed(2)}</td>
                       <td>{new Date(budget.startDate).toLocaleDateString()}</td>
                       <td>{new Date(budget.endDate).toLocaleDateString()}</td>
-                      <td className="py-2">
+                      <td className="py-3 px-6">
                         <button
                           onClick={() => handleEdit(budget.budgetID)}
                           className="bg-blue-500 text-white px-4 py-1 rounded-2xl mr-2"

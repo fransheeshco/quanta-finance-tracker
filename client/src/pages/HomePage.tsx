@@ -1,4 +1,3 @@
-import React from 'react';
 import { useExpenses } from '../contexts/expenseContext';
 import { useIncome } from '../contexts/incomeContext';
 import ExpenseChart from '../components/ChartComponent'; // Import the ExpenseChart component
@@ -32,7 +31,7 @@ const HomePage = (props: Props) => {
           </div>
           {/* Income */}
           <div className="w-[400px] h-[200px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
-            <h4 className="text-3xl">Income</h4>
+            <h4 className="text-3xl text-blue-950">Income</h4>
             <br />
             <h4 className="text-5xl">₱{totalIncome.toFixed(2)}</h4>
           </div>
@@ -44,17 +43,13 @@ const HomePage = (props: Props) => {
           </div>
         </div>
 
-        {/* Transactions and Statistics */}
-        <div className="flex flex-row mt-5 gap-4">
-          {/* Transactions */}
-          <div className="w-[820px] h-[400px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">   
-          <p className='flex justify-center text-xl'>Expenses</p>
-            <ExpenseChart /> {/* Expense chart inside the transactions div */}
-          </div>
-
-          {/* All Statistics */}
-          <div className="w-[400px] h-[400px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
-            <h4 className="text-3xl">Categories</h4>
+        <div className="flex flex-row mt-5">
+          {/* Transactions Chart (Fill Whole Row) */}
+          <div className="w-[1230px] h-[400px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
+            <p className="flex justify-center text-xl">Expenses</p>
+            <div className="w-full h-full"> {/* Ensure the chart container takes full space */}
+              <ExpenseChart /> {/* Expense chart inside the transactions div */}
+            </div>
           </div>
         </div>
       </div>

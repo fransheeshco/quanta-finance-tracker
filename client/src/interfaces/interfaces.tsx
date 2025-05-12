@@ -22,7 +22,13 @@ export type Account = {
 }
 
 export type GetAccountsResponse = {
-  accounts: Account[];
+  message: string;
+  data: { // Add the 'data' property
+    count: number;
+    accounts: Account[]; // Rename 'rows' to 'accounts' to match your API response
+    currentPage?: number; // Add currentPage if it's part of your response
+    totalPages?: number;  // Add totalPages if it's part of your response
+  };
 };
 
 export type Categories = {
@@ -66,11 +72,17 @@ export type GetTotalExpensesResponse = {
 
 export type Income = {
   incomeID: number;
+  expenseID: number;
   amount: number;
+  date: Date;
 }
 
 export type GetIncomeResponse = {
-  income: Income[];
+  message: string;
+  income: {
+    count: number;
+    rows: Income[];
+  } 
 }
 
 export type Budget = {

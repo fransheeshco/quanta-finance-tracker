@@ -53,8 +53,6 @@ export const createCategoryAPI = async (categoryName: string, token: string) => 
   };
   
   
-  
-  
   export const updateCategoryAPI = async (categoryName: string, categoryID: number, token: string) => {
     try {
       const data = await axios.patch<Categories>(

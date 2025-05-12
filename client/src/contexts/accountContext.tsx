@@ -12,13 +12,15 @@ import {
   deleteAccountAPI,
   updateAccountAPI,
   fetchAccountsAPI,
-} from "../api";
+} from "../api/AccountAPI";
 import { toast } from "react-toastify";
 import { useAuth } from "./authContext";
+import { GetAccountsOptions } from "@/interfaces/QueryOptions";
 
 type AccountContextType = {
   accounts: Account[] | undefined;
-  fetchAccounts: (sortBy?: string, sortDirection?: "asc" | "desc", limit?: number, page?: number) => Promise<void>;
+  accountCount: number;
+  fetchAccounts: (options: GetAccountsOptions) => Promise<void>;
   createAccount: (accountType: string, balance: number, userID: number) => Promise<void>;
   deleteAccount: (accountID: number) => Promise<void>;
   updateAccount: (accountID: number, balance: number, accountType: string) => Promise<void>;
@@ -32,19 +34,20 @@ type Props = {
 
 export const AccountProvider = ({ children }: Props) => {
   const [accounts, setAccounts] = useState<Account[] | undefined>(undefined);
-  const { user, token } = useAuth();
+  const [accountCount, setAccountCount] = useState(0);
+  const { token } = useAuth();
 
   const fetchAccounts = useCallback(
     async (
-      sortBy: string = "balance",
-      sortDirection: "asc" | "desc" = "asc",
-      limit: number = 5,
-      page: number = 1
+      filters: GetAccountsOptions
     ) => {
       if (!token) return;
       try {
-        const response = await fetchAccountsAPI(token, sortBy, sortDirection, limit, page);
-        if (response) setAccounts(response);
+        const response = await fetchAccountsAPI(filters);
+        console.log("asdasdasdas", response)
+        if (!response) return
+        setAccounts(response.data.accounts);
+        setAccountCount(response?.data.count);
       } catch (error) {
         toast.error("Failed to fetch accounts.");
       }
@@ -59,7 +62,7 @@ export const AccountProvider = ({ children }: Props) => {
         const newAccount = await createAccountAPI(accountType, balance, userID, token);
         if (newAccount) {
           toast.success("Account created successfully.");
-          await fetchAccounts(); // default sort & limit
+          await fetchAccounts({ page: 1, limit: 5 }); // default sort & limit
         }
       } catch (error) {
         toast.error("Failed to create account.");
@@ -74,7 +77,7 @@ export const AccountProvider = ({ children }: Props) => {
       try {
         await deleteAccountAPI(accountID, token);
         toast.success("Account deleted.");
-        await fetchAccounts();
+        await fetchAccounts({ page: 1, limit: 5 });
       } catch (error) {
         toast.error("Failed to delete account.");
       }
@@ -88,7 +91,7 @@ export const AccountProvider = ({ children }: Props) => {
       try {
          await updateAccountAPI(accountID, token, balance, accountType);
         toast.success("Account updated.");
-        await fetchAccounts();
+        await fetchAccounts({ page: 1, limit: 5 });
       } catch (error) {
         toast.error("Failed to update account.");
       }
@@ -98,7 +101,7 @@ export const AccountProvider = ({ children }: Props) => {
 
   useEffect(() => {
     if (token) {
-      fetchAccounts();
+      fetchAccounts({ page: 1, limit: 5 });
     }
   }, [token, fetchAccounts]);
 
@@ -106,6 +109,7 @@ export const AccountProvider = ({ children }: Props) => {
     <AccountContext.Provider
       value={{
         accounts,
+        accountCount,
         fetchAccounts,
         createAccount,
         deleteAccount,

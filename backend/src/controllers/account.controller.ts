@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { updateAccountBalance } from "../utils/updateAccountUtils";
 import { Account } from "../models/associationblock";
+import { buildQueryOptions } from "../utils/sortingAndFilterUtils"
 
 
 export const addAccount = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -25,7 +26,7 @@ export const addAccount = async (req: Request, res: Response, next: NextFunction
       balance: balance,
       accountType: accountType
     })
-    return res.status(201).json({ message: "Account created successfully.", account})
+    return res.status(201).json({ message: "Account created successfully.", account })
   } catch (err) {
     return res.status(403).json({ message: "Could not create account." })
   }
@@ -87,55 +88,59 @@ export const updateAccount = async (req: Request, res: Response): Promise<any> =
   }
 };
 
-
-import { Op } from 'sequelize';
-
-export const getAccounts = async (req: Request, res: Response): Promise<any> => {
-  const {
-    page = 1,
-    limit = 10,
-    sortBy = 'accountType',
-    sortDirection = 'asc',
-    accountType, // filter param (example)
-    minBalance,  // optional filter
-    maxBalance   // optional filter
-  } = req.query;
-
-  const userID = req.userID || req.params.id;
+export const getAccounts = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  const userID = req.userID;
 
   try {
     if (!userID) {
-      return res.status(401).json({ message: "Unauthorized: No user ID." });
+      return res.status(401).json({ message: 'Unauthorized: No user ID.' });
     }
 
-    const offset = (Number(page) - 1) * Number(limit);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 5; // Make limit configurable
+    const offset = (page - 1) * limit;
 
-    // Create filter object
-    const filters: any = { userID };
+    const filters = {
+      accountType: req.query.accountType,
+    };
 
-    if (accountType) {
-      filters.accountType = accountType;
-    }
+    const sortField = (req.query.sortField as string) || 'createdAt';
+    const sortDirection =
+      req.query.sortBy === 'asc' || req.query.sortBy === 'desc'
+      ? (req.query.sortBy as 'asc' | 'desc')
+      : 'desc';
 
-    if (minBalance || maxBalance) {
-      filters.balance = {};
-      if (minBalance) filters.balance[Op.gte] = Number(minBalance);
-      if (maxBalance) filters.balance[Op.lte] = Number(maxBalance);
-    }
+    const sort: Record<string, 'asc' | 'desc'> = {
+      [sortField]: sortDirection,
+    };
 
-    const accounts = await Account.findAll({
-      where: filters,
-      order: [[String(sortBy), String(sortDirection).toUpperCase()]],
+    const { where, order } = buildQueryOptions({ filters, sort });
+
+    const { count, rows: accounts } = await Account.findAndCountAll({
+      where,
+      order,
       limit: Number(limit),
-      offset
+      offset,
     });
 
-    return res.status(200).json({ message: "Accounts found", accounts });
+    return res.status(200).json({
+      message: 'Accounts found',
+      data: {
+        count,
+        accounts,
+        currentPage: Number(page),
+        totalPages: Math.ceil(count / Number(limit)),
+      },
+    });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Error retrieving accounts." });
+    return res.status(500).json({ message: 'Error retrieving accounts.' });
   }
-}
+};
+
 
 export const totalBalance = async (req: Request, res: Response): Promise<any> => {
   const userID = req.userID;
