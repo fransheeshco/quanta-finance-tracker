@@ -38,7 +38,10 @@ const ExpensesPage = () => {
   }, [filterType, categoryFilter, searchTerm]);
 
   const handleDelete = (expenseID: number) => {
-    deleteExpense(expenseID);
+    if (window.confirm("Are you sure you want to delete this Expenses?")) {
+      deleteExpense(expenseID);
+    }
+    
   };
 
   const handleEdit = (expenseID: number) => {

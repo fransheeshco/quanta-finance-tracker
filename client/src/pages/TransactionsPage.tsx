@@ -38,7 +38,10 @@ const TransactionsPage = (props: Props) => {
   }, [currentPage, pageSize, filterType, fetchTransactions]);
 
   const handleDelete = (transactionID: number) => {
-    deleteTransactions(transactionID);
+    if (window.confirm("Are you sure you want to delete this Transactio?")) {
+      deleteTransactions(transactionID);
+    }
+    
   };
 
   const handleEdit = (transactionID: number) => {

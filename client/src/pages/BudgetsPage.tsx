@@ -36,7 +36,9 @@ const BudgetPage = () => {
   }, [searchTerm]);
 
   const handleDelete = (budgetID: number) => {
-    removeBudget(budgetID);
+    if (window.confirm("Are you sure you want to delete this budget?")) {
+      removeBudget(budgetID);
+    }
   };
 
   const handleEdit = (budgetID: number) => {

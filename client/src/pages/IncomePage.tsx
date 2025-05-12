@@ -28,7 +28,10 @@ const IncomePage = (props: Props) => {
   }, [currentPage, sortField, sortOrder, fetchData]);
 
   const handleDelete = (incomeID: number) => {
-    deleteIncome(incomeID);
+    if (window.confirm("Are you sure you want to delete this Income?")) {
+      deleteIncome(incomeID);
+    }
+    
   };
 
   const handleEdit = (income: Income) => {

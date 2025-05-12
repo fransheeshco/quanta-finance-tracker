@@ -82,7 +82,9 @@ const AccountsPage = () => {
   };
 
   const handleDelete = async (id: number) => {
-    await deleteAccount(id);
+    if (window.confirm("Are you sure you want to delete this Account?")) {
+      await deleteAccount(id);
+    }
     fetchAccountsData(page, sortKey, sortDirection, searchTerm);
   };
 
