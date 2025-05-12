@@ -6,7 +6,7 @@ import React, {
   ReactNode,
   useContext,
 } from "react";
-import { Budget, GetBudgetResponse } from "../interfaces/interfaces";
+import { Budget } from "../interfaces/interfaces";
 import {
   createBudgetAPI,
   deleteBudgetAPI,
@@ -18,6 +18,7 @@ import { useAuth } from "./authContext";
 
 type BudgetTypeContext = {
   budgets: Budget[] | null;
+  totalBudgets: number;
   fetchBudgets: (
     page?: number,
     sortField?: string,
@@ -47,6 +48,7 @@ const BudgetContext = createContext<BudgetTypeContext | undefined>(undefined);
 
 export const BudgetProvider = ({ children }: Props) => {
   const [budgets, setBudgets] = useState<Budget[] | null>(null);
+  const [totalBudgets, setTotalBudgets] = useState<number>(0);
   const { token } = useAuth();
 
   const fetchBudgets = useCallback(
@@ -63,16 +65,24 @@ export const BudgetProvider = ({ children }: Props) => {
           sortBy,
           page,
         });
-        setBudgets(fetched.budgets);
-        console.log("Total number of budgets:", fetched.count);
+        if (fetched) {
+          setBudgets(fetched.budgets);
+          setTotalBudgets(fetched.count);
+          console.log("Total number of budgets:", fetched.count);
+        } else {
+          setBudgets(null);
+          setTotalBudgets(0);
+        }
       } catch (err) {
         console.error("Error fetching budgets:", err);
         toast.error("Failed to fetch budgets");
+        setBudgets(null);
+        setTotalBudgets(0);
       }
     },
-    [token] // <— depends only on token
+    [token]
   );
-  
+
 
   const addBudget = async (
     budgetName: string,
@@ -83,9 +93,13 @@ export const BudgetProvider = ({ children }: Props) => {
     if (!token) return;
 
     try {
-      await createBudgetAPI(token, budgetName, amount, startDate, endDate);
-      await fetchBudgets();
-      toast.success("Budget added!");
+      const newBudget = await createBudgetAPI(token, budgetName, amount, startDate, endDate);
+      if (newBudget) {
+        await fetchBudgets();
+        toast.success("Budget added!");
+      } else {
+        toast.error("Failed to add budget.");
+      }
     } catch {
       toast.error("Failed to add budget.");
     }
@@ -101,7 +115,7 @@ export const BudgetProvider = ({ children }: Props) => {
     if (!token) return;
 
     try {
-      await updateBudgetAPI(
+      const updatedBudget = await updateBudgetAPI(
         token,
         budgetID,
         budgetName,
@@ -109,8 +123,12 @@ export const BudgetProvider = ({ children }: Props) => {
         startDate,
         endDate
       );
-      await fetchBudgets();
-      toast.success("Budget updated!");
+      if (updatedBudget) {
+        await fetchBudgets();
+        toast.success("Budget updated!");
+      } else {
+        toast.error("Failed to update budget.");
+      }
     } catch {
       toast.error("Failed to update budget.");
     }
@@ -120,9 +138,13 @@ export const BudgetProvider = ({ children }: Props) => {
     if (!token) return;
 
     try {
-      await deleteBudgetAPI(token, budgetID);
-      await fetchBudgets();
-      toast.success("Budget deleted.");
+      const deletedBudget = await deleteBudgetAPI(token, budgetID);
+      if (deletedBudget) {
+        await fetchBudgets();
+        toast.success("Budget deleted.");
+      } else {
+        toast.error("Failed to delete budget.");
+      }
     } catch {
       toast.error("Failed to delete budget.");
     }
@@ -131,13 +153,17 @@ export const BudgetProvider = ({ children }: Props) => {
   useEffect(() => {
     if (token) {
       fetchBudgets();
+    } else {
+      setBudgets(null);
+      setTotalBudgets(0);
     }
-  }, [token]);
+  }, [token, fetchBudgets]);
 
   return (
     <BudgetContext.Provider
       value={{
         budgets,
+        totalBudgets,
         fetchBudgets,
         addBudget,
         editBudget,

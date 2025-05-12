@@ -7,14 +7,13 @@ import EditBudgetForm from "../components/EditbudgetsForm";
 
 const BudgetPage = () => {
   const {
-    budgets: rawBudgets,
+    budgets,
+    totalBudgets,
     fetchBudgets,
     addBudget,
     removeBudget,
     editBudget,
   } = useBudgets();
-
-  const budgets = rawBudgets ?? [];
 
   const { categories } = useCategory();
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,13 +22,14 @@ const BudgetPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editBudgetID, setEditBudgetID] = useState<number | null>(null);
+  const [sortField, setSortField] = useState<string>("amount");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchBudgets(currentPage, "amount", sortOrder);
-  }, [currentPage, pageSize, sortOrder, fetchBudgets]);
+    fetchBudgets(currentPage, sortField, sortOrder);
+  }, [currentPage, pageSize, sortField, sortOrder, fetchBudgets]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -44,11 +44,16 @@ const BudgetPage = () => {
     setIsEditOpen(true);
   };
 
-  const handleSortByAmount = () => {
-    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
   };
 
-  const totalPages = Math.ceil(budgets.length / pageSize);
+  const totalPages = Math.ceil(totalBudgets / pageSize);
   const currentData = useMemo(() => {
     let data = budgets ?? [];
 
@@ -58,14 +63,8 @@ const BudgetPage = () => {
       );
     }
 
-    if (sortOrder === "asc") {
-      data = data.sort((a, b) => a.amount - b.amount);
-    } else {
-      data = data.sort((a, b) => b.amount - a.amount);
-    }
-
     return data;
-  }, [budgets, searchTerm, sortOrder]);
+  }, [budgets, searchTerm]);
 
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
@@ -124,12 +123,18 @@ const BudgetPage = () => {
               <table className="w-full text-left">
                 <thead>
                   <tr>
-                    <th className="py-2">Name</th>
-                    <th className="py-2 cursor-pointer" onClick={handleSortByAmount}>
-                      Amount {sortOrder === "asc" ? "↑" : "↓"}
+                    <th className="py-2 cursor-pointer" onClick={() => handleSort("budgetName")}>
+                      Name {sortField === "budgetName" && (sortOrder === "asc" ? "↑" : "↓")}
                     </th>
-                    <th className="py-2">Start Date</th>
-                    <th className="py-2">End Date</th>
+                    <th className="py-2 cursor-pointer" onClick={() => handleSort("amount")}>
+                      Amount {sortField === "amount" && (sortOrder === "asc" ? "↑" : "↓")}
+                    </th>
+                    <th className="py-2 cursor-pointer" onClick={() => handleSort("startDate")}>
+                      Start Date {sortField === "startDate" && (sortOrder === "asc" ? "↑" : "↓")}
+                    </th>
+                    <th className="py-2 cursor-pointer" onClick={() => handleSort("endDate")}>
+                      End Date {sortField === "endDate" && (sortOrder === "asc" ? "↑" : "↓")}
+                    </th>
                     <th className="py-2">Actions</th>
                   </tr>
                 </thead>
@@ -157,7 +162,6 @@ const BudgetPage = () => {
                     </tr>
                   ))}
                 </tbody>
-
               </table>
             )}
           </div>
