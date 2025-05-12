@@ -6,6 +6,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
+const auth_routes_1 = __importDefault(require("./routes/auth.routes")); // Comment out this line
+const user_routes_1 = __importDefault(require("./routes/user.routes"));
+const category_routes_1 = __importDefault(require("./routes/category.routes"));
+const budget_routes_1 = __importDefault(require("./routes/budget.routes"));
+const transactions_routes_1 = __importDefault(require("./routes/transactions.routes"));
+const savings_routes_1 = __importDefault(require("./routes/savings.routes"));
+const expenses_routes_1 = __importDefault(require("./routes/expenses.routes"));
+const account_routes_1 = __importDefault(require("./routes/account.routes"));
+const income_routes_1 = __importDefault(require("./routes/income.routes"));
+const transfer_routes_1 = __importDefault(require("./routes/transfer.routes"));
 const path_1 = __importDefault(require("path"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -14,26 +24,26 @@ const PORT = process.env.PORT || 8000;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // API Routes
-// app.use('/api/auth', authRoutes); // Ensure this line is commented out
-// app.use('/api/auth/user', userRoutes) ;
-// app.use('/api/auth/category', categoryRoutes);
-// app.use('/api/auth/budgets', budgetRoutes);
-// app.use('/api/auth/transaction', transactionRoutes);
-// app.use('/api/auth/savings', savingsRoutes);
-// app.use('/api/auth/expenses', expensesRoutes);
-// app.use('/api/auth/account', accountRoutes);
-// app.use('/api/auth/income', incomeRoutes);
-// app.use('/api/auth/transfer', transferRoute);
+app.use('/api/auth', auth_routes_1.default); // Ensure this line is commented out
+app.use('/api/auth/user', user_routes_1.default);
+app.use('/api/auth/category', category_routes_1.default);
+app.use('/api/auth/budgets', budget_routes_1.default);
+app.use('/api/auth/transaction', transactions_routes_1.default);
+app.use('/api/auth/savings', savings_routes_1.default);
+app.use('/api/auth/expenses', expenses_routes_1.default);
+app.use('/api/auth/account', account_routes_1.default);
+app.use('/api/auth/income', income_routes_1.default);
+app.use('/api/auth/transfer', transfer_routes_1.default);
 app.get('/', (req, res) => {
     res.send('Root route working');
 });
 // Serve static files from your frontend build directory
-const frontendBuildPath = path_1.default.join(__dirname, '../../frontend/build'); // Adjust the path as needed
+const frontendBuildPath = path_1.default.join(__dirname, '../../frontend/build');
 app.use(express_1.default.static(frontendBuildPath));
 // Define a catch-all route to serve the frontend's index.html for all other requests
-// app.get('*', (req: Request, res: Response) => {
-//  res.sendFile(path.join(frontendBuildPath, 'index.html'));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path_1.default.join(frontendBuildPath, 'index.html'));
+});
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
