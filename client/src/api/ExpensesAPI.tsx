@@ -14,7 +14,7 @@ export const createExpenseAPI = async (
 ): Promise<Expenses | undefined> => {
   try {
     const res = await axios.post<Expenses>(
-      `${api}auth/expenses/addexpenses`,
+      `${api}expenses/addexpenses`,
       {
         title,
         amount,
@@ -52,7 +52,7 @@ export const getExpensesAPI = async (
   const token = localStorage.getItem("token");
 
   try {
-    const res = await axios.get(`${api}auth/expenses/getexpenses?${queryParams.toString()}`, {
+    const res = await axios.get(`${api}expenses/getexpenses?${queryParams.toString()}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -82,7 +82,7 @@ export const updateExpensesAPI = async (
 ): Promise<Expenses | undefined> => {
   try {
     const res = await axios.patch<Expenses>(
-      `${api}auth/expenses/updateexpenses/${expenseID}`,
+      `${api}expenses/updateexpenses/${expenseID}`,
       {
         title,
         amount,
@@ -107,7 +107,7 @@ export const deleteExpensesAPI = async (
 ): Promise<Expenses | undefined> => {
   try {
     const res = await axios.delete<Expenses>(
-      `${api}auth/expenses/deleteexpense/${expenseID}`,
+      `${api}expenses/deleteexpense/${expenseID}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

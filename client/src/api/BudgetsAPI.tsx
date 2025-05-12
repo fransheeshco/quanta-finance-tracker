@@ -7,7 +7,7 @@ const api = "http://localhost:8000/api/";
 export const createBudgetAPI = async (token: string, budgetName: string, amount: number, startDate: Date, endDate: Date) => {
   try {
     const response = await axios.post<Budget>(
-      `${api}auth/budgets/createbudget/`,
+      `${api}budgets/createbudget/`,
       {
         budgetName,
         amount,
@@ -29,7 +29,7 @@ export const createBudgetAPI = async (token: string, budgetName: string, amount:
 export const deleteBudgetAPI = async (token: string, budgetID: number) => {
   try {
     const response = await axios.delete<Budget>(
-      `${api}auth/budgets/deletebudget/${budgetID}`,
+      `${api}budgets/deletebudget/${budgetID}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -45,7 +45,7 @@ export const deleteBudgetAPI = async (token: string, budgetID: number) => {
 export const updateBudgetAPI = async (token: string, budgetID: number, budgetName: string, amount: number, startDate: Date, endDate: Date) => {
   try {
     const response = await axios.patch<Budget>(
-      `${api}auth/budgets/updatebudget/${budgetID}`,
+      `${api}budgets/updatebudget/${budgetID}`,
       {
         budgetName,
         amount,
@@ -77,7 +77,7 @@ export const getBudgetAPI = async ({
 }): Promise<GetBudgetResponse> => {
   try {
     const response = await axios.get<GetBudgetResponse>(
-        `${api}auth/budgets/getbudgets`,
+        `${api}budgets/getbudgets`,
         {
           params: {
             page,

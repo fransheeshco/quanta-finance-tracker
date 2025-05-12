@@ -16,16 +16,16 @@ const PORT = process.env.PORT || 8000;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // API Routes
-app.use('/api/auth', auth_routes_1.default); // Ensure this line is commented out
-app.use('/api/auth/user', user_routes_1.default);
-//app.use('/api/auth/category', categoryRoutes);
-//app.use('/api/auth/budgets', budgetRoutes);
-//app.use('/api/auth/transaction', transactionRoutes);
-//app.use('/api/auth/savings', savingsRoutes);
-//app.use('/api/auth/expenses', expensesRoutes);
-//app.use('/api/auth/account', accountRoutes);
-//app.use('/api/auth/income', incomeRoutes);
-//app.use('/api/auth/transfer', transferRoute);
+app.use('/api', auth_routes_1.default); // Ensure this line is commented out
+app.use('/api/user', user_routes_1.default);
+//app.use('/api/category', categoryRoutes);
+//app.use('/api/budgets', budgetRoutes);
+//app.use('/api/transaction', transactionRoutes);
+//app.use('/api/savings', savingsRoutes);
+//app.use('/api/expenses', expensesRoutes);
+//app.use('/api/account', accountRoutes);
+//app.use('/api/income', incomeRoutes);
+//app.use('/api/transfer', transferRoute);
 app.get('/', (req, res) => {
     res.send('Root route working');
 });

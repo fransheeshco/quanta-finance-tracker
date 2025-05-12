@@ -10,7 +10,7 @@ const api = "http://localhost:8000/api/";
 export const createCategoryAPI = async (categoryName: string, token: string) => {
     try {
       const data = await axios.post<Categories>(
-        `${api}auth/category/postcategories`,
+        `${api}category/postcategories`,
         {
           categoryName
         },
@@ -39,7 +39,7 @@ export const createCategoryAPI = async (categoryName: string, token: string) => 
     if (sortBy) queryParams.append("sortBy", sortBy);
   
     try {
-      const response = await axios.get<GetCategoriesResponse>(`${api}auth/category/getcategories?${queryParams.toString()}`, {
+      const response = await axios.get<GetCategoriesResponse>(`${api}category/getcategories?${queryParams.toString()}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -56,7 +56,7 @@ export const createCategoryAPI = async (categoryName: string, token: string) => 
   export const updateCategoryAPI = async (categoryName: string, categoryID: number, token: string) => {
     try {
       const data = await axios.patch<Categories>(
-        `${api}auth/category/updatecategory/${categoryID}`,
+        `${api}category/updatecategory/${categoryID}`,
         {
           categoryName
         },
@@ -75,7 +75,7 @@ export const createCategoryAPI = async (categoryName: string, token: string) => 
   export const deleteCategoryAPI = async (categoryID: number, token: string) => {
     try {
       const data = await axios.delete<Categories>(
-        `${api}auth/category/deletecategory/${categoryID}`,
+        `${api}category/deletecategory/${categoryID}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

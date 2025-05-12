@@ -10,7 +10,7 @@ const api = "http://localhost:8000/api/";
 export const createIncomeAPI = async (amount: number, date: Date, token: string) => {
     try {
         const data = await axios.post<Income>(
-            `${api}auth/income/addincome`,
+            `${api}income/addincome`,
             {
                 amount,
                 date: date.toISOString().split('T')[0],
@@ -45,7 +45,7 @@ export const getIncomesAPI = async (options: GetIncomeOptions = {}): Promise<Get
 
     try {
         const data = await axios.get<GetIncomeResponse>(
-            `${api}auth/income/getincomes?${queryParams}`,
+            `${api}income/getincomes?${queryParams}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -70,7 +70,7 @@ export const getIncomesAPI = async (options: GetIncomeOptions = {}): Promise<Get
 export const deleteIncomeAPI = async (incomeID: number, token: string) => {
     try {
         const data = await axios.patch<Categories>(
-            `${api}auth/income/deleteincome/${incomeID}`,
+            `${api}income/deleteincome/${incomeID}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -86,7 +86,7 @@ export const deleteIncomeAPI = async (incomeID: number, token: string) => {
 export const updateIncomeAPI = async (token: string, amount: number, incomeID: number) => {
     try {
         const data = await axios.patch<Income>(
-            `${api}auth/income/updateincome/${incomeID}`,
+            `${api}income/updateincome/${incomeID}`,
             {
                 amount
             },

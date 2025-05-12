@@ -14,7 +14,7 @@ export const createSavingsAPI = async (
   ) => {
     try {
       const { data } = await axios.post<Savings>(
-        `${api}auth/savings/addsavings`,
+        `${api}savings/addsavings`,
         { title, goalAmount, currentAmount },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -33,7 +33,7 @@ export const createSavingsAPI = async (
   ) => {
     try {
       const { data } = await axios.patch<Savings>(
-        `${api}auth/savings/updatesavings/${savingID}`,
+        `${api}savings/updatesavings/${savingID}`,
         { title, goalAmount, currentAmount },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -46,7 +46,7 @@ export const createSavingsAPI = async (
   export const deleteSavingsAPI = async (token: string, savingID: number) => {
     try {
       const { data } = await axios.delete(
-        `${api}auth/savings/deletesavings/${savingID}`,
+        `${api}savings/deletesavings/${savingID}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       return data;
@@ -71,7 +71,7 @@ export const createSavingsAPI = async (
   
     try {
       const response = await axios.get<GetSavingsResponse>(
-        `${api}auth/savings/getsavings?${queryParams.toString()}`,
+        `${api}savings/getsavings?${queryParams.toString()}`,
         {
           method: 'GET',
           headers: {

@@ -16,7 +16,7 @@ export const createAccountAPI = async (
 ) => {
     try {
         const data = await axios.post<Account>(
-            `${api}auth/account/addaccount`,
+            `${api}account/addaccount`,
             {
                 accountType,
                 balance,
@@ -38,7 +38,7 @@ export const createAccountAPI = async (
 export const deleteAccountAPI = async (accountID: number, token: string,) => {
     try {
         const data = await axios.delete<Account>(
-            `${api}auth/account/deleteaccount/${accountID}`,
+            `${api}account/deleteaccount/${accountID}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -55,7 +55,7 @@ export const deleteAccountAPI = async (accountID: number, token: string,) => {
 export const updateAccountAPI = async (accountID: number, token: string, balance: number, accountType: string) => {
     try {
         const data = await axios.patch<Account>(
-            `${api}auth/account/updateaccount/${accountID}`,
+            `${api}account/updateaccount/${accountID}`,
             {
                 balance,
                 accountType,
@@ -91,7 +91,7 @@ export const fetchAccountsAPI = async (options: GetAccountsOptions = {}
 
     try {
         const response = await axios.get<GetAccountsResponse>(
-            `${api}auth/account/getaccounts?${queryParams.toString()}`,
+            `${api}account/getaccounts?${queryParams.toString()}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

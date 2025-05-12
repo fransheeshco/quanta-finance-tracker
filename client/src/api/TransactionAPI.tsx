@@ -11,7 +11,7 @@ const api = "http://localhost:8000/api/";
 export const createTransactionAPI = async (token: string, transactionType: TransactionType, amount: number, date: Date) => {
     try {
       const data = await axios.post<Transactions>(
-        `${api}auth/transaction/addtransaction`,
+        `${api}transaction/addtransaction`,
         {
           transactionType,
           amount,
@@ -32,7 +32,7 @@ export const createTransactionAPI = async (token: string, transactionType: Trans
   export const deleteTransactionAPI = async (token: string, transactionID: number) => {
     try {
       const data = await axios.delete<Transactions>(
-        `${api}auth/transaction/deletetransaction/${transactionID}`,
+        `${api}transaction/deletetransaction/${transactionID}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ export const createTransactionAPI = async (token: string, transactionType: Trans
   export const updateTransactionAPI = async (token: string, transactionType: TransactionType, amount: number, date: Date, transactionID: number) => {
     try {
       const data = await axios.patch<Transactions>(
-        `${api}auth/transaction/updatetransaction/${transactionID}`,
+        `${api}transaction/updatetransaction/${transactionID}`,
         {
           transactionType,
           amount,
@@ -84,7 +84,7 @@ export const createTransactionAPI = async (token: string, transactionType: Trans
   
     try {
       const response = await axios.get<GetTransactionResponse>(
-        `${api}auth/transaction/gettransactions?${queryParams.toString()}`,
+        `${api}transaction/gettransactions?${queryParams.toString()}`,
         {
           method: 'GET',
           headers: {
