@@ -32,7 +32,7 @@ app.use(express.json());
 //app.use('/api/expenses', expensesRoutes);
 //app.use('/api/account', accountRoutes);
 //app.use('/api/income', incomeRoutes);
-//app.use('/api/transfer', transferRoute);
+app.use('/api/transfer', transferRoute);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Root route working');
@@ -44,9 +44,9 @@ app.use(express.static(frontendBuildPath));
 
 
 // Define a catch-all route to serve the frontend's index.html for all other requests
-app.get('*', (req: Request, res: Response) => {
-  res.sendFile(path.join(frontendBuildPath, 'index.html'));
-});
+//app.get('*', (req: Request, res: Response) => {
+//res.sendFile(path.join(frontendBuildPath, 'index.html'));
+//});
 
 
 app.listen(PORT, () => {
