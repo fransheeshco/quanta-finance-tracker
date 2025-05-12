@@ -24,7 +24,7 @@ app.use(express.json());
 
 // API Routes
 app.use('/api', authRoutes); // Ensure this line is commented out
-app.use('/api/user', userRoutes) ;
+app.use('/api/user', userRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/budgets', budgetRoutes);
 app.use('/api/transaction', transactionRoutes);
@@ -34,9 +34,7 @@ app.use('/api/account', accountRoutes);
 app.use('/api/income', incomeRoutes);
 app.use('/api/transfer', transferRoute);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Root route working');
-});
+
 
 // Serve static files from your frontend build directory
 const frontendBuildPath = path.join(__dirname, '../../client/build');
@@ -44,9 +42,9 @@ app.use(express.static(frontendBuildPath));
 
 
 // Define a catch-all route to serve the frontend's index.html for all other requests
-//app.get('*', (req: Request, res: Response) => {
-//res.sendFile(path.join(frontendBuildPath, 'index.html'));
-//});
+app.get('*', (req: Request, res: Response) => {
+  res.sendFile(path.join(frontendBuildPath, 'index.html'));
+});
 
 
 app.listen(PORT, () => {
