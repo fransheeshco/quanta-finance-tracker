@@ -12,6 +12,7 @@ const HomePage = (_props: Props) => {
 
   // Fallback to an empty array if expenses or incomes is null or undefined
   const totalIncome = (incomes || []).reduce((acc, income) => acc + income.amount, 0);
+  const remaining = totalIncome + balance;
   const totalExpenses = (expenses || []).reduce((acc, expense) => acc + expense.amount, 0);
 
   if (loadingIncomes || loadingExpenses) return <div>Loading...</div>;
@@ -29,7 +30,7 @@ const HomePage = (_props: Props) => {
           <div className="w-[400px] h-[200px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
             <h4 className="text-3xl">Remaining</h4>
             <br />
-            <h4 className="text-5xl">₱{(totalIncome - totalExpenses).toFixed(2)}</h4>
+            <h4 className="text-5xl">₱{(remaining - totalExpenses).toFixed(2)}</h4>
           </div>
           {/* Income */}
           <div className="w-[400px] h-[200px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
@@ -42,12 +43,6 @@ const HomePage = (_props: Props) => {
             <h4 className="text-3xl">Expenses</h4>
             <br />
             <h4 className="text-5xl">₱{totalExpenses.toFixed(2)}</h4>
-          </div>
-          {/* Total Balance */}
-          <div className="w-[400px] h-[200px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
-            <h4 className="text-3xl text-green-500">Total Balance</h4>
-            <br />
-            <h4 className="text-5xl">₱{balance?.toFixed(2)}</h4> {/* Use optional chaining in case balance is still undefined initially */}
           </div>
         </div>
 
