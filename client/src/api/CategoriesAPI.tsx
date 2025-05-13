@@ -5,12 +5,13 @@ import {
 } from "../interfaces/interfaces";
 import { GetCategoriesOptions } from "@/interfaces/QueryOptions";
 
-const api = "http://localhost:8000/api/";
+const api = import.meta.env.VITE_API_BASE_URL;
+
 
 export const createCategoryAPI = async (categoryName: string, token: string) => {
     try {
       const data = await axios.post<Categories>(
-        `${api}category/postcategories`,
+        `${api}api/auth/category/postcategories`,
         {
           categoryName
         },
@@ -39,7 +40,7 @@ export const createCategoryAPI = async (categoryName: string, token: string) => 
     if (sortBy) queryParams.append("sortBy", sortBy);
   
     try {
-      const response = await axios.get<GetCategoriesResponse>(`${api}category/getcategories?${queryParams.toString()}`, {
+      const response = await axios.get<GetCategoriesResponse>(`${api}api/auth/category/getcategories?${queryParams.toString()}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -56,7 +57,7 @@ export const createCategoryAPI = async (categoryName: string, token: string) => 
   export const updateCategoryAPI = async (categoryName: string, categoryID: number, token: string) => {
     try {
       const data = await axios.patch<Categories>(
-        `${api}category/updatecategory/${categoryID}`,
+        `${api}api/auth/category/updatecategory/${categoryID}`,
         {
           categoryName
         },
@@ -75,7 +76,7 @@ export const createCategoryAPI = async (categoryName: string, token: string) => 
   export const deleteCategoryAPI = async (categoryID: number, token: string) => {
     try {
       const data = await axios.delete<Categories>(
-        `${api}category/deletecategory/${categoryID}`,
+        `${api}api/auth/category/deletecategory/${categoryID}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

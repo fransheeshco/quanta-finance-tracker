@@ -1,7 +1,5 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useBudgets } from "../contexts/budgetsContext";
-import { useCategory } from "../contexts/categoryContext";
-import { useNavigate } from "react-router-dom";
 import AddBudgetForm from "../components/AddBudgetForm";
 import EditBudgetForm from "../components/EditbudgetsForm";
 
@@ -10,22 +8,17 @@ const BudgetPage = () => {
     budgets,
     totalBudgets,
     fetchBudgets,
-    addBudget,
     removeBudget,
-    editBudget,
   } = useBudgets();
 
-  const { categories } = useCategory();
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, _setPageSize] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editBudgetID, setEditBudgetID] = useState<number | null>(null);
   const [sortField, setSortField] = useState<string>("amount");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBudgets(currentPage, sortField, sortOrder);
@@ -67,6 +60,7 @@ const BudgetPage = () => {
 
     return data;
   }, [budgets, searchTerm]);
+
 
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);

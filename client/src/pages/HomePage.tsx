@@ -4,7 +4,7 @@ import ExpenseChart from '../components/ChartComponent'; // Import the ExpenseCh
 
 type Props = {};
 
-const HomePage = (props: Props) => {
+const HomePage = (_props: Props) => {
   const { expenses, loading: loadingExpenses } = useExpenses();
   const { incomes, loading: loadingIncomes } = useIncome();
 

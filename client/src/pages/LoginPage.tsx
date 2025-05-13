@@ -1,4 +1,3 @@
-import React from 'react'
 import Footer from '../components/Footer'
 import { NavLink } from 'react-router-dom';
 import * as Yup from "yup"
@@ -19,7 +18,7 @@ const validation = Yup.object().shape({
     password: Yup.string().required("Password is required.")
 })
 
-const LoginPage = (props: Props) => {
+const LoginPage = (_props: Props) => {
     const { loginUser } = useAuth();
     const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>({
         resolver: yupResolver(validation)

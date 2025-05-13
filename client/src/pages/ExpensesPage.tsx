@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useExpenses } from "../contexts/expenseContext";
-import { useNavigate } from "react-router-dom";
 import AddExpenseForm from "../components/AddExpenseForm";
 import EditExpenseForm from "../components/EditExpenseForm";
 import { useCategory } from "../contexts/categoryContext";
@@ -14,15 +13,14 @@ const ExpensesPage = () => {
   } = useExpenses();
   const { categories } = useCategory();
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-  const [filterType, setFilterType] = useState<"all" | "fixed" | "variable">("all");
+  const [pageSize, _setPageSize] = useState(5);
+  const [filterType, _setFilterType] = useState<"all" | "fixed" | "variable">("all");
   const [categoryFilter, setCategoryFilter] = useState<number | "all">("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editExpenseID, setEditExpenseID] = useState<number | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchExpenses({

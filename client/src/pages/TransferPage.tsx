@@ -1,8 +1,7 @@
-import React from 'react'
 
 type Props = {}
 
-const TransferPage = (props: Props) => {
+const TransferPage = (_props: Props) => {
   return (
     <section className="absolute top-45 left-25 z-0">
     <div className="mt-4 flex justify-center">

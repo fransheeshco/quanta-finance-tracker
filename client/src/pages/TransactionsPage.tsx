@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTransactions } from "../contexts/transactionsContext";
-import { useNavigate } from "react-router-dom";
 import AddTransactionForm from "../components/AddTransactionForm";
 import EditTransactionsForm from "../components/EditTrasactionForm";
 
 type Props = {};
 
-const TransactionsPage = (props: Props) => {
+const TransactionsPage = (_props: Props) => {
   const {
     transactions,
     transactionCount,
@@ -15,14 +14,13 @@ const TransactionsPage = (props: Props) => {
   } = useTransactions();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, _setPageSize] = useState(5);
   const [filterType, setFilterType] = useState<"all" | "income" | "expense">("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editTransactionID, setEditTransactionID] = useState<number | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     const filters: any = {

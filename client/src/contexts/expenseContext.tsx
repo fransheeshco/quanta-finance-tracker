@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useContext,
   useEffect,
@@ -47,7 +47,7 @@ const ExpenseContext = createContext<ExpenseContextType | null>(null);
 export const ExpenseProvider = ({ children }: Props) => {
   const [expenses, setExpenses] = useState<Expenses[] | null>(null);
   const [expenseCount, setExpenseCount] = useState(0);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading] = useState<boolean>(false);
   const { token, user } = useAuth();
 
   const fetchExpenses = useCallback(

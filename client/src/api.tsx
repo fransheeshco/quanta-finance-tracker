@@ -4,11 +4,11 @@ import {
   UserToken
 } from "./interfaces/interfaces";
 
-const api = "http://localhost:8000/api/";
+const api = import.meta.env.VITE_API_BASE_URL;
 
 export const loginAPI = async (email: string, password: string) => {
   try {
-    const data = await axios.post<UserToken>(api + "auth" + "/login", {
+    const data = await axios.post < UserToken > (`${api}api/auth/login`, {
       email: email,
       password: password,
     });
@@ -21,7 +21,7 @@ export const loginAPI = async (email: string, password: string) => {
 
 export const registerAPI = async (fname: string, lname: string, email: string, password: string) => {
   try {
-    const data = await axios.post < UserToken > (api + "auth" + "/signup", {
+    const data = await axios.post < UserToken > (`${api}api/auth/signup`, {
       fname,
       lname,
       email,
@@ -37,4 +37,3 @@ export const registerAPI = async (fname: string, lname: string, email: string, p
     }
   }
 };
-

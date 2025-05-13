@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Income } from "../interfaces/interfaces";
 import { useIncome } from "../contexts/incomeContext";
 import AddIncomeForm from "../components/AddIncome";
@@ -6,7 +6,7 @@ import EditIncomeForm from "../components/EditIncomeForm";
 
 type Props = {};
 
-const IncomePage = (props: Props) => {
+const IncomePage = (_props: Props) => {
   const { incomes, fetchIncome, deleteIncome, incomeCount } = useIncome();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(5);
@@ -39,7 +39,7 @@ const IncomePage = (props: Props) => {
     setIsEditFormOpen(true);
   };
 
-  const handleSave = async (incomeID: number, amount: number) => {
+  const handleSave = async (_incomeID: number, _amount: number) => {
     // Here you would typically call an `updateIncome` function from context
     // e.g., await updateIncome(incomeID, amount);
     await fetchData(currentPage, sortField, sortOrder); // Refresh income list

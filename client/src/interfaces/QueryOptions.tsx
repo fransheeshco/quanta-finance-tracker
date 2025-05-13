@@ -1,5 +1,3 @@
-import { string } from "yup";
-
 export interface GetTransactionsOptions {
   page?: number;
   limit?: number;

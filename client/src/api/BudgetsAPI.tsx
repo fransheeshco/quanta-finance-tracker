@@ -2,12 +2,13 @@ import axios from "axios";
 import { handleError } from "../ErrorHandler";
 import { Budget, GetBudgetResponse } from "../interfaces/interfaces";
 
-const api = "http://localhost:8000/api/";
+const api = import.meta.env.VITE_API_BASE_URL;
+
 
 export const createBudgetAPI = async (token: string, budgetName: string, amount: number, startDate: Date, endDate: Date) => {
   try {
     const response = await axios.post<Budget>(
-      `${api}budgets/createbudget/`,
+      `${api}api/auth/budgets/createbudget/`,
       {
         budgetName,
         amount,
@@ -29,7 +30,7 @@ export const createBudgetAPI = async (token: string, budgetName: string, amount:
 export const deleteBudgetAPI = async (token: string, budgetID: number) => {
   try {
     const response = await axios.delete<Budget>(
-      `${api}budgets/deletebudget/${budgetID}`,
+      `${api}api/auth/budgets/deletebudget/${budgetID}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -45,7 +46,7 @@ export const deleteBudgetAPI = async (token: string, budgetID: number) => {
 export const updateBudgetAPI = async (token: string, budgetID: number, budgetName: string, amount: number, startDate: Date, endDate: Date) => {
   try {
     const response = await axios.patch<Budget>(
-      `${api}budgets/updatebudget/${budgetID}`,
+      `${api}api/auth/budgets/updatebudget/${budgetID}`,
       {
         budgetName,
         amount,
@@ -77,7 +78,7 @@ export const getBudgetAPI = async ({
 }): Promise<GetBudgetResponse> => {
   try {
     const response = await axios.get<GetBudgetResponse>(
-        `${api}budgets/getbudgets`,
+        `${api}api/auth/budgets/getbudgets`,
         {
           params: {
             page,

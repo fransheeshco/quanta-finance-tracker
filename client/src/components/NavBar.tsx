@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../contexts/authContext";
 import "../styles/navbar.css";
 
 function NavBar() {

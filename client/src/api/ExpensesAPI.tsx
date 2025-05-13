@@ -3,7 +3,8 @@ import { handleError } from "../ErrorHandler";
 import { Expenses, GetExpenseResponse } from "../interfaces/interfaces";
 import { GetExpensesOptions } from "@/interfaces/QueryOptions";
 
-const api = "http://localhost:8000/api/";
+const api = import.meta.env.VITE_API_BASE_URL;
+
 
 export const createExpenseAPI = async (
   token: string,
@@ -14,7 +15,7 @@ export const createExpenseAPI = async (
 ): Promise<Expenses | undefined> => {
   try {
     const res = await axios.post<Expenses>(
-      `${api}expenses/addexpenses`,
+      `${api}api/auth/expenses/addexpenses`,
       {
         title,
         amount,
@@ -52,7 +53,7 @@ export const getExpensesAPI = async (
   const token = localStorage.getItem("token");
 
   try {
-    const res = await axios.get(`${api}expenses/getexpenses?${queryParams.toString()}`, {
+    const res = await axios.get(`${api}api/auth/expenses/getexpenses?${queryParams.toString()}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -82,7 +83,7 @@ export const updateExpensesAPI = async (
 ): Promise<Expenses | undefined> => {
   try {
     const res = await axios.patch<Expenses>(
-      `${api}expenses/updateexpenses/${expenseID}`,
+      `${api}api/auth/expenses/updateexpenses/${expenseID}`,
       {
         title,
         amount,
@@ -107,7 +108,7 @@ export const deleteExpensesAPI = async (
 ): Promise<Expenses | undefined> => {
   try {
     const res = await axios.delete<Expenses>(
-      `${api}expenses/deleteexpense/${expenseID}`,
+      `${api}api/auth/expenses/deleteexpense/${expenseID}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

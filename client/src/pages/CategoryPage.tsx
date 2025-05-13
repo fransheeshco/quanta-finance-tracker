@@ -6,12 +6,12 @@ import EditCategoryForm from "../components/EditCategoriesForm";
 
 type Props = {};
 
-const CategoryPage = (props: Props) => {
+const CategoryPage = (_props: Props) => {
   const { user, token, logout } = useAuth();
   const { categories, totalCategories, fetchCategories, editCategory, removeCategory } = useCategory();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, _setPageSize] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);

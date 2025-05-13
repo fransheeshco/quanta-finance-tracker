@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Account } from "@/interfaces/interfaces";
-import { useAccounts } from "@/contexts/accountContext";
 
 type Props = {
   account: Account;

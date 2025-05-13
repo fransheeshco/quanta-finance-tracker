@@ -5,13 +5,13 @@ import {
 } from "../interfaces/interfaces";
 import { GetTransactionsOptions } from "../interfaces/QueryOptions";
 
-const api = "http://localhost:8000/api/";
+const api = import.meta.env.VITE_API_BASE_URL;
 
 
 export const createTransactionAPI = async (token: string, transactionType: TransactionType, amount: number, date: Date) => {
     try {
       const data = await axios.post<Transactions>(
-        `${api}transaction/addtransaction`,
+        `${api}api/auth/transaction/addtransaction`,
         {
           transactionType,
           amount,
@@ -32,7 +32,7 @@ export const createTransactionAPI = async (token: string, transactionType: Trans
   export const deleteTransactionAPI = async (token: string, transactionID: number) => {
     try {
       const data = await axios.delete<Transactions>(
-        `${api}transaction/deletetransaction/${transactionID}`,
+        `${api}api/auth/transaction/deletetransaction/${transactionID}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ export const createTransactionAPI = async (token: string, transactionType: Trans
   export const updateTransactionAPI = async (token: string, transactionType: TransactionType, amount: number, date: Date, transactionID: number) => {
     try {
       const data = await axios.patch<Transactions>(
-        `${api}transaction/updatetransaction/${transactionID}`,
+        `${api}api/auth/transaction/updatetransaction/${transactionID}`,
         {
           transactionType,
           amount,
@@ -84,7 +84,7 @@ export const createTransactionAPI = async (token: string, transactionType: Trans
   
     try {
       const response = await axios.get<GetTransactionResponse>(
-        `${api}transaction/gettransactions?${queryParams.toString()}`,
+        `${api}api/auth/transaction/gettransactions?${queryParams.toString()}`,
         {
           method: 'GET',
           headers: {

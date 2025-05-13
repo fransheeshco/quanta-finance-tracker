@@ -12,7 +12,7 @@ const AddBudgetForm = ({ onClose }: Props) => {
   const [endDate, setEndDate] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
   const { addBudget } = useBudgets();
-  const { user, token } = useAuth();
+  const { token } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

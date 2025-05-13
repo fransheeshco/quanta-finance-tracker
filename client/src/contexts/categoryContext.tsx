@@ -1,7 +1,6 @@
 // CategoryContext.tsx
 import React, {
   createContext,
-  useEffect,
   useState,
   useCallback,
   useMemo,
@@ -17,13 +16,6 @@ import {
 import { toast } from "react-toastify";
 import { useAuth } from "./authContext";
 
-interface GetCategoriesResponse {
-  count: number;
-  currentPage: number;
-  data: Categories[]; // Categories array is directly under 'data'
-  message: string;
-  totalPages: number;
-}
 
 type CategoryTypeContext = {
   categories: Categories[] | null;
@@ -43,8 +35,7 @@ const CategoryContext = createContext<CategoryTypeContext>(
 export const CategoryProvider = ({ children }: Props) => {
   const [categories, setCategories] = useState<Categories[] | null>(null);
   const [totalCategories, setTotalCategories] = useState(0);
-  const { user, token } = useAuth();
-  const [pageSize] = useState(5);
+  const { token } = useAuth();
 
   const fetchCategories = useCallback(
     async (page: number) => {
@@ -55,13 +46,13 @@ export const CategoryProvider = ({ children }: Props) => {
           sortField: "categoryID",
           sortBy: "asc",
           page,
-        })) as GetCategoriesResponse; // Explicitly cast the response
+        })); // Explicitly cast the response
 
         console.log("Response from getCategoriesAPI:", response); // For debugging
 
-        if (response && response.data) {
-          setCategories(response.data); // Access the categories from 'response.data'
-          setTotalCategories(response.count);
+        if (response && response.categories) {
+          setCategories(response.categories.rows); // Access the categories from 'response.data'
+          setTotalCategories(response.categories.count);
         } else {
           setCategories([]);
           setTotalCategories(0);

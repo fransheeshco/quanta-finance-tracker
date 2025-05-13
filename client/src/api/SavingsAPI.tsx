@@ -4,7 +4,9 @@ import {
      Savings, GetSavingsResponse,
 } from "../interfaces/interfaces"
 import { GetSavingsOptions } from "@/interfaces/QueryOptions";
-const api = "http://localhost:8000/api/";
+
+const api = import.meta.env.VITE_API_BASE_URL;
+
 
 export const createSavingsAPI = async (
     token: string,
@@ -14,7 +16,7 @@ export const createSavingsAPI = async (
   ) => {
     try {
       const { data } = await axios.post<Savings>(
-        `${api}savings/addsavings`,
+        `${api}api/auth/savings/addsavings`,
         { title, goalAmount, currentAmount },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -33,7 +35,7 @@ export const createSavingsAPI = async (
   ) => {
     try {
       const { data } = await axios.patch<Savings>(
-        `${api}savings/updatesavings/${savingID}`,
+        `${api}api/auth/savings/updatesavings/${savingID}`,
         { title, goalAmount, currentAmount },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -46,7 +48,7 @@ export const createSavingsAPI = async (
   export const deleteSavingsAPI = async (token: string, savingID: number) => {
     try {
       const { data } = await axios.delete(
-        `${api}savings/deletesavings/${savingID}`,
+        `${api}api/auth/savings/deletesavings/${savingID}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       return data;
@@ -71,7 +73,7 @@ export const createSavingsAPI = async (
   
     try {
       const response = await axios.get<GetSavingsResponse>(
-        `${api}savings/getsavings?${queryParams.toString()}`,
+        `${api}api/auth/savings/getsavings?${queryParams.toString()}`,
         {
           method: 'GET',
           headers: {

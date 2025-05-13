@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useEffect,
   useState,
@@ -6,7 +6,7 @@ import React, {
   useContext,
   ReactNode,
 } from "react";
-import { Income, GetIncomeResponse } from "../interfaces/interfaces";
+import { Income } from "../interfaces/interfaces";
 import {
   createIncomeAPI,
   deleteIncomeAPI,
@@ -106,6 +106,7 @@ export const IncomeProvider = ({ children }: Props) => {
           if (!token) return;
           try {
               const updated = await updateIncomeAPI(token, amount, incomeID);
+               console.log(updated);
 
               setIncomes((prev) =>
                   prev.map((income) =>

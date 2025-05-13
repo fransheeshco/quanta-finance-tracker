@@ -5,8 +5,7 @@ import {
 } from "../interfaces/interfaces";
 import { GetAccountsOptions } from "@/interfaces/QueryOptions";
 
-const api = "http://localhost:8000/api/";
-
+const api = import.meta.env.VITE_API_BASE_URL;
 
 export const createAccountAPI = async (
     accountType: string,
@@ -16,7 +15,7 @@ export const createAccountAPI = async (
 ) => {
     try {
         const data = await axios.post<Account>(
-            `${api}account/addaccount`,
+            `${api}api/auth/account/addaccount`,
             {
                 accountType,
                 balance,
@@ -38,7 +37,7 @@ export const createAccountAPI = async (
 export const deleteAccountAPI = async (accountID: number, token: string,) => {
     try {
         const data = await axios.delete<Account>(
-            `${api}account/deleteaccount/${accountID}`,
+            `${api}api/auth/account/deleteaccount/${accountID}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -55,7 +54,7 @@ export const deleteAccountAPI = async (accountID: number, token: string,) => {
 export const updateAccountAPI = async (accountID: number, token: string, balance: number, accountType: string) => {
     try {
         const data = await axios.patch<Account>(
-            `${api}account/updateaccount/${accountID}`,
+            `${api}api/auth/account/updateaccount/${accountID}`,
             {
                 balance,
                 accountType,
@@ -91,7 +90,7 @@ export const fetchAccountsAPI = async (options: GetAccountsOptions = {}
 
     try {
         const response = await axios.get<GetAccountsResponse>(
-            `${api}account/getaccounts?${queryParams.toString()}`,
+            `${api}api/auth/account/getaccounts?${queryParams.toString()}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

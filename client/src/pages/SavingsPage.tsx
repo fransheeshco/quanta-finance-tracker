@@ -6,9 +6,9 @@ import EditSavingsForm from "../components/EditSavingsForm";
 
 type Props = {};
 
-const SavingsPage = (props: Props) => {
+const SavingsPage = (_props: Props) => {
   const { savings, fetchSavings, deleteSavings, setCurrentPage, currentPage, totalPages } = useSavings();
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, _setPageSize] = useState(5);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [editingSaving, setEditingSaving] = useState<Savings | null>(null);

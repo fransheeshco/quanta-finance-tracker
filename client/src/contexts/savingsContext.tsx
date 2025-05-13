@@ -1,5 +1,5 @@
-import React, { createContext, useEffect, useState, useContext, ReactNode, useCallback } from "react";
-import { Savings, GetSavingsResponse } from "../interfaces/interfaces";
+import { createContext, useEffect, useState, useContext, ReactNode, useCallback } from "react";
+import { Savings } from "../interfaces/interfaces";
 import { GetSavingsOptions } from "@/interfaces/QueryOptions";
 import {
   createSavingsAPI,

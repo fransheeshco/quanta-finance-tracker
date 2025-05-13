@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { loginAPI, registerAPI } from "../api";
 import { toast } from "react-toastify";
 import React from "react";
-import axios, { AxiosError } from "axios"; // Import AxiosError
+import axios from "axios"; // Import AxiosError
 
 type UserContextType = {
     user: User | null;
@@ -105,7 +105,7 @@ export const UserProvider = ({ children }: Props) => {
                     navigate("/home");
                 }
             })
-            .catch((e) => toast.warning("Server error occurred"));
+            .catch((e: Error) => toast.warning(`Server error occurred ${e}`));
     };
 
 

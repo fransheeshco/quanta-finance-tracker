@@ -1,4 +1,3 @@
-import React from 'react';
 import Footer from '../components/Footer';
 import { NavLink } from 'react-router-dom';
 import * as Yup from "yup";
@@ -23,7 +22,7 @@ const validation = Yup.object().shape({
     lname: Yup.string().required("Last Name is required.")
 })
 
-const SignUpPage = (props: Props) => {
+const SignUpPage = (_props: Props) => {
     const { registerUser, registrationError } = useAuth(); // Destructure registrationError
     const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormInputs>({
         resolver: yupResolver(validation)
