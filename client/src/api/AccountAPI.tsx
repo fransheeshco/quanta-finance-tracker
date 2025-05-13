@@ -5,7 +5,7 @@ import {
 } from "../interfaces/interfaces";
 import { GetAccountsOptions } from "@/interfaces/QueryOptions";
 
-const api = 'http://localhost:8000/';
+const api = 'https://quanta-finance-tracker-backend.onrender.com/';
 
 
 export const createAccountAPI = async (

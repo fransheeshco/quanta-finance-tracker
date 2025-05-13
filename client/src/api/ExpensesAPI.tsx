@@ -3,7 +3,7 @@ import { handleError } from "../ErrorHandler";
 import { Expenses, GetExpenseResponse } from "../interfaces/interfaces";
 import { GetExpensesOptions } from "@/interfaces/QueryOptions";
 
-const api = 'http://localhost:8000/';
+const api = 'https://quanta-finance-tracker-backend.onrender.com/';
 
 
 

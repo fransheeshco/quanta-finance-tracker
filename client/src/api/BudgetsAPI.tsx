@@ -2,7 +2,7 @@ import axios from "axios";
 import { handleError } from "../ErrorHandler";
 import { Budget, GetBudgetResponse } from "../interfaces/interfaces";
 
-const api = 'http://localhost:8000/';
+const api = 'https://quanta-finance-tracker-backend.onrender.com/';
 
 
 
