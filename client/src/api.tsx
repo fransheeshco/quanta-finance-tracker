@@ -4,7 +4,7 @@ import {
   UserToken
 } from "./interfaces/interfaces";
 
-const api = import.meta.env.VITE_API_BASE_URL;
+const api = 'http://localhost:8000/';
 
 export const loginAPI = async (email: string, password: string) => {
   try {

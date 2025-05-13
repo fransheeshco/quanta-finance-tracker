@@ -5,7 +5,8 @@ import {
 } from "../interfaces/interfaces";
 import { GetCategoriesOptions } from "@/interfaces/QueryOptions";
 
-const api = import.meta.env.VITE_API_BASE_URL;
+const api = 'http://localhost:8000/';
+
 
 
 export const createCategoryAPI = async (categoryName: string, token: string) => {

@@ -5,7 +5,8 @@ import {
 } from "../interfaces/interfaces";
 import { GetTransactionsOptions } from "../interfaces/QueryOptions";
 
-const api = import.meta.env.VITE_API_BASE_URL;
+const api = 'http://localhost:8000/';
+
 
 
 export const createTransactionAPI = async (token: string, transactionType: TransactionType, amount: number, date: Date) => {
