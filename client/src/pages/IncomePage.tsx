@@ -40,9 +40,7 @@ const IncomePage = (_props: Props) => {
   };
 
   const handleSave = async (_incomeID: number, _amount: number) => {
-    // Here you would typically call an `updateIncome` function from context
-    // e.g., await updateIncome(incomeID, amount);
-    await fetchData(currentPage, sortField, sortOrder); // Refresh income list
+    await fetchData(currentPage, sortField, sortOrder); 
   };
 
   const handleSort = (field: string) => {
@@ -52,7 +50,7 @@ const IncomePage = (_props: Props) => {
       setSortField(field);
       setSortOrder("asc");
     }
-    setCurrentPage(1); // Reset to the first page on sort
+    setCurrentPage(1);
   };
 
   const totalPages = Math.ceil(incomeCount / pageSize);

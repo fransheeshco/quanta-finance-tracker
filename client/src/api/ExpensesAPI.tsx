@@ -60,8 +60,6 @@ export const getExpensesAPI = async (
       },
     });
 
-    console.log("API response:", res.data);
-
     return {
       message: res.data.message,
       expenses: {

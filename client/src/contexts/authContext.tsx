@@ -38,7 +38,6 @@ export const UserProvider = ({ children }: Props) => {
                 setToken(token);
                 axios.defaults.headers.common["Authorization"] = "Bearer " + token;
             } catch (error) {
-                console.error("Error parsing user data from localStorage:", error);
                 localStorage.removeItem("user");
                 localStorage.removeItem("token");
             }
@@ -79,7 +78,6 @@ export const UserProvider = ({ children }: Props) => {
                 return error.response.data.message; // Return the error message to the component
             } else {
                 toast.warning("Server error occurred during registration.");
-                console.error("Registration error:", error);
                 setRegistrationError("An unexpected error occurred during registration."); // Set a generic error message
                 return "An unexpected error occurred during registration."; // Return a generic error
             }

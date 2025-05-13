@@ -54,7 +54,6 @@ export const getIncomesAPI = async (options: GetIncomeOptions = {}): Promise<Get
                 },
             }
         );
-        console.log( "adskjsdad ", data);
         return {
             message: data.data.message,
             income: {

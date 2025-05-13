@@ -20,6 +20,7 @@ import { GetAccountsOptions } from "@/interfaces/QueryOptions";
 type AccountContextType = {
   accounts: Account[] | undefined;
   accountCount: number;
+  balance: number;
   fetchAccounts: (options: GetAccountsOptions) => Promise<void>;
   createAccount: (accountType: string, balance: number, userID: number) => Promise<void>;
   deleteAccount: (accountID: number) => Promise<void>;
@@ -35,6 +36,7 @@ type Props = {
 export const AccountProvider = ({ children }: Props) => {
   const [accounts, setAccounts] = useState<Account[] | undefined>(undefined);
   const [accountCount, setAccountCount] = useState(0);
+  const [balance, setBalance] = useState(0);
   const { token } = useAuth();
 
   const fetchAccounts = useCallback(
@@ -44,7 +46,6 @@ export const AccountProvider = ({ children }: Props) => {
       if (!token) return;
       try {
         const response = await fetchAccountsAPI(filters);
-        console.log("asdasdasdas", response)
         if (!response) return
         setAccounts(response.data.accounts);
         setAccountCount(response?.data.count);
@@ -89,7 +90,7 @@ export const AccountProvider = ({ children }: Props) => {
     async (accountID: number, balance: number, accountType: string) => {
       if (!token) return;
       try {
-         await updateAccountAPI(accountID, token, balance, accountType);
+        await updateAccountAPI(accountID, token, balance, accountType);
         toast.success("Account updated.");
         await fetchAccounts({ page: 1, limit: 5 });
       } catch (error) {
@@ -100,15 +101,19 @@ export const AccountProvider = ({ children }: Props) => {
   );
 
   useEffect(() => {
-    if (token) {
-      fetchAccounts({ page: 1, limit: 5 });
+    if (accounts) {
+      const calculatedTotalBalance = accounts.reduce((acc, account) => acc + account.balance, 0);
+      setBalance(calculatedTotalBalance);
+    } else {
+      setBalance(0); // Reset if accounts is undefined
     }
-  }, [token, fetchAccounts]);
+  }, [accounts]);
 
   return (
     <AccountContext.Provider
       value={{
         accounts,
+        balance,
         accountCount,
         fetchAccounts,
         createAccount,

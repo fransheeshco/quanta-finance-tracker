@@ -56,7 +56,6 @@ export const ExpenseProvider = ({ children }: Props) => {
       try {
         const data = await getExpensesAPI(filters);
         if (data) {
-          console.log('Fetched expenses:', data);
           setExpenses(data.expenses.rows);
           setExpenseCount(data.expenses.count);
         }

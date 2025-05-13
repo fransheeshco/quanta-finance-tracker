@@ -86,8 +86,6 @@ export const createSavingsAPI = async (
   
       // Extract data and return it in the required format
       const { savings, count, page: currentPage, totalPages, nextPage } = response.data;
-      console.log(savings, count, currentPage, totalPages, nextPage)
-      console.log(response.data)
   
       return {
         savings: {

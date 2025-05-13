@@ -46,7 +46,6 @@ export const createCategoryAPI = async (categoryName: string, token: string) => 
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Backend Response:", response.data);
       return response.data; // Return the entire response data
     } catch (error) {
       handleError(error);

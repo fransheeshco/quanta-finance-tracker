@@ -51,10 +51,28 @@ const HomePageNavBar = () => {
                                         Home
                                     </NavLink>
                                     <NavLink
+                                        to="/accounts"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                        Accounts
+                                    </NavLink>
+                                    <NavLink
                                         to="/savings"
                                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     >
                                         Savings
+                                    </NavLink>
+                                    <NavLink
+                                        to="/income"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                        Incomes
+                                    </NavLink>
+                                    <NavLink
+                                        to="/budgets"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                        Budgets
                                     </NavLink>
                                     <NavLink
                                         to="/categories"
@@ -73,30 +91,6 @@ const HomePageNavBar = () => {
                                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     >
                                         Transactions
-                                    </NavLink>
-                                    <NavLink
-                                        to="/budgets"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    >
-                                        Budgets
-                                    </NavLink>
-                                    <NavLink
-                                        to="/income"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    >
-                                        Incomes
-                                    </NavLink>
-                                    <NavLink
-                                        to="/transfers"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    >
-                                        Transfers
-                                    </NavLink>
-                                    <NavLink
-                                        to="/accounts"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    >
-                                        Accounts
                                     </NavLink>
                                     <button
                                         onClick={logout}

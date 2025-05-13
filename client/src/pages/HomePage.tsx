@@ -1,12 +1,14 @@
 import { useExpenses } from '../contexts/expenseContext';
 import { useIncome } from '../contexts/incomeContext';
 import ExpenseChart from '../components/ChartComponent'; // Import the ExpenseChart component
+import { useAccounts } from '@/contexts/accountContext';
 
 type Props = {};
 
 const HomePage = (_props: Props) => {
   const { expenses, loading: loadingExpenses } = useExpenses();
   const { incomes, loading: loadingIncomes } = useIncome();
+  const { balance } = useAccounts()
 
   // Fallback to an empty array if expenses or incomes is null or undefined
   const totalIncome = (incomes || []).reduce((acc, income) => acc + income.amount, 0);
@@ -41,14 +43,19 @@ const HomePage = (_props: Props) => {
             <br />
             <h4 className="text-5xl">₱{totalExpenses.toFixed(2)}</h4>
           </div>
+          {/* Total Balance */}
+          <div className="w-[400px] h-[200px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
+            <h4 className="text-3xl text-green-500">Total Balance</h4>
+            <br />
+            <h4 className="text-5xl">₱{balance?.toFixed(2)}</h4> {/* Use optional chaining in case balance is still undefined initially */}
+          </div>
         </div>
 
         <div className="flex flex-row mt-5">
-          {/* Transactions Chart (Fill Whole Row) */}
           <div className="w-[1230px] h-[400px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
             <p className="flex justify-center text-xl">Expenses</p>
-            <div className="w-full h-full"> {/* Ensure the chart container takes full space */}
-              <ExpenseChart /> {/* Expense chart inside the transactions div */}
+            <div className="w-full h-full">
+              <ExpenseChart />
             </div>
           </div>
         </div>

@@ -94,7 +94,6 @@ export const getBudgetAPI = async ({
       
 
     // Log the response to ensure proper structure
-    console.log(response.data);
 
     return {
       message: response.data.message,
