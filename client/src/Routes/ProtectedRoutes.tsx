@@ -9,7 +9,6 @@ const ProtectedRoute = ({ children }: Props) => {
     const { token } = useAuth();
     return (token) ? (
         <>
-            <Navigate to="/home" />
             {children}</>) : (
         <Navigate to="/login" state={{ from: location }} replace />
     )
