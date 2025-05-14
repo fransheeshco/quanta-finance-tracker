@@ -7,8 +7,6 @@ import { GetCategoriesOptions } from "@/interfaces/QueryOptions";
 
 const api = 'https://quanta-finance-tracker-backend.onrender.com/';
 
-
-
 export const createCategoryAPI = async (categoryName: string, token: string) => {
     try {
       const data = await axios.post<Categories>(

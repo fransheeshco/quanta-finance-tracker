@@ -5,8 +5,6 @@ import { GetExpensesOptions } from "@/interfaces/QueryOptions";
 
 const api = 'https://quanta-finance-tracker-backend.onrender.com/';
 
-
-
 export const createExpenseAPI = async (
   token: string,
   title: string,

@@ -8,7 +8,6 @@ import { GetTransactionsOptions } from "../interfaces/QueryOptions";
 const api = 'https://quanta-finance-tracker-backend.onrender.com/';
 
 
-
 export const createTransactionAPI = async (token: string, transactionType: TransactionType, amount: number, date: Date) => {
     try {
       const data = await axios.post<Transactions>(
