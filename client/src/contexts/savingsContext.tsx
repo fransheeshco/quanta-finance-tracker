@@ -62,7 +62,6 @@ export const SavingsProvider = ({ children }: Props) => {
 }, [token]);
   
 
-
   const createSavings = async (title: string, goalAmount: number, currentAmount: number) => {
     if (!token) {
       toast.error("Token is missing.");

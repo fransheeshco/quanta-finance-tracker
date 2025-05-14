@@ -4,11 +4,12 @@ import HomePageNavBar from './HomePageNavBar';
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
+
 
   return (
     <>
-      {user ? <HomePageNavBar /> : <NavBar />}
+      {user && token ? <HomePageNavBar /> : <NavBar />}
       <Outlet />
     </>
   );

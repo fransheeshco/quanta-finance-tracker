@@ -15,7 +15,6 @@ const SavingsPage = (_props: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState<string>("goalAmountAsc");
 
-  console.log(currentPage)
   useEffect(() => {
     const filters: {
       page: number;
