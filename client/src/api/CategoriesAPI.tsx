@@ -46,10 +46,10 @@ export const createCategoryAPI = async (categoryName: string, token: string) => 
           Authorization: `Bearer ${token}`,
         },
       });
-      return response.data; // Return the entire response data
+      return response.data;
     } catch (error) {
       handleError(error);
-      return undefined; // Or throw the error depending on your error handling strategy
+      return undefined; 
     }
   };
   

@@ -20,7 +20,7 @@ export const createExpenseAPI = async (
       {
         title,
         amount,
-        date: date.toISOString().split("T")[0], // or .toISOString() if backend expects it
+        date: date.toISOString().split("T")[0], 
         categoryID,
       },
       {

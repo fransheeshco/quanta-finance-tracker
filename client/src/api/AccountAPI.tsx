@@ -99,15 +99,13 @@ export const fetchAccountsAPI = async (options: GetAccountsOptions = {}
             }
         );
 
-        console.log(response.data);
-
         return {
             message: response.data.message,
-            data: { // Return the 'data' property as defined in the interface
+            data: {
                 count: response.data.data.count ?? 0,
-                accounts: response.data.data.accounts ?? [], // Use 'accounts' to match the interface
-                currentPage: response.data.data.currentPage, // Include currentPage if present
-                totalPages: response.data.data.totalPages,   // Include totalPages if present
+                accounts: response.data.data.accounts ?? [],
+                currentPage: response.data.data.currentPage,
+                totalPages: response.data.data.totalPages,   
             }
         }
     } catch (error) {

@@ -94,10 +94,8 @@ export const createTransactionAPI = async (token: string, transactionType: Trans
           },
         }
       );
-  
-      // Update the response structure based on the actual backend response
-      const transactions = response.data.transactions; // Now we're accessing the correct field
-      const totalCount = response.data.transactions.count; // Access the count correctly
+      const transactions = response.data.transactions; 
+      const totalCount = response.data.transactions.count;
       
       return { transactionsData: transactions, totalCount };
       

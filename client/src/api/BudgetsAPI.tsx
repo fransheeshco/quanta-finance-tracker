@@ -93,11 +93,9 @@ export const getBudgetAPI = async ({
       );
       
 
-    // Log the response to ensure proper structure
-
     return {
       message: response.data.message,
-      count: response.data.count,  // This should now be correctly mapped
+      count: response.data.count,
       budgets: response.data.budgets,
     };
   } catch (error) {
