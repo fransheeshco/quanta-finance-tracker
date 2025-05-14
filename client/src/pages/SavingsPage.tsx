@@ -21,7 +21,7 @@ const SavingsPage = (_props: Props) => {
       page: number;
       limit?: number;
       sortField?: string;
-      sortBy?: "asc" | "desc"; // Or "asc" | "desc" | undefined depending on your GetSavingsOptions
+      sortBy?: "asc" | "desc"; 
     } = {
       page: currentPage, 
       limit: pageSize,

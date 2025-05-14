@@ -46,12 +46,12 @@ export const CategoryProvider = ({ children }: Props) => {
           sortField: "categoryID",
           sortBy: "asc",
           page,
-        })); // Explicitly cast the response
+        })); 
 
         console.log("Response from getCategoriesAPI:", response); // For debugging
 
         if (response && response.categories) {
-          setCategories(response.categories.rows); // Access the categories from 'response.data'
+          setCategories(response.categories.rows);
           setTotalCategories(response.categories.count);
         } else {
           setCategories([]);

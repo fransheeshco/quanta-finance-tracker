@@ -52,7 +52,6 @@ export const TransactionsProvider = ({ children }: Props) => {
       }
     } catch (error) {
       console.error("Failed to fetch transactions:", error);
-      toast.error("Could not fetch transactions.");
     }
   };
 

@@ -30,8 +30,6 @@ const SignUpPage = (_props: Props) => {
 
     const handleRegister = async (form: RegisterFormInputs) => {
         await registerUser(form.fname, form.lname, form.email, form.password);
-        // No need to handle the error here directly, as the registrationError
-        // state in the context will be updated. The component will re-render.
     }
 
     return (

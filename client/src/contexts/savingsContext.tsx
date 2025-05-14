@@ -51,18 +51,12 @@ export const SavingsProvider = ({ children }: Props) => {
         if (response) {
             setSavings(response.savings.rows);
             setSavingsCount(response.savings.count);
-            console.log("API Response Page:", response.page);
             setCurrentPage(response.page);
-            console.log("currpage: ", currentPage)
             setTotalPages(response.totalPages);
-            console.log("total page", totalPages)
-            console.log("API Response:", response);
-            console.log("API Response Data:", response.savings);
         }
         return response?.savings.rows;
     } catch (error) {
         console.error("Error fetching savings:", error);
-        toast.error("Error fetching savings");
         return null;
     }
 }, [token]);

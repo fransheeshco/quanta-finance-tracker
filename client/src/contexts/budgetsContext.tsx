@@ -75,7 +75,6 @@ export const BudgetProvider = ({ children }: Props) => {
         }
       } catch (err) {
         console.error("Error fetching budgets:", err);
-        toast.error("Failed to fetch budgets");
         setBudgets(null);
         setTotalBudgets(0);
       }

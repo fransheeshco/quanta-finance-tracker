@@ -45,9 +45,7 @@ export const IncomeProvider = ({ children }: Props) => {
     setLoading(true);
     try {
         const data = await getIncomesAPI(filters);
-        if (data) { // Only need to check if the overall response is defined
-          console.log("Raw fetchedResponse:", data);
-
+        if (data) { 
             setIncomes(data.income.rows);
             setIncomeCount(data.income.count);
         } else {
@@ -56,7 +54,6 @@ export const IncomeProvider = ({ children }: Props) => {
         }
     } catch (error) {
         console.error("Failed to fetch incomes", error);
-        toast.error("Failed to fetch incomes");
     } finally {
         setLoading(false);
     }
@@ -71,8 +68,6 @@ export const IncomeProvider = ({ children }: Props) => {
                   toast.error("Failed to add income (no data received)");
                   return;
               }
-
-              // Optimistically update the state, and then refetch for consistency
               setIncomes((prev) => [...prev, newIncome]);
               fetchIncome();
               toast.success("Income added!");
@@ -88,7 +83,6 @@ export const IncomeProvider = ({ children }: Props) => {
           if (!token) return;
           try {
               await deleteIncomeAPI(incomeID, token);
-              // Optimistically update the state, and then refetch for consistency
               setIncomes((prev) =>
                   prev.filter((income) => income.incomeID !== incomeID)
               );
@@ -106,14 +100,12 @@ export const IncomeProvider = ({ children }: Props) => {
           if (!token) return;
           try {
               const updated = await updateIncomeAPI(token, amount, incomeID);
-               console.log(updated);
 
               setIncomes((prev) =>
                   prev.map((income) =>
                       income.incomeID === incomeID ? { ...income, amount } : income
                   )
               );
-
               toast.success("Income updated!");
           } catch (error) {
               toast.error("Failed to update income");
