@@ -94,7 +94,7 @@ export const IncomeProvider = ({ children }: Props) => {
       },
       [token, fetchIncome]
   );
-
+  
   const updateIncome = useCallback(
       async (incomeID: number, amount: number) => {
           if (!token) return;

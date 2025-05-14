@@ -37,7 +37,6 @@ const HomePageNavBar = () => {
                                 />
                             </svg>
                         </button>
-
                         {isOpen && (
                             <div className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-100">
                                 <div className="px-4 py-3 text-gray-700 text-sm font-semibold border-b">
