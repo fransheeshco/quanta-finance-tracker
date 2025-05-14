@@ -99,7 +99,7 @@ export const IncomeProvider = ({ children }: Props) => {
       async (incomeID: number, amount: number) => {
           if (!token) return;
           try {
-              const updated = await updateIncomeAPI(token, amount, incomeID);
+              await updateIncomeAPI(token, amount, incomeID);
 
               setIncomes((prev) =>
                   prev.map((income) =>
