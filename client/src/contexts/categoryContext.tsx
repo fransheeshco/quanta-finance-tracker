@@ -45,19 +45,18 @@ export const CategoryProvider = ({ children }: Props) => {
           sortField: "categoryID",
           sortBy: "asc",
           page,
-        }); 
-
-        console.log("Response from getCategoriesAPI:", response); // For debugging
-
+        });
+  
+        console.log("Response from getCategoriesAPI:", response);
+  
         if (response && response.data) {
           setCategories(response.data.rows);
-          console.log("Fetched categories:", response.data);
-          console.log("Fetched categories rows:", response.data.rows);
           setTotalCategories(response.data.count);
         } else {
           setCategories([]);
           setTotalCategories(0);
         }
+        
       } catch (err) {
         toast.error("Failed to fetch categories");
         setCategories([]);
@@ -66,6 +65,7 @@ export const CategoryProvider = ({ children }: Props) => {
     },
     [token]
   );
+  
 
   const addCategory = async (categoryName: string) => {
     if (!token) return;
