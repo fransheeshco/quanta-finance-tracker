@@ -51,7 +51,7 @@ export const CategoryProvider = ({ children }: Props) => {
 
         if (response && response.data) {
           setCategories(response.data.rows);
-          console.log(response.data.rows);
+          console.log("Fetched categories:", response.data);
           setTotalCategories(response.data.count);
         } else {
           setCategories([]);
