@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../contexts/authContext";
 import { useCategory } from "../contexts/categoryContext";
 import AddCategoryForm from "../components/AddCategoryForm";
@@ -17,18 +17,12 @@ const CategoryPage = (_props: Props) => {
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
 
-  console.log("--- CategoryPage Render ---");
-  console.log("Categories from Context:", categories);
-  console.log("Total Categories from Context:", totalCategories);
-  console.log("Current Page:", currentPage);
-  console.log("Search Term:", searchTerm);
-
   useEffect(() => {
     if (!user && token) {
       console.warn("User not available, potential issue with auth context.");
     }
     if (token) {
-      fetchCategories(currentPage); // Fetch based on current page
+      fetchCategories(currentPage);
     } else if (!token && user) {
       console.error("Token missing while user is logged in. Logging out.");
       logout();
@@ -37,7 +31,6 @@ const CategoryPage = (_props: Props) => {
     }
   }, [user, token, currentPage, fetchCategories, logout]);
 
-  // Reset page to 1 when search term changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
@@ -45,7 +38,7 @@ const CategoryPage = (_props: Props) => {
   const handleDeleteCategory = async (categoryID: number) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       await removeCategory(categoryID);
-      fetchCategories(currentPage); // Refresh current page after deletion
+      fetchCategories(currentPage);
     }
   };
 
@@ -56,21 +49,13 @@ const CategoryPage = (_props: Props) => {
 
   const totalPages = Math.ceil(totalCategories / pageSize);
 
-  // Client-side filtering based on search term
-  const filteredCategories = React.useMemo(() => {
-    if (!categories) {
-      return [];
-    }
-    if (!searchTerm) {
-      return categories;
-    }
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    return categories.filter((cat) =>
-      cat.categoryName.toLowerCase().includes(lowerCaseSearchTerm)
-    );
+  const filteredCategories = useMemo(() => {
+    if (!categories) return [];
+    if (!searchTerm) return categories;
+    const term = searchTerm.toLowerCase();
+    return categories.filter((cat) => cat.categoryName.toLowerCase().includes(term));
   }, [categories, searchTerm]);
 
-  // Since the backend handles pagination, we just render the filtered data
   const currentData = filteredCategories;
 
   const handlePrevPage = () => {
@@ -131,8 +116,10 @@ const CategoryPage = (_props: Props) => {
 
           {/* Category Table */}
           <div className="mt-6 bg-white border border-[#A64DFF] rounded-lg shadow-md overflow-x-auto">
-            {filteredCategories.length === 0 ? (
-              <p>No categories found.</p>
+            {currentData.length === 0 ? (
+              <div className="p-6 text-center text-gray-600">
+                No categories found.
+              </div>
             ) : (
               <table className="w-full text-left">
                 <thead className="bg-[#F4E1FF]">
@@ -142,18 +129,18 @@ const CategoryPage = (_props: Props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentData.map((categories) => (
-                    <tr key={categories.categoryID} className="border-t">
-                      <td className="py-3 px-6">{categories.categoryName}</td>
+                  {currentData.map((cat) => (
+                    <tr key={cat.categoryID} className="border-t">
+                      <td className="py-3 px-6">{cat.categoryName}</td>
                       <td className="py-3 px-6">
                         <button
-                          onClick={() => handleEditCategory(categories)}
+                          onClick={() => handleEditCategory(cat)}
                           className="bg-blue-500 text-white px-4 py-1 rounded-2xl mr-2"
                         >
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDeleteCategory(categories.categoryID)}
+                          onClick={() => handleDeleteCategory(cat.categoryID)}
                           className="bg-red-500 text-white px-4 py-1 rounded-2xl"
                         >
                           Delete
