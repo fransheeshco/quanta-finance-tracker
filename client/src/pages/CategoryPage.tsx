@@ -1,5 +1,4 @@
 import { useEffect, useState, useMemo } from "react";
-import { useAuth } from "../contexts/authContext";
 import { useCategory } from "../contexts/categoryContext";
 import AddCategoryForm from "../components/AddCategoryForm";
 import EditCategoryForm from "../components/EditCategoriesForm";
@@ -7,7 +6,6 @@ import EditCategoryForm from "../components/EditCategoriesForm";
 type Props = {};
 
 const CategoryPage = (_props: Props) => {
-  const { user, token, logout } = useAuth();
   const { categories, totalCategories, fetchCategories, editCategory, removeCategory } = useCategory();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,18 +16,9 @@ const CategoryPage = (_props: Props) => {
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
 
   useEffect(() => {
-    if (!user && token) {
-      console.warn("User not available, potential issue with auth context.");
-    }
-    if (token) {
-      fetchCategories(currentPage);
-    } else if (!token && user) {
-      console.error("Token missing while user is logged in. Logging out.");
-      logout();
-    } else {
-      console.log("Not logged in.");
-    }
-  }, [user, token, currentPage, fetchCategories, logout]);
+    fetchCategories(currentPage);
+  }, [currentPage, pageSize]);
+
 
   useEffect(() => {
     setCurrentPage(1);
