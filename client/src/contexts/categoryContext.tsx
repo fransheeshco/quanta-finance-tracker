@@ -49,9 +49,9 @@ export const CategoryProvider = ({ children }: Props) => {
   
         console.log("Response from getCategoriesAPI:", response);
   
-        if (response && response.data) {
-          setCategories(response.data.rows);
-          setTotalCategories(response.data.count);
+        if (response && response.rows) {
+          setCategories(response.rows);
+          setTotalCategories(response.count);
         } else {
           setCategories([]);
           setTotalCategories(0);
