@@ -39,8 +39,10 @@ export type Categories = {
 
 export type GetCategoriesResponse = {
   message: string;
-  count: number;
-  rows: Categories[];
+  data: {
+      count: number;
+      rows: Categories[];
+  };
 };
 
 export type Expenses = {
@@ -78,7 +80,7 @@ export type GetIncomeResponse = {
   income: {
     count: number;
     rows: Income[];
-  }
+  } 
 }
 
 export type Budget = {
@@ -122,7 +124,7 @@ export enum TransactionType {
   INCOME = 'income',
   EXPENSE = 'expense',
   TRANSFER = 'transfer',
-}
+}  
 
 export type Transactions = {
   transactionID: number;

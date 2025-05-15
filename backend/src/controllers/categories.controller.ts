@@ -71,16 +71,19 @@ export const getCategories = async (
 
         return res.status(200).json({
             message: 'Categories found',
-            data: categories, // Rename 'categories' to 'data' for consistency
-            count,
+            data: {
+              count,
+              rows: categories,
+            },
             totalPages,
             currentPage: page,
-        });
+          });          
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Could not retrieve categories' });
     }
 };
+
 export const deleteCategory = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
     const {id : categoryID} = req.params;
