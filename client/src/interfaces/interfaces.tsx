@@ -50,6 +50,7 @@ export type Expenses = {
   title: string;
   amount: number;
   categoryID: number;
+  categoryName: string;
   totalExpenses: number;
   date: Date;
   Category?: Categories;

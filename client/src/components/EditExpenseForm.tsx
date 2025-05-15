@@ -15,11 +15,11 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({ expense, onClose }) =
   const [date, setDate] = useState<string>(
     new Date(expense.date).toISOString().split("T")[0]
   );  
-  const [categoryID, setCategoryID] = useState<number>(expense.categoryID);
+  const [categoryName, setCategoryName] = useState<string>(expense.categoryName);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateExpense(title, amount, expense.expenseID, new Date(date), categoryID);
+    await updateExpense(title, amount, expense.expenseID, new Date(date), categoryName);
     onClose();
   };
 
@@ -69,8 +69,8 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({ expense, onClose }) =
           <input
             type="number"
             className="border px-3 py-2 rounded-xl"
-            value={categoryID}
-            onChange={(e) => setCategoryID(Number(e.target.value))}
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
             required
           />
         </label>

@@ -34,7 +34,7 @@ type ExpenseContextType = {
     amount: number,
     expenseID: number,
     date: Date,
-    categoryID: number
+    categoryName: string
   ) => Promise<void>;
   deleteExpense: (expenseID: number) => Promise<void>;
   getTotalExpenses: () => number;
@@ -91,11 +91,11 @@ export const ExpenseProvider = ({ children }: Props) => {
       amount: number,
       expenseID: number,
       date: Date,
-      categoryID: number
+      categoryName: string
     ) => {
       if (!token) return;
       try {
-        await updateExpensesAPI(title, expenseID, token, amount, date, categoryID);
+        await updateExpensesAPI(title, expenseID, token, amount, date, categoryName);
         toast.success("Expense updated!");
         await fetchExpenses({ page: 1, limit: 5 }); // ✅ safe now
       } catch {
