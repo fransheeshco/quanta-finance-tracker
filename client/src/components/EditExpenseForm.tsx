@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Expenses } from "@/interfaces/interfaces";
 import { useExpenses } from "@/contexts/expenseContext";
+import { useCategory } from "@/contexts/categoryContext";
 
 interface EditExpenseFormProps {
   expense: Expenses;
@@ -9,17 +10,18 @@ interface EditExpenseFormProps {
 
 const EditExpenseForm: React.FC<EditExpenseFormProps> = ({ expense, onClose }) => {
   const { updateExpense } = useExpenses();
+  const { categories } = useCategory();
 
   const [title, setTitle] = useState<string>(expense.title);
   const [amount, setAmount] = useState<number>(expense.amount);
   const [date, setDate] = useState<string>(
     new Date(expense.date).toISOString().split("T")[0]
   );  
-  const [categoryName, setCategoryName] = useState<string>(expense.categoryName);
+  const [categoryID, setCategoryID] = useState<number>(expense.categoryID);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateExpense(title, amount, expense.expenseID, new Date(date), categoryName);
+    await updateExpense(title, amount, expense.expenseID, new Date(date), categoryID);
     onClose();
   };
 
@@ -66,13 +68,23 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({ expense, onClose }) =
 
         <label className="flex flex-col gap-1">
           Category Name
-          <input
-            type="text"
+          <select
+            value={categoryID}
+            onChange={(e) => setCategoryID(Number(e.target.value))}
             className="border px-3 py-2 rounded-xl"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
             required
-          />
+          >
+            <option value="" disabled>Select category</option>
+            {categories && categories.length > 0 ? (
+              categories.map((cat) => (
+                <option key={cat.categoryID} value={cat.categoryID}>
+                  {cat.categoryName}
+                </option>
+              ))
+            ) : (
+              <option value="" disabled>No categories available</option>
+            )}
+          </select>
         </label>
 
         <div className="flex justify-end gap-3 mt-4">

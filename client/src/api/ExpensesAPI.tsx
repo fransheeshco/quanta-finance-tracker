@@ -76,7 +76,7 @@ export const updateExpensesAPI = async (
   token: string,
   amount: number,
   date: Date,
-  categoryName: string
+  categoryID: number
 ): Promise<Expenses | undefined> => {
   try {
     const res = await axios.patch<Expenses>(
@@ -85,7 +85,7 @@ export const updateExpensesAPI = async (
         title,
         amount,
         date: date.toISOString().split("T")[0],
-        categoryName,
+        categoryID,
       },
       {
         headers: {
