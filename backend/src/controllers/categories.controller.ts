@@ -8,10 +8,16 @@ export const createCategory = async (req: Request, res: Response, next: NextFunc
     const { categoryName } = req.body;
 
     try {
-        const account = await Account.findOne({where:  {userID: userID}});
+        const account = await Account.findOne({ where: { userID: userID } });
         if (!account) {
-            return res.status(404).json({message: "Account not found"})
+            return res.status(404).json({ message: "Account not found" })
         }
+        const category = await Category.findOne({where: {categoryName: categoryName}});
+
+        if (category) {
+            return res.status(200).json({message: "Category Already Exists."});
+        }
+        
         const newCategory = await Category.create({
             categoryName: categoryName,
             accountID: account.accountID,
@@ -72,12 +78,12 @@ export const getCategories = async (
         return res.status(200).json({
             message: 'Categories found',
             data: {
-              count,
-              rows: categories,
+                count,
+                rows: categories,
             },
             totalPages,
             currentPage: page,
-          });          
+        });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Could not retrieve categories' });
@@ -86,15 +92,15 @@ export const getCategories = async (
 
 export const deleteCategory = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const {id : categoryID} = req.params;
+    const { id: categoryID } = req.params;
 
     try {
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." })
         }
-        const account = await Account.findOne({where:  {userID: userID}});
+        const account = await Account.findOne({ where: { userID: userID } });
         if (!account) {
-            return res.status(404).json({message: "Account not found"})
+            return res.status(404).json({ message: "Account not found" })
         }
         const category = await Category.findByPk(categoryID);
         if (category?.accountID !== account.accountID) {
@@ -109,16 +115,16 @@ export const deleteCategory = async (req: Request, res: Response, next: NextFunc
 
 export const updateCategory = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const userID = req.userID;
-    const {id : categoryID} = req.params;
+    const { id: categoryID } = req.params;
     const { categoryName } = req.body;
 
     try {
         if (!userID) {
             return res.status(401).json({ message: "Unauthorized: No user ID." })
         }
-        const account = await Account.findOne({where:  {userID: userID}});
+        const account = await Account.findOne({ where: { userID: userID } });
         if (!account) {
-            return res.status(404).json({message: "Account not found"})
+            return res.status(404).json({ message: "Account not found" })
         }
         const category = await Category.findByPk(categoryID);
         if (category?.accountID !== account.accountID) {
