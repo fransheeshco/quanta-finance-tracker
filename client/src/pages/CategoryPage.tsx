@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../contexts/authContext";
 import { useCategory } from "../contexts/categoryContext";
 import AddCategoryForm from "../components/AddCategoryForm";
