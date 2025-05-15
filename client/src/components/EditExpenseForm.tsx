@@ -65,9 +65,9 @@ const EditExpenseForm: React.FC<EditExpenseFormProps> = ({ expense, onClose }) =
         </label>
 
         <label className="flex flex-col gap-1">
-          Category ID
+          Category Name
           <input
-            type="number"
+            type="text"
             className="border px-3 py-2 rounded-xl"
             value={categoryName}
             onChange={(e) => setCategoryName(e.target.value)}
