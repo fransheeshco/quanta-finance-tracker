@@ -1,5 +1,5 @@
 // CategoryContext.tsx
-import React, {
+import {
   createContext,
   useState,
   useCallback,
