@@ -28,9 +28,7 @@ type CategoryTypeContext = {
 
 type Props = { children: ReactNode };
 
-const CategoryContext = createContext<CategoryTypeContext>(
-  {} as CategoryTypeContext
-);
+const CategoryContext = createContext<CategoryTypeContext | undefined>(undefined);
 
 export const CategoryProvider = ({ children }: Props) => {
   const [categories, setCategories] = useState<Categories[] | null>(null);
