@@ -1,4 +1,3 @@
-import { Next } from "mysql2/typings/mysql/lib/parsers/typeCast";
 import { Category, User, Account } from "../models/associationblock";
 import { Request, Response, NextFunction } from "express";
 import { buildQueryOptions } from '../utils/sortingAndFilterUtils';
@@ -15,9 +14,9 @@ export const createCategory = async (req: Request, res: Response, next: NextFunc
         const category = await Category.findOne({where: {categoryName: categoryName}});
 
         if (category) {
-            return res.status(200).json({message: "Category Already Exists."});
+            return res.status(409).json({message: "Category Already Exists."});
         }
-        
+
         const newCategory = await Category.create({
             categoryName: categoryName,
             accountID: account.accountID,
