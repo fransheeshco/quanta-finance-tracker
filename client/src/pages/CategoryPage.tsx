@@ -142,18 +142,18 @@ const CategoryPage = (_props: Props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentData.map((cat, index) => (
-                    <tr key={index} className="border-t">
-                      <td className="py-3 px-6">{cat.categoryName}</td>
+                  {currentData.map((categories) => (
+                    <tr key={categories.categoryID} className="border-t">
+                      <td className="py-3 px-6">{categories.categoryName}</td>
                       <td className="py-3 px-6">
                         <button
-                          onClick={() => handleEditCategory(cat)}
+                          onClick={() => handleEditCategory(categories)}
                           className="bg-blue-500 text-white px-4 py-1 rounded-2xl mr-2"
                         >
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDeleteCategory(cat.categoryID)}
+                          onClick={() => handleDeleteCategory(categories.categoryID)}
                           className="bg-red-500 text-white px-4 py-1 rounded-2xl"
                         >
                           Delete
