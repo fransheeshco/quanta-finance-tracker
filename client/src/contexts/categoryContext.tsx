@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useMemo,
   ReactNode,
+  useContext,
 } from "react";
 import { Categories } from "../interfaces/interfaces";
 import {
@@ -116,4 +117,10 @@ export const CategoryProvider = ({ children }: Props) => {
   );
 };
 
-export const useCategory = () => React.useContext(CategoryContext);
+export const useCategory = (): CategoryTypeContext => {
+  const context = useContext(CategoryContext);
+  if(!context) {
+    throw new Error("useCategory must be used within a CategoryProvider");
+  }
+  return context;
+}
