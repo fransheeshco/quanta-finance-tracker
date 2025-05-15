@@ -39,7 +39,7 @@ export type Categories = {
 
 export type GetCategoriesResponse = {
   message: string;
-  categories: {
+  data: {
       count: number;
       rows: Categories[];
   };

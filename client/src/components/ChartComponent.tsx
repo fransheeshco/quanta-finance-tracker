@@ -10,7 +10,7 @@ import {
     Filler,
   } from 'chart.js';
   import { Line } from 'react-chartjs-2';
-  import type { ChartData } from 'chart.js'; // ✅ import types
+  import type { ChartData } from 'chart.js';
   import { useExpenses } from '@/contexts/expenseContext';
   import { useState, useEffect } from 'react';
   
