@@ -40,17 +40,18 @@ export const CategoryProvider = ({ children }: Props) => {
     async (page: number) => {
       if (!token) return;
       try {
-        const response = (await getCategoriesAPI({
+        const response = await getCategoriesAPI({
           token,
           sortField: "categoryID",
           sortBy: "asc",
           page,
-        })); 
+        }); 
 
         console.log("Response from getCategoriesAPI:", response); // For debugging
 
         if (response && response.data) {
           setCategories(response.data.rows);
+          console.log(categories)
           setTotalCategories(response.data.count);
         } else {
           setCategories([]);
