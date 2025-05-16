@@ -27,7 +27,7 @@ const HomePage = (_props: Props) => {
           <div className="w-[400px] h-[200px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
             <h4 className="text-3xl">Remaining</h4>
             <br />
-            <h4 className="text-5xl">₱{(totalExpenses - totalExpenses).toFixed(2)}</h4>
+            <h4 className="text-5xl">₱{(totalIncome - totalExpenses).toFixed(2)}</h4>
           </div>
           {/* Income */}
           <div className="w-[400px] h-[200px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
