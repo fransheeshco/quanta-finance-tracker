@@ -1,18 +1,15 @@
 import { useExpenses } from '../contexts/expenseContext';
 import { useIncome } from '../contexts/incomeContext';
 import ExpenseChart from '../components/ChartComponent'; // Import the ExpenseChart component
-import { useAccounts } from '@/contexts/accountContext';
 
 type Props = {};
 
 const HomePage = (_props: Props) => {
   const { expenses, loading: loadingExpenses } = useExpenses();
   const { incomes, loading: loadingIncomes } = useIncome();
-  const { balance } = useAccounts()
 
   // Fallback to an empty array if expenses or incomes is null or undefined
   const totalIncome = (incomes || []).reduce((acc, income) => acc + income.amount, 0);
-  const remaining = totalIncome + balance;
   const totalExpenses = (expenses || []).reduce((acc, expense) => acc + expense.amount, 0);
 
   if (loadingIncomes || loadingExpenses) return <div>Loading...</div>;
@@ -30,7 +27,7 @@ const HomePage = (_props: Props) => {
           <div className="w-[400px] h-[200px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
             <h4 className="text-3xl">Remaining</h4>
             <br />
-            <h4 className="text-5xl">₱{(remaining - totalExpenses).toFixed(2)}</h4>
+            <h4 className="text-5xl">₱{(totalExpenses - totalExpenses).toFixed(2)}</h4>
           </div>
           {/* Income */}
           <div className="w-[400px] h-[200px] flex-col bg-white border border-[#A64DFF] rounded-2xl p-4">
