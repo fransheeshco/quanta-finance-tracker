@@ -11,6 +11,10 @@ const createCategory = async (req, res, next) => {
         if (!account) {
             return res.status(404).json({ message: "Account not found" });
         }
+        const category = await associationblock_1.Category.findOne({ where: { categoryName: categoryName } });
+        if (category) {
+            return res.status(409).json({ message: "Category Already Exists." });
+        }
         const newCategory = await associationblock_1.Category.create({
             categoryName: categoryName,
             accountID: account.accountID,
@@ -56,8 +60,10 @@ const getCategories = async (req, res, next) => {
         const totalPages = Math.ceil(count / limit);
         return res.status(200).json({
             message: 'Categories found',
-            data: categories, // Rename 'categories' to 'data' for consistency
-            count,
+            data: {
+                count,
+                rows: categories,
+            },
             totalPages,
             currentPage: page,
         });
